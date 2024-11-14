@@ -1,7 +1,6 @@
 
 package isi.deso.desarrollotrabajopractico.DAOS;
 
-import isi.deso.desarrollotrabajopractico.ItemMenu;
 import isi.deso.desarrollotrabajopractico.Vendedor;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -223,7 +222,7 @@ public class VendedorMySQLDAO implements VendedorDAO {
         return vendedor; 
     }
     
-     public int obtenerID() {
+    public int obtenerID() {
         
         String sql = "SELECT COUNT(*) FROM vendedores";
         int ID = 0;
@@ -232,10 +231,10 @@ public class VendedorMySQLDAO implements VendedorDAO {
             PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
+                    rs.next();
                     int count = rs.getInt(1);  
                     ID = count + 1; 
-                }
+                
             }
 
         } catch (SQLException ex) {
@@ -246,31 +245,5 @@ public class VendedorMySQLDAO implements VendedorDAO {
 
         return ID;  
     }
-    
-    public boolean existeID(int idVendedor) {
-        
-        String sql = "SELECT COUNT(*) FROM vendedores WHERE id = ?";
-        boolean existe = false;
-
-        try (Connection connection = getConnection();  
-            PreparedStatement pstmt = connection.prepareStatement(sql)) {
-
-            pstmt.setInt(1, idVendedor);  // Asigna el id del cliente al parámetro de la consulta
-
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    int count = rs.getInt(1);  // Obtiene el número de coincidencias (debería ser 0 o 1)
-                    existe = count > 0;        // Si el conteo es mayor a 0, el cliente existe
-                }
-            }
-        } 
-        catch (ClassNotFoundException ex) {
-            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        catch (SQLException ex) {
-            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-            } 
-
-        return existe;
-    }
+   
 }

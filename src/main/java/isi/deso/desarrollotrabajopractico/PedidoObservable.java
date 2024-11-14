@@ -10,6 +10,4 @@ public  abstract class PedidoObservable {
     public abstract void notifyObservers();
     public abstract void setChanged();
     
-    
-    
 }

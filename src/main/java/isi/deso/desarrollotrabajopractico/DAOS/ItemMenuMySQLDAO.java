@@ -356,10 +356,10 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
             PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    int count = rs.getInt(1);  
-                    ID = count + 1; 
-                }
+                rs.next();
+                int count = rs.getInt(1);  
+                ID = count + 1; 
+                
             }
 
         } catch (SQLException ex) {

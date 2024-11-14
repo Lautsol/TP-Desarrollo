@@ -52,10 +52,6 @@ public class CrearVendedor extends javax.swing.JFrame {
         showMessageDialog(null, "Hay campos inválidos.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
     }
     
-    public void mostrarMensajeID() {
-        showMessageDialog(null, "Ya existe un vendedor con ese identificador.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
-    }
-    
     public void mostrarMensajeItem() {
         showMessageDialog(null, "El vendedor debe tener al menos un item.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
     }

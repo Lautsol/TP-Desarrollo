@@ -275,10 +275,9 @@ public class PedidoMySQLDAO implements PedidoDAO {
             PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
+                    rs.next();
                     int count = rs.getInt(1);  
                     ID = count + 1; 
-                }
             }
 
         } catch (SQLException ex) {
@@ -302,10 +301,9 @@ public class PedidoMySQLDAO implements PedidoDAO {
         pstmt.setInt(1, idCliente);
 
         try (ResultSet rs = pstmt.executeQuery()) {
-            if (rs.next()) {
+                rs.next();
                 int count = rs.getInt(1);  
                 pedido_abierto = (count > 0);  // Si el número de pedidos es mayor a 0, existen pedidos abiertos
-            }
         }
         
         } catch (SQLException e) {
@@ -314,38 +312,39 @@ public class PedidoMySQLDAO implements PedidoDAO {
         catch (ClassNotFoundException ex) {
             Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         return pedido_abierto;
   }
     
-  public ArrayList<Pedido> buscarPedidosPorEstado(int idVendedor, Estado estado) {
-    String estadoPedido = String.valueOf(estado);
-    String sql = "SELECT * FROM grupo11.pedidos WHERE estado = ? AND id_vendedor = ?";
-    ArrayList<Pedido> pedidos = new ArrayList<>();
+    public ArrayList<Pedido> buscarPedidosPorEstado(int idVendedor, Estado estado) {
+        String estadoPedido = String.valueOf(estado);
+        String sql = "SELECT * FROM grupo11.pedidos WHERE estado = ? AND id_vendedor = ?";
+        ArrayList<Pedido> pedidos = new ArrayList<>();
 
-    try (Connection connection = getConnection();
-         PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try (Connection connection = getConnection();
+            PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
-        pstmt.setString(1, estadoPedido);  // Establece el parámetro para el estado
-        pstmt.setInt(2, idVendedor);  // Establece el parámetro para el id_vendedor
+            pstmt.setString(1, estadoPedido);  // Establece el parámetro para el estado
+            pstmt.setInt(2, idVendedor);  // Establece el parámetro para el id_vendedor
 
         try (ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
                 Pedido pedido = new Pedido(
-                        rs.getInt("id"),
-                        FactoryDAO.getClienteDAO().buscarClientePorID(rs.getInt("id_cliente")), 
-                        FactoryDAO.getVendedorDAO().buscarVendedorPorID(rs.getInt("id_vendedor"))
-                );
-                pedidos.add(pedido);  
+                    rs.getInt("id"),
+                    FactoryDAO.getClienteDAO().buscarClientePorID(rs.getInt("id_cliente")), 
+                    FactoryDAO.getVendedorDAO().buscarVendedorPorID(rs.getInt("id_vendedor"))
+            );
+            pedidos.add(pedido); 
             }
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    catch (ClassNotFoundException ex) {
+          }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-    }
+        }
 
-    return pedidos; 
+        return pedidos; 
   }
     
 }

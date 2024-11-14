@@ -50,8 +50,7 @@ public class ClienteController implements ActionListener {
             interfazCrearCliente = new CrearCliente();  
             interfazCrearCliente.setControlador(this);
             setCrearCliente(interfazCrearCliente);  
-            ClienteMySQLDAO clienteMySQLDAO = (ClienteMySQLDAO) FactoryDAO.getClienteDAO();
-            int idCliente = clienteMySQLDAO.obtenerID();
+            int idCliente = obtenerID();
             interfazCrearCliente.getjTextField4().setText(String.valueOf(idCliente));
             interfazCrearCliente.getjTextField4().setEditable(false);
         } 
@@ -156,11 +155,14 @@ public class ClienteController implements ActionListener {
             else alias = interfazCrearCliente.getjTextField7().getText();
             
             ClienteMySQLDAO clienteMySQLDAO = (ClienteMySQLDAO) FactoryDAO.getClienteDAO();
-            if(clienteMySQLDAO.verificarCuit(cuit)) interfazCrearCliente.mostrarMensajeCuit();
+            if(clienteMySQLDAO.buscarClientePorCuit(cuit) != null) interfazCrearCliente.mostrarMensajeCuit();
             else{
             crearCliente(nombre, id, cuit, alias, cbu, email, direccion);
             listaDeClientes.agregarClienteALaTabla(nombre, id, cuit, alias, cbu, email, direccion);
             interfazCrearCliente.setearCamposEnBlanco();
+            id = obtenerID();
+            interfazCrearCliente.getjTextField4().setText(String.valueOf(id));
+            
             }
           }
         } 
@@ -433,18 +435,23 @@ public class ClienteController implements ActionListener {
         return correcto;
     }
     
-    private boolean verificarID(int id_cliente) {
+    public boolean verificarID(int id_cliente) {
         
-        /*
         boolean existe = false;
-        
+        /*
         for (Cliente cliente : ClienteMemory.listaClientes) {
             if(cliente.getId() == id_cliente) existe = true; 
         }
         */
         
         ClienteMySQLDAO clienteMySQLDAO = (ClienteMySQLDAO) FactoryDAO.getClienteDAO();
-        return clienteMySQLDAO.existeID(id_cliente);
+        existe = clienteMySQLDAO.buscarClientePorID(id_cliente) != null;
+        return existe;
+    }
+    
+    private int obtenerID() {
+        ClienteMySQLDAO clienteMySQLDAO = (ClienteMySQLDAO) FactoryDAO.getClienteDAO();
+        return clienteMySQLDAO.obtenerID();
     }
     
  }

@@ -66,10 +66,6 @@ public class CrearItemMenu extends javax.swing.JFrame {
         showMessageDialog(null, "Hay campos inválidos.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
     }
     
-    public void mostrarMensajeID() {
-        showMessageDialog(null, "Ya existe un item menu con ese identificador.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
-    }
-    
     public void mostrarMensajeCategoria() {
         showMessageDialog(null, "No existe la categoría.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
     }

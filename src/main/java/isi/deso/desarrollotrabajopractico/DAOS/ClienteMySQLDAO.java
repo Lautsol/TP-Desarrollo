@@ -241,10 +241,10 @@ public class ClienteMySQLDAO implements ClienteDAO {
             PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    int count = rs.getInt(1);  
-                    ID = count + 1; 
-                }
+                rs.next();
+                int count = rs.getInt(1);  
+                ID = count + 1; 
+                
             }
 
         } catch (SQLException ex) {
@@ -255,56 +255,43 @@ public class ClienteMySQLDAO implements ClienteDAO {
 
         return ID;  
     }
-    
-    public boolean existeID(int idCliente) {
+ 
+
+    public Cliente buscarClientePorCuit(long cuit) {
         
-    String sql = "SELECT COUNT(*) FROM clientes WHERE id = ?";
-    boolean existe = false;
+        Cliente cliente = null;  
+        String sql = "SELECT * FROM clientes WHERE cuit = ?";  
 
-    try (Connection connection = getConnection();  
-         PreparedStatement pstmt = connection.prepareStatement(sql)) {
-
-        pstmt.setInt(1, idCliente);  // Asigna el id del cliente al parámetro de la consulta
-
-        try (ResultSet rs = pstmt.executeQuery()) {
-            if (rs.next()) {
-                int count = rs.getInt(1);  // Obtiene el número de coincidencias (debería ser 0 o 1)
-                existe = count > 0;        // Si el conteo es mayor a 0, el cliente existe
-            }
-        }
-    } 
-        catch (ClassNotFoundException ex) {
-            Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        catch (SQLException ex) {
-            Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-            } 
-
-        return existe;
-}
-
-  public boolean verificarCuit(long cuit) {
-      
-       String query = "SELECT 1 FROM clientes WHERE cuit = ?";
-        
         try (Connection connection = getConnection(); 
-             PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setLong(1, cuit);
-            ResultSet rs = stmt.executeQuery();
-            
-            // Si la consulta devuelve un resultado, el cuit existe
-            return rs.next();
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-            
+            PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            // Establecer el parámetro del ID en la consulta
+            pstmt.setLong(1, cuit);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                // Si se encuentra un resultado, crear el objeto Cliente
+                if (rs.next()) {
+                    cliente = new Cliente(
+                        rs.getInt("id"), 
+                        rs.getLong("cuit"),
+                        rs.getString("nombre"),
+                        rs.getString("email"),
+                        rs.getString("direccion"),
+                        null,
+                        rs.getLong("cbu"),
+                        rs.getString("alias")
+                    );
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        return false;  
-    }
 
+        return cliente; 
+    }
 }
 
 

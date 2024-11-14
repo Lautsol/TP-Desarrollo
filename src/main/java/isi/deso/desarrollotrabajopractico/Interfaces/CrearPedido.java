@@ -63,10 +63,6 @@ public class CrearPedido extends javax.swing.JFrame {
     public void mostrarMensajeDatosInvalidos() {
         showMessageDialog(null, "Hay campos inválidos.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);   
     }
-     
-    public void mostrarMensajeID() {
-        showMessageDialog(null, "Ya existe un pedido con ese identificador.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
-    }
     
     public void mostrarMensajeCliente() {
         showMessageDialog(null, "El cliente no existe.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
@@ -90,7 +86,6 @@ public class CrearPedido extends javax.swing.JFrame {
     
     public void mostrarMensajePedidoVacio() {
         showMessageDialog(null, "No puede crear un pedido sin items.", "ERROR", JOptionPane.ERROR_MESSAGE);
-
     }
     
     public void mostrarMensajePedidoAbierto() {

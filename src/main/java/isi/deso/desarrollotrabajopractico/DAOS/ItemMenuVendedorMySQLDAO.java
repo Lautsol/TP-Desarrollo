@@ -96,20 +96,16 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
         pstmt.setInt(1, idVendedor);
         pstmt.setInt(2, idItem);
         
-        // Ejecutar la consulta
         ResultSet rs = pstmt.executeQuery();
         
         // Si hay un resultado, el ItemMenu existe
-        if (rs.next()) {
-            return true; 
-        }
+        return (rs.next());
         
-    } catch (SQLException e) {
+        } catch (SQLException e) {
         e.printStackTrace();
         
-    } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException ex) {
         Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-            
         }
     
         return false; 
@@ -186,7 +182,7 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
         }
     
         return itemsMenu;
-}
+    }
 
 }
 

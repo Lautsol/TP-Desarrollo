@@ -58,8 +58,7 @@ public class VendedorController implements ActionListener {
             interfazCrearVendedor = new CrearVendedor();  
             interfazCrearVendedor.setControlador(this);
             setCrearVendedor(interfazCrearVendedor); 
-            VendedorMySQLDAO vendedorMySQLDAO = (VendedorMySQLDAO) FactoryDAO.getVendedorDAO();
-            int idVendedor = vendedorMySQLDAO.obtenerID();
+            int idVendedor = obtenerID();
             interfazCrearVendedor.getjTextField4().setText(String.valueOf(idVendedor));
             interfazCrearVendedor.getjTextField4().setEditable(false);
         } 
@@ -144,12 +143,13 @@ public class VendedorController implements ActionListener {
             int id = Integer.parseInt(interfazCrearVendedor.getjTextField4().getText());
             String direccion = interfazCrearVendedor.getjTextField5().getText();
             
-            if(verificarID(id)) interfazCrearVendedor.mostrarMensajeID();
-            else if(itemsMenu == null || itemsMenu.isEmpty()) interfazCrearVendedor.mostrarMensajeItem();
+            if(itemsMenu == null || itemsMenu.isEmpty()) interfazCrearVendedor.mostrarMensajeItem();
             else{
             crearVendedor(nombre, id, direccion, itemsMenu);
             listaDeVendedores.agregarVendedorALaTabla(nombre, id, direccion);
             interfazCrearVendedor.setearCamposEnBlanco();
+            id = obtenerID();
+            interfazCrearVendedor.getjTextField4().setText(String.valueOf(id));
             }
           }
         } 
@@ -172,7 +172,7 @@ public class VendedorController implements ActionListener {
             int row = interfazItemsMenuPedido.getjTable1().getSelectedRow(); // Obtener la fila seleccionada
            
             int id = (Integer) interfazItemsMenuPedido.getModelo().getValueAt(row, 0);
-            ItemMenu item = FactoryDAO.getItemMenuDAO().buscarItemMenuPorID(id);
+            ItemMenu item = (new ItemMenuController()).buscarItemMenu(id);
             itemsMenu.add(item);
             interfazItemsMenuPedido.mostrarMensajeExitoso();
     }
@@ -392,11 +392,10 @@ public class VendedorController implements ActionListener {
         return correcto;
     }
     
-    private boolean verificarID(int id_vendedor) {
+    public boolean verificarID(int id_vendedor) {
         
-        /*
         boolean existe = false;
-        
+        /*
         for (Vendedor vendedor : VendedorMemory.listaVendedores) {
             if(vendedor.getId() == id_vendedor) existe = true; 
         }
@@ -405,7 +404,8 @@ public class VendedorController implements ActionListener {
        */
         
         VendedorMySQLDAO vendedorMySQLDAO = (VendedorMySQLDAO) FactoryDAO.getVendedorDAO();
-        return vendedorMySQLDAO.existeID(id_vendedor);
+        existe = vendedorMySQLDAO.buscarVendedorPorID(id_vendedor) != null;
+        return existe;
     }
     
      public void cargarDatosOriginalesEnTablaItems() {
@@ -440,6 +440,10 @@ public class VendedorController implements ActionListener {
         }
     }
     
+    private int obtenerID() {
+        VendedorMySQLDAO vendedorMySQLDAO = (VendedorMySQLDAO) FactoryDAO.getVendedorDAO();
+        return vendedorMySQLDAO.obtenerID();
+    }
   }
 
 

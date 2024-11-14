@@ -54,8 +54,7 @@ public class ItemMenuController implements ActionListener{
             interfazCrearItemMenu = new CrearItemMenu();  
             interfazCrearItemMenu.setControlador(this);
             setCrearItemMenu(interfazCrearItemMenu);  
-            ItemMenuMySQLDAO itemMenuMySQLDAO = (ItemMenuMySQLDAO) FactoryDAO.getItemMenuDAO();
-            int idItemMenu = itemMenuMySQLDAO.obtenerID();
+            int idItemMenu = obtenerID();
             interfazCrearItemMenu.getjTextField1().setText(String.valueOf(idItemMenu));
             interfazCrearItemMenu.getjTextField1().setEditable(false);
         } 
@@ -80,7 +79,7 @@ public class ItemMenuController implements ActionListener{
            double precio = (Double) listaDeItemMenu.getModelo().getValueAt(row, 4);
            int idCategoria = (Integer) listaDeItemMenu.getModelo().getValueAt(row, 5);
            
-           ItemMenu item = FactoryDAO.getItemMenuDAO().buscarItemMenuPorID(id);
+           ItemMenu item = buscarItemMenu(id);
            
            if(item instanceof Plato) interfazModificarItemMenu.getjComboBox1().setSelectedItem("PLATO");
            else if(item instanceof Gaseosa) interfazModificarItemMenu.getjComboBox1().setSelectedItem("GASEOSA"); 
@@ -167,6 +166,8 @@ public class ItemMenuController implements ActionListener{
             crearItemMenu(id, nombre, descripcion, precio, idCategoria, opcion);
             listaDeItemMenu.agregarItemMenuALaTabla(id, tipoItem, nombre, descripcion, precio, idCategoria);
             interfazCrearItemMenu.setearCamposEnBlanco();
+            int idItemMenu = obtenerID();
+            interfazCrearItemMenu.getjTextField1().setText(String.valueOf(idItemMenu));
            }
          
         }
@@ -500,5 +501,10 @@ public class ItemMenuController implements ActionListener{
         
         // return (categoria.getTipo_item() == tipoItem);
         return(FactoryDAO.getCategoriaDAO().buscarCategoria(categoria.getId()).getTipo_item() == tipoItem);
+    }
+    
+    private int obtenerID() {
+        ItemMenuMySQLDAO itemMenuMySQLDAO = (ItemMenuMySQLDAO) FactoryDAO.getItemMenuDAO();
+        return itemMenuMySQLDAO.obtenerID();
     }
 }
