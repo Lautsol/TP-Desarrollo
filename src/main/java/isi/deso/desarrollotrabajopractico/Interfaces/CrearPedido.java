@@ -32,11 +32,11 @@ public class CrearPedido extends javax.swing.JFrame {
     } 
      
     public JComboBox<String> getCampoEstado() {
-        return CampoEstado;
+        return campoEstado;
     }
 
     public JComboBox<String> getCampoFormaDePago() {
-        return CampoFormaDePago;
+        return campoFormaDePago;
     }
 
     public JTextField getCampoIDcliente() {
@@ -47,17 +47,13 @@ public class CrearPedido extends javax.swing.JFrame {
         return campoIDvendedor;
     }
 
-    public JTextField getCampoTotal() {
-        return campoTotal;
-    }
 
      public void setearCamposEnBlanco() {
         campoIDpedido.setText("");
         campoIDcliente.setText("");
-        campoTotal.setText("");
-        CampoEstado.setSelectedItem("EN ENVIO");
+        campoEstado.setSelectedItem("EN ENVIO");
         campoIDvendedor.setText("");
-        CampoFormaDePago.setSelectedItem("MERCADOPAGO");
+        campoFormaDePago.setSelectedItem("MERCADOPAGO");
     }
      
     public void mostrarMensajeCamposVacios() {
@@ -97,14 +93,16 @@ public class CrearPedido extends javax.swing.JFrame {
 
     }
     
+    public void mostrarMensajePedidoAbierto() {
+        showMessageDialog(null, "El cliente ya tiene un pedido abierto.", "ERROR", JOptionPane.ERROR_MESSAGE);
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
         campoIDcliente = new javax.swing.JTextField();
-        jLabel14 = new javax.swing.JLabel();
-        campoTotal = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         campoIDvendedor = new javax.swing.JTextField();
@@ -114,8 +112,8 @@ public class CrearPedido extends javax.swing.JFrame {
         jLabel22 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        CampoFormaDePago = new javax.swing.JComboBox<>();
-        CampoEstado = new javax.swing.JComboBox<>();
+        campoFormaDePago = new javax.swing.JComboBox<>();
+        campoEstado = new javax.swing.JComboBox<>();
         jLabel19 = new javax.swing.JLabel();
         campoIDpedido = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
@@ -132,14 +130,6 @@ public class CrearPedido extends javax.swing.JFrame {
         campoIDcliente.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 campoIDclienteKeyTyped(evt);
-            }
-        });
-
-        jLabel14.setText("Total:");
-
-        campoTotal.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                campoTotalKeyTyped(evt);
             }
         });
 
@@ -193,19 +183,19 @@ public class CrearPedido extends javax.swing.JFrame {
             }
         });
 
-        CampoFormaDePago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MERCADOPAGO", "TRANSFERENCIA" }));
-        CampoFormaDePago.setToolTipText("");
-        CampoFormaDePago.addActionListener(new java.awt.event.ActionListener() {
+        campoFormaDePago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MERCADOPAGO", "TRANSFERENCIA" }));
+        campoFormaDePago.setToolTipText("");
+        campoFormaDePago.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CampoFormaDePagoActionPerformed(evt);
+                campoFormaDePagoActionPerformed(evt);
             }
         });
 
-        CampoEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "EN_PROCESO", "EN_ENVIO", "RECIBIDO" }));
-        CampoEstado.setToolTipText("");
-        CampoEstado.addActionListener(new java.awt.event.ActionListener() {
+        campoEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "EN_PROCESO", "EN_ENVIO", "RECIBIDO" }));
+        campoEstado.setToolTipText("");
+        campoEstado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CampoEstadoActionPerformed(evt);
+                campoEstadoActionPerformed(evt);
             }
         });
 
@@ -236,42 +226,33 @@ public class CrearPedido extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(59, 59, 59)
+                .addGap(90, 90, 90)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel18)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(CampoFormaDePago, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel15)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(campoIDcliente, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel19)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(campoIDpedido, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(6, 6, 6)))
-                .addGap(83, 83, 83)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel14)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(campoTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel17)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(campoIDvendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jLabel16)
+                        .addComponent(jLabel19)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(204, 204, 204)
+                                .addComponent(jLabel18))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(campoIDpedido, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel17)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(CampoEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(130, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(campoIDvendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(campoFormaDePago, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel16)
+                            .addComponent(jLabel15))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(campoIDcliente, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(campoEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 306, Short.MAX_VALUE)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -289,24 +270,22 @@ public class CrearPedido extends javax.swing.JFrame {
                     .addComponent(jLabel19)
                     .addComponent(jLabel17)
                     .addComponent(campoIDvendedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(43, 43, 43)
+                .addGap(42, 42, 42)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(campoIDcliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel15)
-                    .addComponent(campoTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14))
-                .addGap(48, 48, 48)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel16)
-                    .addComponent(CampoEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel18)
-                    .addComponent(CampoFormaDePago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(campoFormaDePago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(42, 42, 42)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(campoEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16))
                 .addGap(55, 55, 55)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -337,13 +316,13 @@ public class CrearPedido extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void CampoFormaDePagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CampoFormaDePagoActionPerformed
+    private void campoFormaDePagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoFormaDePagoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_CampoFormaDePagoActionPerformed
+    }//GEN-LAST:event_campoFormaDePagoActionPerformed
 
-    private void CampoEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CampoEstadoActionPerformed
+    private void campoEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoEstadoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_CampoEstadoActionPerformed
+    }//GEN-LAST:event_campoEstadoActionPerformed
 
     private void campoIDpedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoIDpedidoActionPerformed
         // TODO add your handling code here:
@@ -366,12 +345,6 @@ public class CrearPedido extends javax.swing.JFrame {
                     evt.consume(); // Evitar que se ingrese más texto
                 }
     }//GEN-LAST:event_campoIDclienteKeyTyped
-
-    private void campoTotalKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoTotalKeyTyped
-        if (campoTotal.getText().length() >= 6) {
-                    evt.consume(); // Evitar que se ingrese más texto
-                }
-    }//GEN-LAST:event_campoTotalKeyTyped
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
@@ -416,16 +389,14 @@ public class CrearPedido extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> CampoEstado;
-    private javax.swing.JComboBox<String> CampoFormaDePago;
+    private javax.swing.JComboBox<String> campoEstado;
+    private javax.swing.JComboBox<String> campoFormaDePago;
     private javax.swing.JTextField campoIDcliente;
     private javax.swing.JTextField campoIDpedido;
     private javax.swing.JTextField campoIDvendedor;
-    private javax.swing.JTextField campoTotal;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;

@@ -57,7 +57,11 @@ public class VendedorController implements ActionListener {
         if (comando.equals("Crear nuevo vendedor")) {
             interfazCrearVendedor = new CrearVendedor();  
             interfazCrearVendedor.setControlador(this);
-            setCrearVendedor(interfazCrearVendedor);  
+            setCrearVendedor(interfazCrearVendedor); 
+            VendedorMySQLDAO vendedorMySQLDAO = (VendedorMySQLDAO) FactoryDAO.getVendedorDAO();
+            int idVendedor = vendedorMySQLDAO.obtenerID();
+            interfazCrearVendedor.getjTextField4().setText(String.valueOf(idVendedor));
+            interfazCrearVendedor.getjTextField4().setEditable(false);
         } 
     
         else if(comando.equals("Editar")) {
@@ -170,6 +174,7 @@ public class VendedorController implements ActionListener {
             int id = (Integer) interfazItemsMenuPedido.getModelo().getValueAt(row, 0);
             ItemMenu item = FactoryDAO.getItemMenuDAO().buscarItemMenuPorID(id);
             itemsMenu.add(item);
+            interfazItemsMenuPedido.mostrarMensajeExitoso();
     }
 
         else if (comando.equals("Guardar")) {
@@ -184,7 +189,7 @@ public class VendedorController implements ActionListener {
             String direccion = interfazModificarVendedor.getjTextField5().getText();
             
             
-            actualizarVendedor(nombre, id, direccion);
+            actualizarVendedor(nombre, id, direccion, itemsMenu);
             
             listaDeVendedores.getModelo().setValueAt(nombre, row, 0); 
             listaDeVendedores.getModelo().setValueAt(id, row, 1);         
@@ -323,7 +328,7 @@ public class VendedorController implements ActionListener {
         }
     }
     
-    public void actualizarVendedor(String nombre, int id, String direccion) {
+    public void actualizarVendedor(String nombre, int id, String direccion, ArrayList<ItemMenu> itemMenu) {
         
         /*
         for (Vendedor vendedor : VendedorMemory.listaVendedores) {
@@ -334,11 +339,15 @@ public class VendedorController implements ActionListener {
         }
         */
         
-        Vendedor vendedor = new Vendedor();
-        vendedor.setId(id);
+        Vendedor vendedor = FactoryDAO.getVendedorDAO().buscarVendedorPorID(id);
         vendedor.setNombre(nombre);
         vendedor.setDireccion(direccion);
+        ArrayList<ItemMenu> items = FactoryDAO.getItemMenuVendedorDAO().obtenerItemsMenuDeVendedor(vendedor);
+        vendedor.setItems(items);
+        vendedor.agregarItems(itemMenu);
+        
         FactoryDAO.getVendedorDAO().actualizarVendedor(vendedor);
+        FactoryDAO.getItemMenuVendedorDAO().agregarItemsVendedor(vendedor);
     }
     
     private boolean validarCamposVacios(CrearVendedor interfaz) {

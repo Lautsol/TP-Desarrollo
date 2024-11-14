@@ -50,6 +50,10 @@ public class ClienteController implements ActionListener {
             interfazCrearCliente = new CrearCliente();  
             interfazCrearCliente.setControlador(this);
             setCrearCliente(interfazCrearCliente);  
+            ClienteMySQLDAO clienteMySQLDAO = (ClienteMySQLDAO) FactoryDAO.getClienteDAO();
+            int idCliente = clienteMySQLDAO.obtenerID();
+            interfazCrearCliente.getjTextField4().setText(String.valueOf(idCliente));
+            interfazCrearCliente.getjTextField4().setEditable(false);
         } 
         
         else if (comando.equals("Editar")) {
@@ -151,7 +155,8 @@ public class ClienteController implements ActionListener {
             if(interfazCrearCliente.getjTextField7().getText().trim().isEmpty()) alias = null;
             else alias = interfazCrearCliente.getjTextField7().getText();
             
-            if(verificarID(id)) interfazCrearCliente.mostrarMensajeID();
+            ClienteMySQLDAO clienteMySQLDAO = (ClienteMySQLDAO) FactoryDAO.getClienteDAO();
+            if(clienteMySQLDAO.verificarCuit(cuit)) interfazCrearCliente.mostrarMensajeCuit();
             else{
             crearCliente(nombre, id, cuit, alias, cbu, email, direccion);
             listaDeClientes.agregarClienteALaTabla(nombre, id, cuit, alias, cbu, email, direccion);
@@ -235,15 +240,13 @@ public class ClienteController implements ActionListener {
         }
         */
         
-        Cliente cliente = new Cliente();
-        cliente.setId(id);
+        Cliente cliente = FactoryDAO.getClienteDAO().buscarClientePorID(id);
         cliente.setNombre(nombre);
         cliente.setCuit(cuit);
         cliente.setAlias(alias);
         cliente.setCbu(cbu);
         cliente.setEmail(email);
         cliente.setDireccion(direccion);
-        
         
         FactoryDAO.getClienteDAO().actualizarCliente(cliente);
         

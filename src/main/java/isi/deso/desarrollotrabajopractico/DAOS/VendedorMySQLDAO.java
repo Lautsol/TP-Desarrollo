@@ -223,20 +223,18 @@ public class VendedorMySQLDAO implements VendedorDAO {
         return vendedor; 
     }
     
-    public boolean existeID(int id) {
+     public int obtenerID() {
         
-        String sql = "SELECT COUNT(*) FROM vendedores WHERE id = ?";
-        boolean existe = false;
-
+        String sql = "SELECT COUNT(*) FROM vendedores";
+        int ID = 0;
+        
         try (Connection connection = getConnection();  
             PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
-            pstmt.setInt(1, id);
-
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    int count = rs.getInt(1);  // Obtener el conteo de resultados
-                    existe = (count > 0);  // Si count es mayor que 0, el ID existe
+                    int count = rs.getInt(1);  
+                    ID = count + 1; 
                 }
             }
 
@@ -246,7 +244,33 @@ public class VendedorMySQLDAO implements VendedorDAO {
             Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return existe;  
+        return ID;  
     }
     
+    public boolean existeID(int idVendedor) {
+        
+        String sql = "SELECT COUNT(*) FROM vendedores WHERE id = ?";
+        boolean existe = false;
+
+        try (Connection connection = getConnection();  
+            PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idVendedor);  // Asigna el id del cliente al parámetro de la consulta
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    int count = rs.getInt(1);  // Obtiene el número de coincidencias (debería ser 0 o 1)
+                    existe = count > 0;        // Si el conteo es mayor a 0, el cliente existe
+                }
+            }
+        } 
+        catch (ClassNotFoundException ex) {
+            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        catch (SQLException ex) {
+            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+            } 
+
+        return existe;
+    }
 }

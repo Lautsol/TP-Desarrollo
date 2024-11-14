@@ -54,6 +54,10 @@ public class ItemMenuController implements ActionListener{
             interfazCrearItemMenu = new CrearItemMenu();  
             interfazCrearItemMenu.setControlador(this);
             setCrearItemMenu(interfazCrearItemMenu);  
+            ItemMenuMySQLDAO itemMenuMySQLDAO = (ItemMenuMySQLDAO) FactoryDAO.getItemMenuDAO();
+            int idItemMenu = itemMenuMySQLDAO.obtenerID();
+            interfazCrearItemMenu.getjTextField1().setText(String.valueOf(idItemMenu));
+            interfazCrearItemMenu.getjTextField1().setEditable(false);
         } 
         
         else if (comando.equals("Editar")) {
@@ -155,9 +159,7 @@ public class ItemMenuController implements ActionListener{
             if(opcion.equals("PLATO")) tipoItem = TipoItem.COMIDA;
             else tipoItem = TipoItem.BEBIDA;
             
-            if(verificarID(id)) interfazCrearItemMenu.mostrarMensajeID();
-            else {
-                Categoria categoria = verificarCategoria(idCategoria);
+            Categoria categoria = verificarCategoria(idCategoria);
             
             if(categoria == null) interfazCrearItemMenu.mostrarMensajeCategoria();
             else if (!categoriaCorrecta(categoria, tipoItem)) interfazCrearItemMenu.mostrarMensajeCategoriaIncorrecta();
@@ -166,7 +168,7 @@ public class ItemMenuController implements ActionListener{
             listaDeItemMenu.agregarItemMenuALaTabla(id, tipoItem, nombre, descripcion, precio, idCategoria);
             interfazCrearItemMenu.setearCamposEnBlanco();
            }
-         }
+         
         }
       } 
 
@@ -394,8 +396,7 @@ public class ItemMenuController implements ActionListener{
         ItemMenu itemMenu;
         
         if(item.equals("PLATO")) {
-            itemMenu = new Plato();
-            itemMenu.setId(id);
+            itemMenu = FactoryDAO.getItemMenuDAO().buscarItemMenuPorID(id);
             categoria=FactoryDAO.getCategoriaDAO().buscarCategoria(idCategoria);
             itemMenu.setCategoria(categoria);
             itemMenu.getCategoria().setTipo_item(tipoItem);
@@ -406,8 +407,7 @@ public class ItemMenuController implements ActionListener{
             FactoryDAO.getItemMenuDAO().actualizarItemMenu(itemMenu);
         }
         else if(item.equals("GASEOSA")) {
-            itemMenu = new Gaseosa();
-            itemMenu.setId(id);
+            itemMenu = FactoryDAO.getItemMenuDAO().buscarItemMenuPorID(id);
             categoria=FactoryDAO.getCategoriaDAO().buscarCategoria(idCategoria);
             itemMenu.setCategoria(categoria);
             itemMenu.getCategoria().setTipo_item(tipoItem);
@@ -418,8 +418,7 @@ public class ItemMenuController implements ActionListener{
             FactoryDAO.getItemMenuDAO().actualizarItemMenu(itemMenu);
         }
         else {
-            itemMenu = new Alcohol();
-            itemMenu.setId(id);
+            itemMenu = FactoryDAO.getItemMenuDAO().buscarItemMenuPorID(id);
             categoria=FactoryDAO.getCategoriaDAO().buscarCategoria(idCategoria);
             itemMenu.setCategoria(categoria);
             itemMenu.getCategoria().setTipo_item(tipoItem);
@@ -479,22 +478,6 @@ public class ItemMenuController implements ActionListener{
            !interfaz.getjTextField5().getText().matches("\\d+")) correcto = false;
         
         return correcto;
-    }
-    
-    private boolean verificarID(int id_item) {
-        
-        /*
-        boolean existe = false;
-        
-        for (ItemMenu item : ItemMenuMemory.listaItemMenu) {
-            if(item.getId() == id_item) existe = true; 
-        }
-        
-        return existe;
-        */
-        
-        ItemMenuMySQLDAO itemMenuMySQLDAO = (ItemMenuMySQLDAO) FactoryDAO.getItemMenuDAO();
-        return itemMenuMySQLDAO.existeID(id_item);
     }
     
     private Categoria verificarCategoria(int id_categoria) {

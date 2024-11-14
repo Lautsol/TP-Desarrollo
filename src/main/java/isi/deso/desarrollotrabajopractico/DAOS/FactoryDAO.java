@@ -1,8 +1,6 @@
 
 package isi.deso.desarrollotrabajopractico.DAOS;
 
-import static isi.deso.desarrollotrabajopractico.DAOS.ItemMenuMySQLDAO.obtenerInstancia;
-
 public class FactoryDAO {
     
     public static ClienteDAO getClienteDAO() {
@@ -27,5 +25,9 @@ public class FactoryDAO {
     
     public static ItemMenuVendedorDAO getItemMenuVendedorDAO() {
         return ItemMenuVendedorMySQLDAO.obtenerInstancia();
+    }
+    
+    public static ItemMenuPedidoDAO getItemMenuPedidoDAO() {
+        return ItemMenuPedidoMySQLDAO.obtenerInstancia();
     }
 }

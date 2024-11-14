@@ -1,6 +1,8 @@
 
 package isi.deso.desarrollotrabajopractico;
 
+import isi.deso.desarrollotrabajopractico.DAOS.FactoryDAO;
+import isi.deso.desarrollotrabajopractico.DAOS.ItemMenuVendedorMySQLDAO;
 import java.util.ArrayList;
 
 public class Cliente implements ClienteObserver{
@@ -51,21 +53,22 @@ public class Cliente implements ClienteObserver{
     
     public Cliente(){}
     
-    public boolean iniciarPedido(int id_pedido, Vendedor vendedor) {
-        boolean pedido_abierto = false;
+    public Pedido iniciarPedido(int id_pedido, Vendedor vendedor) {
         
         if(pedidoActual == null){
             pedidoActual = new Pedido(id_pedido, this, vendedor);
-            pedido_abierto = true;
         }
-        return pedido_abierto;
+        
+        return pedidoActual;
     }
  
-     public boolean agregarProducto(ItemMenu item, int cantidad) {
+    public boolean agregarProducto(PedidoDetalle pd) throws ProductoDeOtroVendedorException {
         boolean exito = false;
         
         if(pedidoActual != null){
-            pedidoActual.agregarPedidoDetalle(new PedidoDetalle(item, cantidad));
+            pedidoActual.agregarPedidoDetalle(pd);
+            ItemMenuVendedorMySQLDAO itemsMenuVendedorMySQLDAO = (ItemMenuVendedorMySQLDAO) FactoryDAO.getItemMenuVendedorDAO();
+            if(!itemsMenuVendedorMySQLDAO.itemMenuDeVendedor(pedidoActual.getVendedor().getId(), pd.getProducto().getId())) throw new ProductoDeOtroVendedorException();
             exito = true;
         } 
         return exito;
@@ -126,6 +129,10 @@ public class Cliente implements ClienteObserver{
 
     public Coordenada getCoordenadas(){
         return coordenadas;
+    }
+    
+    public Pedido getPedidoActual() {
+        return pedidoActual;
     }
 
     public void setId(int id){

@@ -1,8 +1,6 @@
 
 package isi.deso.desarrollotrabajopractico;
 
-import isi.deso.desarrollotrabajopractico.DAOS.FactoryDAO;
-import isi.deso.desarrollotrabajopractico.DAOS.ItemMenuVendedorMySQLDAO;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -65,7 +63,7 @@ public class Pedido  extends PedidoObservable {
         return cliente;
     }
     
-    private double calcularPrecioPedido() {
+    public double calcularPrecioPedido() {
         double precioTotal = 0;
         
         for(PedidoDetalle p : pedidoDetalle){
@@ -102,6 +100,8 @@ public class Pedido  extends PedidoObservable {
             if(formaDePago != null) throw new PagoYaEfectuadoException();
             formaDePago = new Transferencia(cliente.getCbu(), cliente.getCuit(), LocalDate.now());
             formaDePago.setMonto(calcularPrecioFinal());
+            setTotal(calcularPrecioFinal());
+            setEstado(Estado.RECIBIDO);
         }
         catch(PagoYaEfectuadoException e){
            System.out.println(e.getMessage());
@@ -116,6 +116,8 @@ public class Pedido  extends PedidoObservable {
             if(formaDePago != null) throw new PagoYaEfectuadoException();
             formaDePago = new MercadoPago(cliente.getAlias(), LocalDate.now());
             formaDePago.setMonto(calcularPrecioFinal());
+            setTotal(calcularPrecioFinal());
+            setEstado(Estado.RECIBIDO);
         }
         catch(PagoYaEfectuadoException e){
            System.out.println(e.getMessage());
@@ -128,6 +130,11 @@ public class Pedido  extends PedidoObservable {
         return total;
     }
     
+    public double calcularPrecioFinal(double total) {
+        total = formaDePago.calcularPrecio(total);
+        return total;
+    }
+        
     public double getTotal() {
         return total;
     }
@@ -142,24 +149,21 @@ public class Pedido  extends PedidoObservable {
     
     public void setPedidoDetalle(ArrayList<PedidoDetalle> pedidoDetalle) throws ProductoDeOtroVendedorException {
        
-            // if(!pedidosDeUnVendedor(pedidoDetalle)) throw new ProductoDeOtroVendedorException();
-            ItemMenuVendedorMySQLDAO itemsMenuVendedorMySQLDAO = (ItemMenuVendedorMySQLDAO) FactoryDAO.getItemMenuVendedorDAO();
-            for(PedidoDetalle pd : pedidoDetalle) {
-                if(!itemsMenuVendedorMySQLDAO.itemMenuDeVendedor(vendedor.getId(), pd.getProducto().getId())) throw new ProductoDeOtroVendedorException();
-            }
+            if(!pedidosDeUnVendedor(pedidoDetalle)) throw new ProductoDeOtroVendedorException();
+           
             this.pedidoDetalle = pedidoDetalle;
     }
     
     public void agregarPedidoDetalle(PedidoDetalle pd) {
         
-        try{
-            if(!vendedor.getItems().contains(pd.getProducto())) throw new ProductoDeOtroVendedorException();
+        /* try{
+            if(!vendedor.getItems().contains(pd.getProducto())) throw new ProductoDeOtroVendedorException(); */
             pedidoDetalle.add(pd);
         
-        }
+        /* }
         catch(ProductoDeOtroVendedorException e){
             System.out.println(e.getMessage());
-        }
+        } */
     }
     
     public Estado getEstado() {

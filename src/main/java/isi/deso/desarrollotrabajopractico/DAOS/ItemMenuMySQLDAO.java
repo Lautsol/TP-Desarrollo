@@ -347,20 +347,18 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
     }
 
     
-    public boolean existeID(int id) {
+    public int obtenerID() {
         
-        String sql = "SELECT COUNT(*) FROM itemsMenu WHERE id = ?";
-        boolean existe = false;
-
+        String sql = "SELECT COUNT(*) FROM itemsMenu";
+        int ID = 0;
+        
         try (Connection connection = getConnection();  
             PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
-            pstmt.setInt(1, id);
-
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    int count = rs.getInt(1);  // Obtener el conteo de resultados
-                    existe = (count > 0);  // Si count es mayor que 0, el ID existe
+                    int count = rs.getInt(1);  
+                    ID = count + 1; 
                 }
             }
 
@@ -370,7 +368,7 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
             Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return existe;  
+        return ID;  
     }
     
     

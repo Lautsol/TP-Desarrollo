@@ -150,8 +150,16 @@ public class Vendedor {
        }
        return pedidosPorEstado;
    }
+   
+   public void agregarItems(ArrayList<ItemMenu> items) {
+       
+       for(ItemMenu im : items) {
+           this.items.add(im);
+       }
+   }
   
    public void cambiarEstadoPedido(PedidoObservable pedido){
+     
      ArrayList<Pedido> pedidosEnProceso = buscarPedidosPorEstado(Estado.EN_PROCESO);
      
      if(pedido instanceof Pedido){

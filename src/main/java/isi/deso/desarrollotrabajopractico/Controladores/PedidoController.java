@@ -36,6 +36,7 @@ public class PedidoController implements ActionListener{
     private ItemsMenuPedido interfazItemsMenuPedido;
     private Pedido pedido;
     private ArrayList<PedidoDetalle> pedidosDetalles;
+    private Cliente cliente;
 
     public PedidoController() {
     }
@@ -73,6 +74,11 @@ public class PedidoController implements ActionListener{
             interfazCrearPedido = new CrearPedido();  
             interfazCrearPedido.setControlador(this);
             setCrearPedido(interfazCrearPedido);  
+            interfazCrearPedido.getCampoEstado().setEnabled(false);
+            PedidoMySQLDAO pedidoMySQLDAO = (PedidoMySQLDAO) FactoryDAO.getPedidoDAO();
+            int idPedido = pedidoMySQLDAO.obtenerID();
+            interfazCrearPedido.getCampoIDpedido().setText(String.valueOf(idPedido));
+            interfazCrearPedido.getCampoIDpedido().setEditable(false);
         } 
         
         else if (comando.equals("Editar")) {
@@ -85,6 +91,7 @@ public class PedidoController implements ActionListener{
            interfazModificarPedido.getjTextField4().setEditable(false);
            interfazModificarPedido.getjComboBox1().setEnabled(false);
            
+           
            if (listaDePedidos.getjTable1().isEditing()) {
             listaDePedidos.getjTable1().getCellEditor().stopCellEditing(); // Detener la edición si está activa
            }
@@ -95,17 +102,28 @@ public class PedidoController implements ActionListener{
            int idCliente = (Integer) listaDePedidos.getModelo().getValueAt(row, 1);
            int idVendedor = (Integer) listaDePedidos.getModelo().getValueAt(row, 2);
            double total = (Double) listaDePedidos.getModelo().getValueAt(row, 3);
-           TipoDePago tipoDePago = (TipoDePago) listaDePedidos.getModelo().getValueAt(row, 4);
-           String formaDePago = tipoDePago.name();  
-           Estado est = (Estado) listaDePedidos.getModelo().getValueAt(row, 5);
-           String estado = est.name();
+           
+           String formaDePago = (String) listaDePedidos.getModelo().getValueAt(row, 4);
+           TipoDePago tipoDePago = TipoDePago.valueOf(formaDePago); 
+           
+           String estado = (String) listaDePedidos.getModelo().getValueAt(row, 5);
+           Estado est = Estado.valueOf(estado);
+           
+           if(est == Estado.RECIBIDO) {
+               interfazModificarPedido.getjComboBox2().setEnabled(false);
+               
+                interfazModificarPedido.getjComboBox2().addItem("RECIBIDO");
+    
+                interfazModificarPedido.getjComboBox2().setSelectedItem("RECIBIDO");
+            }
+           else interfazModificarPedido.getjComboBox2().setSelectedItem(estado);
                     
            interfazModificarPedido.getjTextField4().setText(String.valueOf(idPedido));
            interfazModificarPedido.getjTextField1().setText(String.valueOf(idCliente)); 
            interfazModificarPedido.getjTextField2().setText(String.valueOf(idVendedor)); 
            interfazModificarPedido.getjTextField3().setText(String.valueOf(total)); 
            interfazModificarPedido.getjComboBox1().setSelectedItem(formaDePago); 
-           interfazModificarPedido.getjComboBox2().setSelectedItem(estado);
+           
           
         } 
         
@@ -177,35 +195,46 @@ public class PedidoController implements ActionListener{
             int idPedido = Integer.parseInt(interfazCrearPedido.getCampoIDpedido().getText());
             int idCliente  = Integer.parseInt(interfazCrearPedido.getCampoIDcliente().getText());
             int idVendedor = Integer.parseInt(interfazCrearPedido.getCampoIDvendedor().getText());
-            double total = Double.parseDouble(interfazCrearPedido.getCampoTotal().getText());
             String formaDePago = (String)interfazCrearPedido.getCampoFormaDePago().getSelectedItem();
             String estado = (String)interfazCrearPedido.getCampoEstado().getSelectedItem();
               
-            if(verificarID(idPedido)) interfazCrearPedido.mostrarMensajeID();
-            else if(!verificarCliente(idCliente)) interfazCrearPedido.mostrarMensajeCliente();
+            if(!verificarCliente(idCliente)) interfazCrearPedido.mostrarMensajeCliente();
             else if(!verificarVendedor(idVendedor)) interfazCrearPedido.mostrarMensajeVendedor();
             else{
-            Cliente cliente = new ClienteController().buscarCliente(idCliente);
+            cliente = new ClienteController().buscarCliente(idCliente);
             Vendedor vendedor = new VendedorController().buscarPorIdVendedor(idVendedor);
             
-            if(cliente.getAlias() == null && formaDePago.equals("MERCADOPAGO")) {
-                interfazCrearPedido.mostrarMensajeAlias();
+            PedidoMySQLDAO pedidoMySQLDAO = (PedidoMySQLDAO) FactoryDAO.getPedidoDAO();
+            
+            if(pedidoMySQLDAO.pedidoAbierto(idCliente)) {
+                interfazCrearPedido.mostrarMensajePedidoAbierto();
             }
-            else if (cliente.getCbu() == 0 && formaDePago.equals("TRANSFERENCIA")) {
-                
-                interfazCrearPedido.mostrarMensajeCbu();
-            }
-            else if (pedidosDetalles == null || pedidosDetalles.isEmpty()) {
-                interfazCrearPedido.mostrarMensajePedidoVacio();
-            }
+            
             else {
-                try {
-                crearPedido(idPedido, cliente,  vendedor, (TipoDePago.valueOf(formaDePago)), pedidosDetalles);
-                listaDePedidos.agregarPedidoALaTabla(idPedido, idCliente,  idVendedor, pedido.calcularPrecioFinal(), formaDePago, estado); 
-                interfazCrearPedido.setearCamposEnBlanco();
-                } catch (ProductoDeOtroVendedorException e1) {
-                    interfazCrearPedido.mostrarMensajeProductoOtroVendedor();
-                    interfazCrearPedido.dispose();
+                cliente.iniciarPedido(idPedido, vendedor);
+            
+                if(cliente.getAlias() == null && formaDePago.equals("MERCADOPAGO")) {
+                    interfazCrearPedido.mostrarMensajeAlias();
+                }
+                else if (cliente.getCbu() == 0 && formaDePago.equals("TRANSFERENCIA")) {
+                
+                    interfazCrearPedido.mostrarMensajeCbu();
+                }
+                else if (pedidosDetalles == null || pedidosDetalles.isEmpty()) {
+                interfazCrearPedido.mostrarMensajePedidoVacio();
+                }
+                else {
+                    try {
+                    for(PedidoDetalle pd : pedidosDetalles) {
+                    cliente.agregarProducto(pd);
+                    }
+                    crearPedido((TipoDePago.valueOf(formaDePago)));
+                    listaDePedidos.agregarPedidoALaTabla(idPedido, idCliente,  idVendedor, pedido.getTotal(), formaDePago, estado); 
+                    interfazCrearPedido.setearCamposEnBlanco();
+                    } catch (ProductoDeOtroVendedorException e1) {
+                        interfazCrearPedido.mostrarMensajeProductoOtroVendedor();
+                        interfazCrearPedido.dispose();
+                    }
                 }
              }
            }
@@ -236,6 +265,8 @@ public class PedidoController implements ActionListener{
             
                 PedidoDetalle pedidoDetalle = new PedidoDetalle(item, cantidad);
                 pedidosDetalles.add(pedidoDetalle);
+                
+                interfazItemsMenuPedido.mostrarMensajeExitoso();
         }
     }
         
@@ -258,17 +289,18 @@ public class PedidoController implements ActionListener{
             String formaDePago = (String)interfazModificarPedido.getjComboBox1().getSelectedItem();
             String estado = (String)interfazModificarPedido.getjComboBox2().getSelectedItem();
             
+            if(Estado.valueOf(estado) == Estado.EN_ENVIO) {
             Cliente cliente = new ClienteController().buscarCliente(idCliente);
             Vendedor vendedor = new VendedorController().buscarPorIdVendedor(idVendedor);
             
-            actualizarPedido(idPedido, cliente,  vendedor, total, formaDePago,  estado);
+            double precioFinal = actualizarPedido(idPedido, cliente,  vendedor, total, formaDePago,  estado);
             listaDePedidos.getModelo().setValueAt(idPedido, row, 0);
             listaDePedidos.getModelo().setValueAt(idCliente,row,1);
             listaDePedidos.getModelo().setValueAt(idVendedor,row,2);
-            listaDePedidos.getModelo().setValueAt(total,row,3);
+            listaDePedidos.getModelo().setValueAt(precioFinal,row,3);
             listaDePedidos.getModelo().setValueAt(formaDePago,row,4);
-            listaDePedidos.getModelo().setValueAt(estado,row,5);
-            
+            listaDePedidos.getModelo().setValueAt(String.valueOf(Estado.RECIBIDO),row,5);
+            }
         }
     }
         
@@ -353,7 +385,29 @@ public class PedidoController implements ActionListener{
         }
     }
      
-    public void actualizarPedido(int idPedido, Cliente cliente, Vendedor vendedor, double total, String formaDePago, String estado) {
+    public void crearPedido(TipoDePago formaDePago) throws ProductoDeOtroVendedorException {
+        
+        pedido = cliente.getPedidoActual();
+        
+        /*
+        if(formaDePago == TipoDePago.TRANSFERENCIA) {
+            pedido.generarTransferencia();
+        }
+        else pedido.generarMercadoPago();
+        */
+        
+        pedido.setTotal(pedido.calcularPrecioPedido());
+        pedido.setTipoPago(formaDePago);
+        pedido.setEstado(Estado.EN_PROCESO);
+
+        // PedidosMemory.listaPedidos.add(pedido);  
+        FactoryDAO.getPedidoDAO().crearPedido(pedido);
+        FactoryDAO.getItemMenuPedidoDAO().agregarItemsPedido(pedido);
+        
+        pedidosDetalles = null;
+    }
+    
+    public double actualizarPedido(int idPedido, Cliente cliente, Vendedor vendedor, double total, String formaDePago, String estado) {
         
         /*
         for (Pedido pedido : PedidosMemory.listaPedidos) {
@@ -364,37 +418,21 @@ public class PedidoController implements ActionListener{
             }
         }
         */
-        Pedido pedido = new Pedido();
-        pedido.setId_pedido(idPedido);
-        pedido.setTotal(total);
-        pedido.setTipoPago(TipoDePago.valueOf(formaDePago));
-        pedido.setEstado(Estado.valueOf(estado));
+        Pedido pedido = FactoryDAO.getPedidoDAO().buscarPedidoPorID(idPedido);
+        
+        if(Estado.valueOf(estado) == Estado.EN_ENVIO) {
+            if(TipoDePago.valueOf(formaDePago) == TipoDePago.TRANSFERENCIA) {
+                pedido.generarTransferencia();
+            }
+            else pedido.generarMercadoPago();
+         
+        }
+        
+        pedido.setTotal(pedido.calcularPrecioFinal(total));
         
         FactoryDAO.getPedidoDAO().actualizarPedido(pedido);
-    }
-     
-    public void crearPedido(int idPedido, Cliente cliente, Vendedor vendedor, TipoDePago formaDePago, ArrayList<PedidoDetalle> pedidosDetalles) throws ProductoDeOtroVendedorException {
         
-        pedido = new Pedido();
-        
-        pedido.setId_pedido(idPedido);
-        pedido.setCliente(cliente);
-        pedido.setVendedor(vendedor);
-        pedido.setPedidoDetalle(pedidosDetalles);
-        
-        if(formaDePago == TipoDePago.TRANSFERENCIA) {
-            pedido.generarTransferencia();
-        }
-        else pedido.generarMercadoPago();
-        
-        pedido.setTotal(pedido.calcularPrecioFinal());
-        pedido.setTipoPago(formaDePago);
-        pedido.setEstado(Estado.EN_PROCESO);
-
-        // PedidosMemory.listaPedidos.add(pedido);  
-        FactoryDAO.getPedidoDAO().crearPedido(pedido);
-        
-        pedidosDetalles = null;
+        return pedido.getTotal();
     }
     
     public void eliminarPedido(int id_pedido) {
@@ -463,8 +501,7 @@ public class PedidoController implements ActionListener{
         
         if(interfaz.getCampoIDpedido().getText().trim().isEmpty() || 
            interfaz.getCampoIDvendedor().getText().trim().isEmpty() ||
-           interfaz.getCampoIDcliente().getText().trim().isEmpty() ||
-           interfaz.getCampoTotal().getText().trim().isEmpty()) vacio = true;
+           interfaz.getCampoIDcliente().getText().trim().isEmpty()) vacio = true;
         
         return vacio;
     }
@@ -475,8 +512,7 @@ public class PedidoController implements ActionListener{
         
         if(!interfaz.getCampoIDpedido().getText().matches("\\d+") || 
            !interfaz.getCampoIDvendedor().getText().matches("\\d+") ||
-           !interfaz.getCampoIDcliente().getText().matches("\\d+") ||
-           !interfaz.getCampoTotal().getText().matches("-?\\d+(\\.\\d+)?")) correcto = false;
+           !interfaz.getCampoIDcliente().getText().matches("\\d+")) correcto = false;
         
         return correcto;
     }
@@ -497,21 +533,6 @@ public class PedidoController implements ActionListener{
         if(!interfaz.getjTextField3().getText().matches("-?\\d+(\\.\\d+)?")) correcto = false;
         
         return correcto;
-    }
-    
-    private boolean verificarID(int id_pedido) {
-        /*
-        boolean existe = false;
-        
-        for (Pedido pedido : PedidosMemory.listaPedidos) {
-            if(pedido.getId_pedido() == id_pedido) existe = true; 
-        }
-        
-        return existe;
-        */
-        
-        PedidoMySQLDAO pedidoMySQLDAO = (PedidoMySQLDAO) FactoryDAO.getPedidoDAO();
-        return pedidoMySQLDAO.existeID(id_pedido);
     }
     
     private boolean verificarCliente(int id_cliente) {

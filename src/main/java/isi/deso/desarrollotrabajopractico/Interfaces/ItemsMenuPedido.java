@@ -7,6 +7,8 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
@@ -120,6 +122,10 @@ public class ItemsMenuPedido extends javax.swing.JFrame {
         TableColumnModel columnModel = jTable1.getColumnModel();
         TableColumn column = columnModel.getColumn(6); // Índice de la columna que deseas ocultar (por ejemplo, la columna 0)
         columnModel.removeColumn(column); // Oculta la columna
+    }
+    
+    public void mostrarMensajeExitoso() {
+        showMessageDialog(null, "El item se agregó con éxito.", "SE AGREGÓ EL ITEM.", JOptionPane.INFORMATION_MESSAGE);
     }
     
     @SuppressWarnings("unchecked")

@@ -170,7 +170,7 @@ public class ModificarPedido extends javax.swing.JFrame {
             }
         });
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "EN_PROCESO", "EN_ENVIO", "RECIBIDO" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "EN_PROCESO", "EN_ENVIO" }));
         jComboBox2.setToolTipText("");
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

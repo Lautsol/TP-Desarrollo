@@ -73,8 +73,8 @@ public class CrearCliente extends javax.swing.JFrame {
         showMessageDialog(null, "Hay campos inválidos.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
     }
     
-    public void mostrarMensajeID() {
-        showMessageDialog(null, "Ya existe un cliente con ese identificador.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
+    public void mostrarMensajeCuit() {
+        showMessageDialog(null, "Ya existe un cliente con ese cuit.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
     }
     
     @SuppressWarnings("unchecked")
