@@ -283,6 +283,27 @@ public class ClienteMySQLDAO implements ClienteDAO {
         return existe;
 }
 
+  public boolean verificarCuit(long cuit) {
+      
+       String query = "SELECT 1 FROM clientes WHERE cuit = ?";
+        
+        try (Connection connection = getConnection(); 
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setLong(1, cuit);
+            ResultSet rs = stmt.executeQuery();
+            
+            // Si la consulta devuelve un resultado, el cuit existe
+            return rs.next();
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return false;  
+    }
 
 }
 
