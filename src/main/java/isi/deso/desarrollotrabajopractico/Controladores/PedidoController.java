@@ -99,11 +99,15 @@ public class PedidoController implements ActionListener{
            int idVendedor = (Integer) listaDePedidos.getModelo().getValueAt(row, 2);
            double total = (Double) listaDePedidos.getModelo().getValueAt(row, 3);
            
-           String formaDePago = (String) listaDePedidos.getModelo().getValueAt(row, 4);
-           TipoDePago tipoDePago = TipoDePago.valueOf(formaDePago); 
-           
-           String estado = (String) listaDePedidos.getModelo().getValueAt(row, 5);
-           Estado est = Estado.valueOf(estado);
+           // Obtener el valor de la forma de pago como cadena
+            Object formaDePagoObj = listaDePedidos.getModelo().getValueAt(row, 4);
+            String formaDePagoStr = formaDePagoObj.toString();  // Convertir a String
+            TipoDePago tipoDePago = TipoDePago.valueOf(formaDePagoStr.toUpperCase());  // Convertir a TipoDePago
+
+            // Obtener el valor del estado como cadena
+            Object estadoObj = listaDePedidos.getModelo().getValueAt(row, 5);
+            String estadoStr = estadoObj.toString();  // Convertir a String
+            Estado est = Estado.valueOf(estadoStr.toUpperCase());  // Convertir a Estado
            
            if(est == Estado.RECIBIDO) {
                interfazModificarPedido.getjComboBox2().setEnabled(false);
@@ -112,13 +116,13 @@ public class PedidoController implements ActionListener{
     
                 interfazModificarPedido.getjComboBox2().setSelectedItem("RECIBIDO");
             }
-           else interfazModificarPedido.getjComboBox2().setSelectedItem(estado);
+           else interfazModificarPedido.getjComboBox2().setSelectedItem(estadoStr);
                     
            interfazModificarPedido.getjTextField4().setText(String.valueOf(idPedido));
            interfazModificarPedido.getjTextField1().setText(String.valueOf(idCliente)); 
            interfazModificarPedido.getjTextField2().setText(String.valueOf(idVendedor)); 
            interfazModificarPedido.getjTextField3().setText(String.valueOf(total)); 
-           interfazModificarPedido.getjComboBox1().setSelectedItem(formaDePago); 
+           interfazModificarPedido.getjComboBox1().setSelectedItem(formaDePagoStr); 
            
         } 
         
@@ -309,6 +313,7 @@ public class PedidoController implements ActionListener{
             listaDePedidos.getModelo().setValueAt(precioFinal,row,3);
             listaDePedidos.getModelo().setValueAt(formaDePago,row,4);
             listaDePedidos.getModelo().setValueAt(String.valueOf(Estado.RECIBIDO),row,5);
+            interfazModificarPedido.dispose();
             }
         }
     }

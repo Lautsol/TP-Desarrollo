@@ -185,6 +185,7 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
     }
 
     public ItemMenu buscarItemMenuPorIDyVendedor(int idVendedor, int idItem) {
+        
         ItemMenu itemMenu = null;
 
         String sqlVerificarVendedor = "SELECT 1 FROM itemsMenuVendedor WHERE idVendedor = ? AND idItem = ?";
@@ -194,7 +195,13 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
         try (PreparedStatement pstmtVerificar = connection.prepareStatement(sqlVerificarVendedor)) {
             pstmtVerificar.setInt(1, idVendedor);
             pstmtVerificar.setInt(2, idItem);
-
+            
+            try (ResultSet rsVerificar = pstmtVerificar.executeQuery()) {
+                if (!rsVerificar.next()) {
+                    // Si no hay resultados, el ítem no pertenece al vendedor
+                    return null;
+                }
+            }
         }
 
         String sqlItemMenu = "SELECT * FROM itemsMenu WHERE id = ?";  

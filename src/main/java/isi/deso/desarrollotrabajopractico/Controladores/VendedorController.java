@@ -23,7 +23,7 @@ public class VendedorController implements ActionListener {
     private CrearVendedor interfazCrearVendedor;
     private ModificarVendedor interfazModificarVendedor;
     private ItemsMenuPedido interfazItemsMenuPedido;
-    private ArrayList<ItemMenu> itemsMenu = new ArrayList<>();
+    private ArrayList<ItemMenu> itemsMenu;
     
     public VendedorController(){}
     
@@ -62,6 +62,7 @@ public class VendedorController implements ActionListener {
             int idVendedor = obtenerID();
             interfazCrearVendedor.getjTextField4().setText(String.valueOf(idVendedor));
             interfazCrearVendedor.getjTextField4().setEditable(false);
+            itemsMenu = new ArrayList<>();
         } 
     
         else if(comando.equals("Editar")) {
@@ -151,6 +152,8 @@ public class VendedorController implements ActionListener {
             interfazCrearVendedor.setearCamposEnBlanco();
             id = obtenerID();
             interfazCrearVendedor.getjTextField4().setText(String.valueOf(id));
+            interfazCrearVendedor.dispose();
+            itemsMenu = null;
             }
           }
         } 
@@ -184,7 +187,7 @@ public class VendedorController implements ActionListener {
             
             if(interfazModificarVendedor != null) {
                 int idVendedor = Integer.parseInt(interfazModificarVendedor.getjTextField4().getText());
-                if(yaTieneItem(idVendedor, item.getId())) agregado = true;
+                if(yaTieneItem(idVendedor, id)) agregado = true;
             }
             
             if(!agregado) {
