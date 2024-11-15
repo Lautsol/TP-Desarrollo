@@ -3,9 +3,11 @@ package isi.deso.desarrollotrabajopractico.Controladores;
 
 import isi.deso.desarrollotrabajopractico.Alcohol;
 import isi.deso.desarrollotrabajopractico.Categoria;
+import isi.deso.desarrollotrabajopractico.DAOS.CategoriaMySQLDAO;
 import isi.deso.desarrollotrabajopractico.DAOS.FactoryDAO;
 import isi.deso.desarrollotrabajopractico.DAOS.ItemMenuMySQLDAO;
 import isi.deso.desarrollotrabajopractico.Gaseosa;
+import isi.deso.desarrollotrabajopractico.Interfaces.Categorias;
 import isi.deso.desarrollotrabajopractico.Interfaces.CrearItemMenu;
 import isi.deso.desarrollotrabajopractico.Interfaces.ListaDeItemMenu;
 import isi.deso.desarrollotrabajopractico.Interfaces.ModificarItemMenu;
@@ -16,11 +18,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JTable;
 
 public class ItemMenuController implements ActionListener{
     private ListaDeItemMenu listaDeItemMenu;
     private CrearItemMenu interfazCrearItemMenu;
     private ModificarItemMenu interfazModificarItemMenu;
+    private Categorias interfazCategorias;
+    int idCategoria = 0;
 
     public ItemMenuController() {
        
@@ -44,6 +49,10 @@ public class ItemMenuController implements ActionListener{
 
     public void setModificarItemMenu(ModificarItemMenu modificarItemMenu) {
         this.interfazModificarItemMenu = modificarItemMenu;
+    }
+    
+    public void setInterfazCategorias(Categorias interfazCategorias) {
+        this.interfazCategorias = interfazCategorias;
     }
     
     public void actionPerformed(ActionEvent e) {
@@ -88,8 +97,7 @@ public class ItemMenuController implements ActionListener{
            interfazModificarItemMenu.getjTextField1().setText(String.valueOf(id)); 
            interfazModificarItemMenu.getjTextField2().setText(nombre); 
            interfazModificarItemMenu.getjTextField3().setText(descripcion); 
-           interfazModificarItemMenu.getjTextField4().setText(String.valueOf(precio)); 
-           interfazModificarItemMenu.getjTextField5().setText(String.valueOf(idCategoria));       
+           interfazModificarItemMenu.getjTextField4().setText(String.valueOf(precio));    
             
         } 
         
@@ -142,6 +150,28 @@ public class ItemMenuController implements ActionListener{
           
         } 
         
+        else if(comando.equals("Seleccionar")) {
+            
+            interfazCategorias = new Categorias(this);
+            setInterfazCategorias(interfazCategorias);
+            cargarCategoriasTabla();
+            
+            if(interfazModificarItemMenu != null) {
+                int idItem = Integer.parseInt(interfazModificarItemMenu.getjTextField1().getText());
+                seleccionarFilaPorID(interfazCategorias.getjTable(), buscarItemMenu(idItem).getCategoria().getId());
+            }
+        }
+        
+        else if(comando.equals("Aceptar")) {
+            
+            int row = interfazCategorias.getjTable().getSelectedRow(); 
+            if(row == -1) interfazCategorias.mostrarMensaje();
+            else {
+                idCategoria = (Integer) interfazCategorias.getModelo().getValueAt(row, 0);
+                interfazCategorias.dispose();
+            }
+        }
+        
         else if (comando.equals("Crear")) {
             
             if(validarCamposVacios(interfazCrearItemMenu)) interfazCrearItemMenu.mostrarMensajeCamposVacios();
@@ -151,7 +181,6 @@ public class ItemMenuController implements ActionListener{
             String nombre = interfazCrearItemMenu.getjTextField2().getText();
             String descripcion = interfazCrearItemMenu.getjTextField3().getText();
             double precio = Double.parseDouble(interfazCrearItemMenu.getjTextField4().getText());
-            int idCategoria = Integer.parseInt(interfazCrearItemMenu.getjTextField5().getText());
             String opcion = (String)interfazCrearItemMenu.getjComboBox1().getSelectedItem();
             
             TipoItem tipoItem;
@@ -185,7 +214,6 @@ public class ItemMenuController implements ActionListener{
             String descripcion = interfazModificarItemMenu.getjTextField3().getText();
             String tipoDeItem = interfazModificarItemMenu.getjComboBox1().getSelectedItem().toString();
             double precio = Double.parseDouble(interfazModificarItemMenu.getjTextField4().getText());
-            int idCategoria = Integer.parseInt(interfazModificarItemMenu.getjTextField5().getText());
             String item = (String)interfazModificarItemMenu.getjComboBox1().getSelectedItem();
             
             TipoItem tipoItem;
@@ -439,7 +467,7 @@ public class ItemMenuController implements ActionListener{
            interfaz.getjTextField2().getText().trim().isEmpty() ||
            interfaz.getjTextField3().getText().trim().isEmpty() ||
            interfaz.getjTextField4().getText().trim().isEmpty() ||
-           interfaz.getjTextField5().getText().trim().isEmpty()) vacio = true;
+           idCategoria == 0) vacio = true;
         
         return vacio;
     }
@@ -451,8 +479,7 @@ public class ItemMenuController implements ActionListener{
         if(!interfaz.getjTextField1().getText().matches("\\d+") || 
            !interfaz.getjTextField2().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+") ||
            !interfaz.getjTextField3().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s,]+") ||
-           !interfaz.getjTextField4().getText().matches("-?\\d+(\\.\\d+)?") ||
-           !interfaz.getjTextField5().getText().matches("\\d+")) correcto = false;
+           !interfaz.getjTextField4().getText().matches("-?\\d+(\\.\\d+)?")) correcto = false;
         
         return correcto;
     }
@@ -464,7 +491,7 @@ public class ItemMenuController implements ActionListener{
         if(interfaz.getjTextField2().getText().trim().isEmpty() ||
            interfaz.getjTextField3().getText().trim().isEmpty() ||
            interfaz.getjTextField4().getText().trim().isEmpty() ||
-           interfaz.getjTextField5().getText().trim().isEmpty()) vacio = true;
+           idCategoria == 0) vacio = true;
         
         return vacio;
     }
@@ -475,8 +502,7 @@ public class ItemMenuController implements ActionListener{
         
         if(!interfaz.getjTextField2().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+") ||
            !interfaz.getjTextField3().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s,]+") ||
-           !interfaz.getjTextField4().getText().matches("-?\\d+(\\.\\d+)?") ||
-           !interfaz.getjTextField5().getText().matches("\\d+")) correcto = false;
+           !interfaz.getjTextField4().getText().matches("-?\\d+(\\.\\d+)?")) correcto = false;
         
         return correcto;
     }
@@ -507,4 +533,28 @@ public class ItemMenuController implements ActionListener{
         ItemMenuMySQLDAO itemMenuMySQLDAO = (ItemMenuMySQLDAO) FactoryDAO.getItemMenuDAO();
         return itemMenuMySQLDAO.obtenerID();
     }
+    
+    private void cargarCategoriasTabla() {
+        CategoriaMySQLDAO categoriaMySQLDAO = (CategoriaMySQLDAO) FactoryDAO.getCategoriaDAO();
+        for (Categoria categoria : categoriaMySQLDAO.obtenerTodasLasCategorias()) {
+            Object[] rowData = {
+                categoria.getId(),
+                categoria.getTipo_item().toString(),
+                categoria.getDescripcion()
+            };
+
+            interfazCategorias.getModelo().addRow(rowData);
+        }
+    }
+    
+    private void seleccionarFilaPorID(JTable tabla, int idBuscado) {
+        for (int i = 0; i < tabla.getRowCount(); i++) {
+            int id = (Integer) tabla.getValueAt(i, 0);  
+            if (id == idBuscado) {
+                tabla.setRowSelectionInterval(i, i);  
+                break;  
+        }
+    }
 }
+}
+

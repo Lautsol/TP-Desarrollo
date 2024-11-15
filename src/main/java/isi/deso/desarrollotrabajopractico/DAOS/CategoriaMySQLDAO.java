@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -76,4 +77,32 @@ public class CategoriaMySQLDAO implements CategoriaDAO {
 
         return categoria; 
     }
+    
+    public ArrayList<Categoria> obtenerTodasLasCategorias() {
+        ArrayList<Categoria> categorias = new ArrayList<>();
+        String sql = "SELECT * FROM categorias";  
+
+        try (Connection connection = getConnection(); 
+            PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Categoria categoria = new Categoria(
+                        rs.getInt("id"),
+                        rs.getString("descripcion"),
+                        TipoItem.valueOf(rs.getString("tipo_item"))
+                    );
+                    categorias.add(categoria);
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CategoriaMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CategoriaMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return categorias; 
+    }
+
 }

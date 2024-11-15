@@ -170,6 +170,17 @@ public class ItemsMenuPedido extends javax.swing.JFrame {
         });
         jTable1.setRowHeight(30);
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(2).setHeaderValue("Nombre");
+            jTable1.getColumnModel().getColumn(3).setResizable(false);
+            jTable1.getColumnModel().getColumn(4).setResizable(false);
+            jTable1.getColumnModel().getColumn(4).setHeaderValue("Precio");
+            jTable1.getColumnModel().getColumn(5).setResizable(false);
+            jTable1.getColumnModel().getColumn(5).setHeaderValue("ID categoría");
+            jTable1.getColumnModel().getColumn(6).setHeaderValue("Cantidad");
+            jTable1.getColumnModel().getColumn(7).setHeaderValue("Acciones");
+        }
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
 
