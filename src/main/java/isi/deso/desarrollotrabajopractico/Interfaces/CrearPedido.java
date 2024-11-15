@@ -81,15 +81,11 @@ public class CrearPedido extends javax.swing.JFrame {
     }
     
     public void mostrarMensajeProductoOtroVendedor() {
-        showMessageDialog(null, "El pedido no puede contener productos de distintos vendedores. Vuelva a iniciar.", "ERROR", JOptionPane.ERROR_MESSAGE);
+        showMessageDialog(null, "El pedido no puede contener productos de distintos vendedores.", "ERROR", JOptionPane.ERROR_MESSAGE);
     }
     
     public void mostrarMensajePedidoVacio() {
         showMessageDialog(null, "No puede crear un pedido sin items.", "ERROR", JOptionPane.ERROR_MESSAGE);
-    }
-    
-    public void mostrarMensajePedidoAbierto() {
-        showMessageDialog(null, "El cliente ya tiene un pedido abierto.", "ERROR", JOptionPane.ERROR_MESSAGE);
     }
     
     @SuppressWarnings("unchecked")

@@ -62,13 +62,11 @@ public class Cliente implements ClienteObserver{
         return pedidoActual;
     }
  
-    public boolean agregarProducto(PedidoDetalle pd) throws ProductoDeOtroVendedorException {
+    public boolean agregarProducto(PedidoDetalle pd) {
         boolean exito = false;
         
         if(pedidoActual != null){
             pedidoActual.agregarPedidoDetalle(pd);
-            ItemMenuVendedorMySQLDAO itemsMenuVendedorMySQLDAO = (ItemMenuVendedorMySQLDAO) FactoryDAO.getItemMenuVendedorDAO();
-            if(!itemsMenuVendedorMySQLDAO.itemMenuDeVendedor(pedidoActual.getVendedor().getId(), pd.getProducto().getId())) throw new ProductoDeOtroVendedorException();
             exito = true;
         } 
         return exito;

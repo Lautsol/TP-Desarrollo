@@ -11,6 +11,7 @@ import isi.deso.desarrollotrabajopractico.Interfaces.ListaDeVendedores;
 import isi.deso.desarrollotrabajopractico.Interfaces.ModificarVendedor;
 import isi.deso.desarrollotrabajopractico.ItemMenu;
 import isi.deso.desarrollotrabajopractico.Memory.VendedorMemory;
+import isi.deso.desarrollotrabajopractico.ProductoDeOtroVendedorException;
 import isi.deso.desarrollotrabajopractico.Vendedor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -215,6 +216,7 @@ public class VendedorController implements ActionListener {
             listaDeVendedores.getModelo().setValueAt(nombre, row, 0); 
             listaDeVendedores.getModelo().setValueAt(id, row, 1);         
             listaDeVendedores.getModelo().setValueAt(direccion, row, 2); 
+            interfazModificarVendedor.dispose();
             }
         } 
         
@@ -470,7 +472,13 @@ public class VendedorController implements ActionListener {
         ItemMenuVendedorMySQLDAO itemMenuVendedorMySQLDAO = (ItemMenuVendedorMySQLDAO) FactoryDAO.getItemMenuVendedorDAO();
         return itemMenuVendedorMySQLDAO.buscarItemMenuPorIDyVendedor(id_item, id_vendedor) != null;
     }
-  }
+
+    public void verificarProducto(int idVendedor, int idProducto) throws ProductoDeOtroVendedorException {
+        ItemMenuVendedorMySQLDAO itemsMenuVendedorMySQLDAO = (ItemMenuVendedorMySQLDAO) FactoryDAO.getItemMenuVendedorDAO();
+        if(!itemsMenuVendedorMySQLDAO.itemMenuDeVendedor(idVendedor, idProducto)) throw new ProductoDeOtroVendedorException();
+    }
+    
+}
 
 
 

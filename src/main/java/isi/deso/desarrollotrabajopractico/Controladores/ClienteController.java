@@ -159,9 +159,7 @@ public class ClienteController implements ActionListener {
             else{
             crearCliente(nombre, id, cuit, alias, cbu, email, direccion);
             listaDeClientes.agregarClienteALaTabla(nombre, id, cuit, alias, cbu, email, direccion);
-            interfazCrearCliente.setearCamposEnBlanco();
-            id = obtenerID();
-            interfazCrearCliente.getjTextField4().setText(String.valueOf(id));
+            interfazCrearCliente.dispose();
             
             }
           }
@@ -195,8 +193,9 @@ public class ClienteController implements ActionListener {
             listaDeClientes.getModelo().setValueAt(cbu, row, 4);      
             listaDeClientes.getModelo().setValueAt(email, row, 5);    
             listaDeClientes.getModelo().setValueAt(direccion, row, 6); 
-            }
-        } 
+            interfazModificarCliente.dispose();
+        }
+    }
         
         else if (comando.equals("CancelarCrear")) {
             interfazCrearCliente.dispose();  

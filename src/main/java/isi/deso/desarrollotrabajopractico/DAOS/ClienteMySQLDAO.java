@@ -234,26 +234,23 @@ public class ClienteMySQLDAO implements ClienteDAO {
     
     public int obtenerID() {
         
-        String sql = "SELECT COUNT(*) FROM clientes";
-        int ID = 0;
-        
-        try (Connection connection = getConnection();  
-            PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        String consulta = "SELECT MAX(id) AS ultimo_id FROM grupo11.clientes";
+        int nuevoID = 1; 
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                rs.next();
-                int count = rs.getInt(1);  
-                ID = count + 1; 
-                
+        try (PreparedStatement stmt = getConnection().prepareStatement(consulta)) {
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int ultimoID = rs.getInt("ultimo_id");
+                nuevoID = ultimoID + 1;
             }
-
+            
         } catch (SQLException ex) {
             Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return ID;  
+        return nuevoID;
     }
  
 

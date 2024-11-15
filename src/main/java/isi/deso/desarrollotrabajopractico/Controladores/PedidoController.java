@@ -213,34 +213,31 @@ public class PedidoController implements ActionListener{
             interfazCrearPedido.mostrarMensajePedidoVacio();
             }
             else {
-                try {
                 cliente.iniciarPedido(idPedido, vendedor);
                 
                 for(PedidoDetalle pd : pedidosDetalles) {
-                    cliente.agregarProducto(pd);
+                    cliente.agregarProducto(pd); 
                 }
                 
                 double total = crearPedido(cliente.getPedidoActual(), TipoDePago.valueOf(formaDePago));
                 listaDePedidos.agregarPedidoALaTabla(idPedido, idCliente,  idVendedor, total, formaDePago, estado); 
-                interfazCrearPedido.setearCamposEnBlanco();
-                idPedido = obtenerID();
-                interfazCrearPedido.getCampoIDpedido().setText(String.valueOf(idPedido));
-                
-                } catch (ProductoDeOtroVendedorException e1) {
-                    interfazCrearPedido.mostrarMensajeProductoOtroVendedor();
-                    interfazCrearPedido.dispose();
+                interfazCrearPedido.dispose();
                     
                 }
              }
            }
          }
-       }
+       
         
         else if (comando.equals("Agregar items")) {
-            
-                interfazItemsMenuPedido = new ItemsMenuPedido(this);
-                setItemsMenuPedido(interfazItemsMenuPedido);
-                cargarDatosOriginalesEnTablaItems();
+                if(interfazCrearPedido.getCampoIDvendedor().getText().trim().isEmpty() 
+                || (!verificarVendedor(Integer.parseInt(interfazCrearPedido.getCampoIDvendedor().getText())))) interfazCrearPedido.mostrarMensajeVendedor();
+                else {
+                    interfazCrearPedido.getCampoIDvendedor().setEditable(false);
+                    interfazItemsMenuPedido = new ItemsMenuPedido(this);
+                    setItemsMenuPedido(interfazItemsMenuPedido);
+                    cargarDatosOriginalesEnTablaItems();
+                }
         }
         
         else if (comando.equals("Agregar")) {
@@ -252,13 +249,17 @@ public class PedidoController implements ActionListener{
             int row = interfazItemsMenuPedido.getjTable1().getSelectedRow(); // Obtener la fila seleccionada
            
             if(interfazItemsMenuPedido.getModelo().getValueAt(row, 6) != null) {
-                
+            try {
                 int id = (Integer) interfazItemsMenuPedido.getModelo().getValueAt(row, 0);
                 int cantidad = (Integer) interfazItemsMenuPedido.getModelo().getValueAt(row, 6);
                 
             if(cantidad <= 0) interfazItemsMenuPedido.mostrarMensajeError("La cantidad debe ser mayor a 0.");
             
+         
             else {
+                
+                (new VendedorController()).verificarProducto(Integer.parseInt(interfazCrearPedido.getCampoIDvendedor().getText()), id);
+                
                 ItemMenu item = (new ItemMenuController()).buscarItemMenu(id);
             
                 PedidoDetalle pedidoDetalle = new PedidoDetalle(item, cantidad);
@@ -277,9 +278,11 @@ public class PedidoController implements ActionListener{
             }
 
             interfazItemsMenuPedido.mostrarMensajeExitoso();
-         } 
-         
-        }
+          }
+          } catch (ProductoDeOtroVendedorException e1) {
+                interfazCrearPedido.mostrarMensajeProductoOtroVendedor();
+          } 
+       }
     }
         
         else if (comando.equals("CancelarCrear")) {
@@ -399,7 +402,7 @@ public class PedidoController implements ActionListener{
         }
     }
      
-    public double crearPedido(Pedido pedido, TipoDePago tipoDePago) throws ProductoDeOtroVendedorException {
+    public double crearPedido(Pedido pedido, TipoDePago tipoDePago) {
         
         cliente.confirmarPedido(tipoDePago);
         pedido.calcularPrecioPedido();

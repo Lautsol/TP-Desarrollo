@@ -194,9 +194,7 @@ public class ItemMenuController implements ActionListener{
             else{
             crearItemMenu(id, nombre, descripcion, precio, idCategoria, opcion);
             listaDeItemMenu.agregarItemMenuALaTabla(id, tipoItem, nombre, descripcion, precio, idCategoria);
-            interfazCrearItemMenu.setearCamposEnBlanco();
-            int idItemMenu = obtenerID();
-            interfazCrearItemMenu.getjTextField1().setText(String.valueOf(idItemMenu));
+            interfazCrearItemMenu.dispose();
            }
          
         }
@@ -233,7 +231,8 @@ public class ItemMenuController implements ActionListener{
             listaDeItemMenu.getModelo().setValueAt(nombre, row, 2);      
             listaDeItemMenu.getModelo().setValueAt(descripcion, row, 3);    
             listaDeItemMenu.getModelo().setValueAt(precio, row, 4);    
-            listaDeItemMenu.getModelo().setValueAt(idCategoria, row, 5);   
+            listaDeItemMenu.getModelo().setValueAt(idCategoria, row, 5);
+            interfazModificarItemMenu.dispose();
             }
           }
         } 

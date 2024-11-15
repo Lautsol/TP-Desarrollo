@@ -129,7 +129,7 @@ public class ItemsMenuPedido extends javax.swing.JFrame {
     }
     
     public void mostrarMensajeError(String mensaje) {
-        showMessageDialog(null, mensaje, "ERROR", JOptionPane.INFORMATION_MESSAGE);
+        showMessageDialog(null, mensaje, "ERROR", JOptionPane.ERROR_MESSAGE);
     }
     
     @SuppressWarnings("unchecked")
