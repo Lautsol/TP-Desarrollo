@@ -2,21 +2,15 @@
 package isi.deso.desarrollotrabajopractico.Controladores;
 
 import isi.deso.desarrollotrabajopractico.Cliente;
-import isi.deso.desarrollotrabajopractico.DAOS.ClienteMySQLDAO;
 import isi.deso.desarrollotrabajopractico.DAOS.FactoryDAO;
 import isi.deso.desarrollotrabajopractico.DAOS.ItemMenuMySQLDAO;
 import isi.deso.desarrollotrabajopractico.DAOS.PedidoMySQLDAO;
-import isi.deso.desarrollotrabajopractico.DAOS.VendedorMySQLDAO;
 import isi.deso.desarrollotrabajopractico.Estado;
 import isi.deso.desarrollotrabajopractico.Interfaces.CrearPedido;
 import isi.deso.desarrollotrabajopractico.Interfaces.ItemsMenuPedido;
-import isi.deso.desarrollotrabajopractico.Interfaces.ListaDeItemMenu;
 import isi.deso.desarrollotrabajopractico.Interfaces.ListaDePedidos;
 import isi.deso.desarrollotrabajopractico.Interfaces.ModificarPedido;
 import isi.deso.desarrollotrabajopractico.ItemMenu;
-import isi.deso.desarrollotrabajopractico.Memory.ClienteMemory;
-import isi.deso.desarrollotrabajopractico.Memory.PedidosMemory;
-import isi.deso.desarrollotrabajopractico.Memory.VendedorMemory;
 import isi.deso.desarrollotrabajopractico.Pedido;
 import isi.deso.desarrollotrabajopractico.PedidoDetalle;
 import isi.deso.desarrollotrabajopractico.ProductoDeOtroVendedorException;
@@ -411,7 +405,7 @@ public class PedidoController implements ActionListener{
         FactoryDAO.getPedidoDAO().crearPedido(pedido);
         FactoryDAO.getItemMenuPedidoDAO().agregarItemsPedido(pedido);
         
-        pedidosDetalles = new ArrayList<>();;
+        pedidosDetalles = new ArrayList<>();
         
         return pedido.getTotal();
     }

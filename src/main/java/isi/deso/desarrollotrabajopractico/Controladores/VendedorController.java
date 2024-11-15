@@ -10,13 +10,11 @@ import isi.deso.desarrollotrabajopractico.Interfaces.ItemsMenuPedido;
 import isi.deso.desarrollotrabajopractico.Interfaces.ListaDeVendedores;
 import isi.deso.desarrollotrabajopractico.Interfaces.ModificarVendedor;
 import isi.deso.desarrollotrabajopractico.ItemMenu;
-import isi.deso.desarrollotrabajopractico.Memory.VendedorMemory;
 import isi.deso.desarrollotrabajopractico.ProductoDeOtroVendedorException;
 import isi.deso.desarrollotrabajopractico.Vendedor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class VendedorController implements ActionListener {
