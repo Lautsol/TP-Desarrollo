@@ -22,6 +22,7 @@ public class Pedido  extends PedidoObservable {
         pedidoDetalle = new ArrayList<>();
         estado = Estado.EN_PROCESO;
         clientesObserver = new ArrayList<>();
+        formaDePago = null;
     }
 
     public Pedido() {
@@ -70,6 +71,8 @@ public class Pedido  extends PedidoObservable {
             precioTotal += p.calcularPrecio();
         }
         
+        setTotal(precioTotal);
+        
         return precioTotal;
     }
     
@@ -99,8 +102,7 @@ public class Pedido  extends PedidoObservable {
         try{
             if(formaDePago != null) throw new PagoYaEfectuadoException();
             formaDePago = new Transferencia(cliente.getCbu(), cliente.getCuit(), LocalDate.now());
-            formaDePago.setMonto(calcularPrecioFinal());
-            setTotal(calcularPrecioFinal());
+            calcularPrecioFinal();
             setEstado(Estado.RECIBIDO);
         }
         catch(PagoYaEfectuadoException e){
@@ -115,8 +117,7 @@ public class Pedido  extends PedidoObservable {
          try{
             if(formaDePago != null) throw new PagoYaEfectuadoException();
             formaDePago = new MercadoPago(cliente.getAlias(), LocalDate.now());
-            formaDePago.setMonto(calcularPrecioFinal());
-            setTotal(calcularPrecioFinal());
+            calcularPrecioFinal();
             setEstado(Estado.RECIBIDO);
         }
         catch(PagoYaEfectuadoException e){
@@ -124,14 +125,21 @@ public class Pedido  extends PedidoObservable {
         }
         return formaDePago;
     }
+    
+    public Pago getPago() {
+        return formaDePago;
+    }
 
-    public double calcularPrecioFinal() {
-        total = formaDePago.calcularPrecio(calcularPrecioPedido());
+    private double calcularPrecioFinal() {
+        total = formaDePago.calcularPrecio(total);
+        formaDePago.setMonto(total);
+        setTotal(total);
         return total;
     }
     
     public double calcularPrecioFinal(double total) {
         total = formaDePago.calcularPrecio(total);
+        setTotal(total);
         return total;
     }
         

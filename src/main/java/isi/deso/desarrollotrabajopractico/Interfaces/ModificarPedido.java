@@ -2,6 +2,7 @@
 package isi.deso.desarrollotrabajopractico.Interfaces;
 
 import isi.deso.desarrollotrabajopractico.Controladores.PedidoController;
+import isi.deso.desarrollotrabajopractico.Pago;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
@@ -76,6 +77,10 @@ public class ModificarPedido extends javax.swing.JFrame {
     
     public void mostrarMensajeDatosInvalidos() {
         showMessageDialog(null, "Hay campos inválidos.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public void mostrarPagoGenerado(Pago pago) {
+        showMessageDialog(null, "Fecha: " + pago.getFecha() + "\nMonto: " + pago.getMonto(), "PAGO REALIZADO CON ÉXITO", JOptionPane.INFORMATION_MESSAGE);
     }
     
     @SuppressWarnings("unchecked")

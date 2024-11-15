@@ -32,8 +32,7 @@ public class PedidoController implements ActionListener{
     private CrearPedido interfazCrearPedido;
     private ModificarPedido interfazModificarPedido;
     private ItemsMenuPedido interfazItemsMenuPedido;
-    private Pedido pedido;
-    private ArrayList<PedidoDetalle> pedidosDetalles;
+    private ArrayList<PedidoDetalle> pedidosDetalles = new ArrayList<>();
     private Cliente cliente;
 
     public PedidoController() {
@@ -121,7 +120,6 @@ public class PedidoController implements ActionListener{
            interfazModificarPedido.getjTextField3().setText(String.valueOf(total)); 
            interfazModificarPedido.getjComboBox1().setSelectedItem(formaDePago); 
            
-          
         } 
         
         else if (source == listaDePedidos.getjTextField1()) {
@@ -205,7 +203,6 @@ public class PedidoController implements ActionListener{
                     interfazCrearPedido.mostrarMensajeAlias();
             }
             else if (cliente.getCbu() == 0 && formaDePago.equals("TRANSFERENCIA")) {
-                
                 interfazCrearPedido.mostrarMensajeCbu();
             }
             else if (pedidosDetalles == null || pedidosDetalles.isEmpty()) {
@@ -213,15 +210,18 @@ public class PedidoController implements ActionListener{
             }
             else {
                 try {
-                Pedido nuevoPedido = cliente.iniciarPedido(idPedido, vendedor);
+                cliente.iniciarPedido(idPedido, vendedor);
+                
                 for(PedidoDetalle pd : pedidosDetalles) {
-                cliente.agregarProducto(pd);
+                    cliente.agregarProducto(pd);
                 }
-                double total = crearPedido(nuevoPedido, TipoDePago.valueOf(formaDePago));
+                
+                double total = crearPedido(cliente.getPedidoActual(), TipoDePago.valueOf(formaDePago));
                 listaDePedidos.agregarPedidoALaTabla(idPedido, idCliente,  idVendedor, total, formaDePago, estado); 
                 interfazCrearPedido.setearCamposEnBlanco();
                 idPedido = obtenerID();
                 interfazCrearPedido.getCampoIDpedido().setText(String.valueOf(idPedido));
+                
                 } catch (ProductoDeOtroVendedorException e1) {
                     interfazCrearPedido.mostrarMensajeProductoOtroVendedor();
                     interfazCrearPedido.dispose();
@@ -237,7 +237,6 @@ public class PedidoController implements ActionListener{
                 interfazItemsMenuPedido = new ItemsMenuPedido(this);
                 setItemsMenuPedido(interfazItemsMenuPedido);
                 cargarDatosOriginalesEnTablaItems();
-                pedidosDetalles = new ArrayList<>();
         }
         
         else if (comando.equals("Agregar")) {
@@ -252,12 +251,30 @@ public class PedidoController implements ActionListener{
                 
                 int id = (Integer) interfazItemsMenuPedido.getModelo().getValueAt(row, 0);
                 int cantidad = (Integer) interfazItemsMenuPedido.getModelo().getValueAt(row, 6);
+                
+            if(cantidad <= 0) interfazItemsMenuPedido.mostrarMensajeError("La cantidad debe ser mayor a 0.");
+            
+            else {
                 ItemMenu item = (new ItemMenuController()).buscarItemMenu(id);
             
                 PedidoDetalle pedidoDetalle = new PedidoDetalle(item, cantidad);
-                pedidosDetalles.add(pedidoDetalle);
                 
-                interfazItemsMenuPedido.mostrarMensajeExitoso();
+                boolean agregado = false;
+                for (PedidoDetalle pd : pedidosDetalles) {
+                    if (pd.getProducto().getId() == item.getId()) {
+                        agregado = true;
+                        pd.setCantidad(pd.getCantidad() + cantidad);
+                        break; 
+                    }
+                }
+                
+                if (!agregado) {
+                    pedidosDetalles.add(pedidoDetalle);
+            }
+
+            interfazItemsMenuPedido.mostrarMensajeExitoso();
+         } 
+         
         }
     }
         
@@ -285,7 +302,7 @@ public class PedidoController implements ActionListener{
             Vendedor vendedor = new VendedorController().buscarPorIdVendedor(idVendedor);
             Pedido pedido = buscarPedido(idPedido);
             
-            double precioFinal = actualizarPedido(pedido, cliente,  vendedor, total, formaDePago,  estado);
+            double precioFinal = actualizarPedido(pedido, cliente,  vendedor);
             listaDePedidos.getModelo().setValueAt(idPedido, row, 0);
             listaDePedidos.getModelo().setValueAt(idCliente,row,1);
             listaDePedidos.getModelo().setValueAt(idVendedor,row,2);
@@ -380,18 +397,18 @@ public class PedidoController implements ActionListener{
     public double crearPedido(Pedido pedido, TipoDePago tipoDePago) throws ProductoDeOtroVendedorException {
         
         cliente.confirmarPedido(tipoDePago);
-        pedido.setTotal(pedido.calcularPrecioPedido());
+        pedido.calcularPrecioPedido();
 
         // PedidosMemory.listaPedidos.add(pedido);  
         FactoryDAO.getPedidoDAO().crearPedido(pedido);
         FactoryDAO.getItemMenuPedidoDAO().agregarItemsPedido(pedido);
         
-        pedidosDetalles = null;
+        pedidosDetalles = new ArrayList<>();;
         
         return pedido.getTotal();
     }
     
-    public double actualizarPedido(Pedido pedido, Cliente cliente, Vendedor vendedor, double total, String formaDePago, String estado) {
+    public double actualizarPedido(Pedido pedido, Cliente cliente, Vendedor vendedor) {
         
         /*
         for (Pedido pedido : PedidosMemory.listaPedidos) {
@@ -404,12 +421,11 @@ public class PedidoController implements ActionListener{
         */
         
         cliente.agregarPedido(pedido);
-        cliente.suscripcionEstadoPedido(pedido);
-        pedido.addObserver(cliente);
         vendedor.agregarPedido(pedido);
+        cliente.suscripcionEstadoPedido(pedido);
         vendedor.cambiarEstadoPedido(pedido);
         
-        pedido.setTotal(pedido.calcularPrecioFinal(total));
+        interfazModificarPedido.mostrarPagoGenerado(pedido.getPago());
         
         FactoryDAO.getPedidoDAO().actualizarPedido(pedido);
         

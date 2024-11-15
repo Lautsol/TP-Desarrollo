@@ -128,6 +128,10 @@ public class ItemsMenuPedido extends javax.swing.JFrame {
         showMessageDialog(null, "El item se agregó con éxito.", "SE AGREGÓ EL ITEM.", JOptionPane.INFORMATION_MESSAGE);
     }
     
+    public void mostrarMensajeError(String mensaje) {
+        showMessageDialog(null, mensaje, "ERROR", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

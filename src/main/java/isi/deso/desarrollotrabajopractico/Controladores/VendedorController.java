@@ -3,6 +3,7 @@ package isi.deso.desarrollotrabajopractico.Controladores;
 
 import isi.deso.desarrollotrabajopractico.DAOS.FactoryDAO;
 import isi.deso.desarrollotrabajopractico.DAOS.ItemMenuMySQLDAO;
+import isi.deso.desarrollotrabajopractico.DAOS.ItemMenuVendedorMySQLDAO;
 import isi.deso.desarrollotrabajopractico.DAOS.VendedorMySQLDAO;
 import isi.deso.desarrollotrabajopractico.Interfaces.CrearVendedor;
 import isi.deso.desarrollotrabajopractico.Interfaces.ItemsMenuPedido;
@@ -22,7 +23,7 @@ public class VendedorController implements ActionListener {
     private CrearVendedor interfazCrearVendedor;
     private ModificarVendedor interfazModificarVendedor;
     private ItemsMenuPedido interfazItemsMenuPedido;
-    private ArrayList<ItemMenu> itemsMenu;
+    private ArrayList<ItemMenu> itemsMenu = new ArrayList<>();
     
     public VendedorController(){}
     
@@ -160,7 +161,6 @@ public class VendedorController implements ActionListener {
             interfazItemsMenuPedido.ocultarColumna();
             setItemsMenuPedido(interfazItemsMenuPedido);
             cargarDatosOriginalesEnTablaItems();
-            itemsMenu = new ArrayList<>();
         }
         
         else if (comando.equals("Agregar")) {
@@ -173,8 +173,26 @@ public class VendedorController implements ActionListener {
            
             int id = (Integer) interfazItemsMenuPedido.getModelo().getValueAt(row, 0);
             ItemMenu item = (new ItemMenuController()).buscarItemMenu(id);
-            itemsMenu.add(item);
-            interfazItemsMenuPedido.mostrarMensajeExitoso();
+            
+            boolean agregado = false;
+                for (ItemMenu itemMenu : itemsMenu) {
+                    if (itemMenu.getId() == item.getId()) {
+                        agregado = true;
+                        break; 
+                    }
+                }
+            
+            if(interfazModificarVendedor != null) {
+                int idVendedor = Integer.parseInt(interfazModificarVendedor.getjTextField4().getText());
+                if(yaTieneItem(idVendedor, item.getId())) agregado = true;
+            }
+            
+            if(!agregado) {
+                itemsMenu.add(item);
+                interfazItemsMenuPedido.mostrarMensajeExitoso();
+            }
+            else interfazItemsMenuPedido.mostrarMensajeError("El vendedor ya tiene ese item.");
+            
     }
 
         else if (comando.equals("Guardar")) {
@@ -443,6 +461,11 @@ public class VendedorController implements ActionListener {
     private int obtenerID() {
         VendedorMySQLDAO vendedorMySQLDAO = (VendedorMySQLDAO) FactoryDAO.getVendedorDAO();
         return vendedorMySQLDAO.obtenerID();
+    }
+    
+    private boolean yaTieneItem(int id_item, int id_vendedor) {
+        ItemMenuVendedorMySQLDAO itemMenuVendedorMySQLDAO = (ItemMenuVendedorMySQLDAO) FactoryDAO.getItemMenuVendedorDAO();
+        return itemMenuVendedorMySQLDAO.buscarItemMenuPorIDyVendedor(id_item, id_vendedor) != null;
     }
   }
 

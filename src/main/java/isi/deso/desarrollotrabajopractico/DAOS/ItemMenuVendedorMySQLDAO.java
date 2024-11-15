@@ -184,5 +184,76 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
         return itemsMenu;
     }
 
+    public ItemMenu buscarItemMenuPorIDyVendedor(int idVendedor, int idItem) {
+        ItemMenu itemMenu = null;
+
+        String sqlVerificarVendedor = "SELECT 1 FROM itemsMenuVendedor WHERE idVendedor = ? AND idItem = ?";
+
+        try (Connection connection = getConnection()) {
+
+        try (PreparedStatement pstmtVerificar = connection.prepareStatement(sqlVerificarVendedor)) {
+            pstmtVerificar.setInt(1, idVendedor);
+            pstmtVerificar.setInt(2, idItem);
+
+        }
+
+        String sqlItemMenu = "SELECT * FROM itemsMenu WHERE id = ?";  
+
+        try (PreparedStatement pstmtItemMenu = connection.prepareStatement(sqlItemMenu)) {
+            pstmtItemMenu.setInt(1, idItem);  
+            try (ResultSet rsItemMenu = pstmtItemMenu.executeQuery()) {
+                if (rsItemMenu.next()) {
+                    String itemType = rsItemMenu.getString("item");  
+                    
+                    switch (itemType) {
+                        case "PLATO":
+                            itemMenu = new Plato(
+                                rsItemMenu.getInt("id"),
+                                rsItemMenu.getString("nombre"),
+                                rsItemMenu.getString("descripcion"),
+                                rsItemMenu.getDouble("precio"),
+                                FactoryDAO.getCategoriaDAO().buscarCategoria(rsItemMenu.getInt("id_categoria")),
+                                0,
+                                0,
+                                false,
+                                false,
+                                false
+                            );
+                            break;
+                        case "GASEOSA":
+                            itemMenu = new Gaseosa(
+                                rsItemMenu.getInt("id"),
+                                rsItemMenu.getString("nombre"),
+                                rsItemMenu.getString("descripcion"),
+                                rsItemMenu.getDouble("precio"),
+                                FactoryDAO.getCategoriaDAO().buscarCategoria(rsItemMenu.getInt("id_categoria")),
+                                0
+                            );
+                            break;
+                        case "ALCOHOL":
+                            itemMenu = new Alcohol(
+                                rsItemMenu.getInt("id"),
+                                rsItemMenu.getString("nombre"),
+                                rsItemMenu.getString("descripcion"),
+                                rsItemMenu.getDouble("precio"),
+                                FactoryDAO.getCategoriaDAO().buscarCategoria(rsItemMenu.getInt("id_categoria")),
+                                0,
+                                0
+                            );
+                            break;
+                            default:
+                            return null;
+                    }
+                }
+            }
+        }
+
+        } catch (SQLException | ClassNotFoundException ex) {
+        Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }   
+
+        return itemMenu;  
+}
+
 }
 
