@@ -14,10 +14,12 @@ import isi.deso.desarrollotrabajopractico.ProductoDeOtroVendedorException;
 import isi.deso.desarrollotrabajopractico.Vendedor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VendedorController implements ActionListener {
+public class VendedorController implements ActionListener, WindowListener {
     private ListaDeVendedores listaDeVendedores;
     private CrearVendedor interfazCrearVendedor;
     private ModificarVendedor interfazModificarVendedor;
@@ -55,16 +57,19 @@ public class VendedorController implements ActionListener {
         Object source = e.getSource();
 
         if (comando.equals("Crear nuevo vendedor")) {
+            
+            itemsMenu = new ArrayList<>();
             interfazCrearVendedor = new CrearVendedor();  
             interfazCrearVendedor.setControlador(this);
             setCrearVendedor(interfazCrearVendedor); 
             int idVendedor = obtenerID();
             interfazCrearVendedor.getjTextField4().setText(String.valueOf(idVendedor));
             interfazCrearVendedor.getjTextField4().setEditable(false);
-            itemsMenu = new ArrayList<>();
+            
         } 
     
         else if(comando.equals("Editar")) {
+            
            interfazModificarVendedor = new ModificarVendedor();  
            interfazModificarVendedor.setControlador(this);
            setModificarVendedor(interfazModificarVendedor); 
@@ -82,8 +87,7 @@ public class VendedorController implements ActionListener {
                     
            interfazModificarVendedor.getjTextField1().setText(nombre); 
            interfazModificarVendedor.getjTextField4().setText(String.valueOf(id)); 
-           interfazModificarVendedor.getjTextField5().setText(direccion); 
-                
+           interfazModificarVendedor.getjTextField5().setText(direccion);   
         }
      
         else if (source == listaDeVendedores.getjTextField1()) {
@@ -148,17 +152,14 @@ public class VendedorController implements ActionListener {
             else{
             crearVendedor(nombre, id, direccion, itemsMenu);
             listaDeVendedores.agregarVendedorALaTabla(nombre, id, direccion);
-            interfazCrearVendedor.setearCamposEnBlanco();
-            id = obtenerID();
-            interfazCrearVendedor.getjTextField4().setText(String.valueOf(id));
+            itemsMenu = new ArrayList<>();
             interfazCrearVendedor.dispose();
-            itemsMenu = null;
             }
           }
         } 
         
         else if (comando.equals("Agregar items")) {
-            
+            itemsMenu = new ArrayList<>();
             interfazItemsMenuPedido = new ItemsMenuPedido(this);
             interfazItemsMenuPedido.ocultarColumna();
             setItemsMenuPedido(interfazItemsMenuPedido);
@@ -177,12 +178,15 @@ public class VendedorController implements ActionListener {
             ItemMenu item = (new ItemMenuController()).buscarItemMenu(id);
             
             boolean agregado = false;
+            
+            if(!itemsMenu.isEmpty()) {
                 for (ItemMenu itemMenu : itemsMenu) {
                     if (itemMenu.getId() == item.getId()) {
                         agregado = true;
                         break; 
                     }
                 }
+            }
             
             if(interfazModificarVendedor != null) {
                 int idVendedor = Integer.parseInt(interfazModificarVendedor.getjTextField4().getText());
@@ -208,13 +212,14 @@ public class VendedorController implements ActionListener {
             int id = Integer.parseInt(interfazModificarVendedor.getjTextField4().getText());
             String direccion = interfazModificarVendedor.getjTextField5().getText();
             
-            
             actualizarVendedor(nombre, id, direccion, itemsMenu);
             
             listaDeVendedores.getModelo().setValueAt(nombre, row, 0); 
             listaDeVendedores.getModelo().setValueAt(id, row, 1);         
             listaDeVendedores.getModelo().setValueAt(direccion, row, 2); 
+            itemsMenu = new ArrayList<>();
             interfazModificarVendedor.dispose();
+            interfazModificarVendedor = null;
             }
         } 
         
@@ -369,6 +374,7 @@ public class VendedorController implements ActionListener {
         
         FactoryDAO.getVendedorDAO().actualizarVendedor(vendedor);
         FactoryDAO.getItemMenuVendedorDAO().agregarItemsVendedor(vendedor);
+        
     }
     
     private boolean validarCamposVacios(CrearVendedor interfaz) {
@@ -474,6 +480,36 @@ public class VendedorController implements ActionListener {
     public void verificarProducto(int idVendedor, int idProducto) throws ProductoDeOtroVendedorException {
         ItemMenuVendedorMySQLDAO itemsMenuVendedorMySQLDAO = (ItemMenuVendedorMySQLDAO) FactoryDAO.getItemMenuVendedorDAO();
         if(!itemsMenuVendedorMySQLDAO.itemMenuDeVendedor(idVendedor, idProducto)) throw new ProductoDeOtroVendedorException();
+    }
+
+    public void windowOpened(WindowEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public void windowClosing(WindowEvent e) {
+            itemsMenu = new ArrayList<>();
+            interfazModificarVendedor.dispose();
+            interfazModificarVendedor = null;
+    }
+
+    public void windowClosed(WindowEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public void windowIconified(WindowEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public void windowDeiconified(WindowEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public void windowActivated(WindowEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public void windowDeactivated(WindowEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }
