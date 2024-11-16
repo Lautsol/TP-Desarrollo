@@ -16,11 +16,13 @@ import isi.deso.desarrollotrabajopractico.Plato;
 import isi.deso.desarrollotrabajopractico.TipoItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTable;
 
-public class ItemMenuController implements ActionListener{
+public class ItemMenuController implements ActionListener, WindowListener {
     private ListaDeItemMenu listaDeItemMenu;
     private CrearItemMenu interfazCrearItemMenu;
     private ModificarItemMenu interfazModificarItemMenu;
@@ -49,6 +51,7 @@ public class ItemMenuController implements ActionListener{
 
     public void setModificarItemMenu(ModificarItemMenu modificarItemMenu) {
         this.interfazModificarItemMenu = modificarItemMenu;
+        interfazModificarItemMenu.addWindowListener(this);
     }
     
     public void setInterfazCategorias(Categorias interfazCategorias) {
@@ -63,6 +66,7 @@ public class ItemMenuController implements ActionListener{
             interfazCrearItemMenu = new CrearItemMenu();  
             interfazCrearItemMenu.setControlador(this);
             setCrearItemMenu(interfazCrearItemMenu);  
+            idCategoria = 0;
             int idItemMenu = obtenerID();
             interfazCrearItemMenu.getjTextField1().setText(String.valueOf(idItemMenu));
             interfazCrearItemMenu.getjTextField1().setEditable(false);
@@ -86,7 +90,7 @@ public class ItemMenuController implements ActionListener{
            String nombre = (String) listaDeItemMenu.getModelo().getValueAt(row, 2);
            String descripcion = (String) listaDeItemMenu.getModelo().getValueAt(row, 3);
            double precio = (Double) listaDeItemMenu.getModelo().getValueAt(row, 4);
-           int idCategoria = (Integer) listaDeItemMenu.getModelo().getValueAt(row, 5);
+           idCategoria = (Integer) listaDeItemMenu.getModelo().getValueAt(row, 5);
            
            ItemMenu item = buscarItemMenu(id);
            
@@ -155,8 +159,8 @@ public class ItemMenuController implements ActionListener{
             interfazCategorias = new Categorias(this);
             setInterfazCategorias(interfazCategorias);
             cargarCategoriasTabla();
-            
-            if(interfazModificarItemMenu != null) {
+            int row = listaDeItemMenu.getjTable1().getSelectedRow();
+            if(row != -1) {
                 int idItem = Integer.parseInt(interfazModificarItemMenu.getjTextField1().getText());
                 seleccionarFilaPorID(interfazCategorias.getjTable(), buscarItemMenu(idItem).getCategoria().getId());
             }
@@ -164,13 +168,14 @@ public class ItemMenuController implements ActionListener{
         
         else if(comando.equals("Aceptar")) {
             
-            int row = interfazCategorias.getjTable().getSelectedRow(); 
-            if(row == -1) interfazCategorias.mostrarMensaje();
-            else {
-                idCategoria = (Integer) interfazCategorias.getModelo().getValueAt(row, 0);
-                interfazCategorias.dispose();
-            }
-        }
+                int row = interfazCategorias.getjTable().getSelectedRow(); 
+                if(row == -1) interfazCategorias.mostrarMensaje();
+                else {
+                    idCategoria = (Integer) interfazCategorias.getModelo().getValueAt(row, 0);
+                    interfazCategorias.dispose();
+                }
+        
+    }
         
         else if (comando.equals("Crear")) {
             
@@ -194,6 +199,8 @@ public class ItemMenuController implements ActionListener{
             else{
             crearItemMenu(id, nombre, descripcion, precio, idCategoria, opcion);
             listaDeItemMenu.agregarItemMenuALaTabla(id, tipoItem, nombre, descripcion, precio, idCategoria);
+            idCategoria = 0;
+            listaDeItemMenu.getjTable1().clearSelection();
             interfazCrearItemMenu.dispose();
            }
          
@@ -206,7 +213,6 @@ public class ItemMenuController implements ActionListener{
             else if (!validarTiposDeDatosModificar(interfazModificarItemMenu)) interfazModificarItemMenu.mostrarMensajeDatosInvalidos();
             else {
             int row = listaDeItemMenu.getjTable1().getSelectedRow(); // Obtener la fila seleccionada
-            
             int id = Integer.parseInt(interfazModificarItemMenu.getjTextField1().getText());
             String nombre = interfazModificarItemMenu.getjTextField2().getText();
             String descripcion = interfazModificarItemMenu.getjTextField3().getText();
@@ -232,6 +238,7 @@ public class ItemMenuController implements ActionListener{
             listaDeItemMenu.getModelo().setValueAt(descripcion, row, 3);    
             listaDeItemMenu.getModelo().setValueAt(precio, row, 4);    
             listaDeItemMenu.getModelo().setValueAt(idCategoria, row, 5);
+            listaDeItemMenu.getjTable1().clearSelection();
             interfazModificarItemMenu.dispose();
             }
           }
@@ -489,8 +496,7 @@ public class ItemMenuController implements ActionListener{
         
         if(interfaz.getjTextField2().getText().trim().isEmpty() ||
            interfaz.getjTextField3().getText().trim().isEmpty() ||
-           interfaz.getjTextField4().getText().trim().isEmpty() ||
-           idCategoria == 0) vacio = true;
+           interfaz.getjTextField4().getText().trim().isEmpty()) vacio = true;
         
         return vacio;
     }
@@ -554,6 +560,28 @@ public class ItemMenuController implements ActionListener{
                 break;  
         }
     }
-}
+  }
+
+    public void windowOpened(WindowEvent e) {
+    }
+
+    public void windowClosing(WindowEvent e) {
+        listaDeItemMenu.getjTable1().clearSelection();
+    }
+
+    public void windowClosed(WindowEvent e) {
+    }
+
+    public void windowIconified(WindowEvent e) {
+    }
+
+    public void windowDeiconified(WindowEvent e) {
+    }
+
+    public void windowActivated(WindowEvent e) {
+    }
+
+    public void windowDeactivated(WindowEvent e) {
+    }
 }
 

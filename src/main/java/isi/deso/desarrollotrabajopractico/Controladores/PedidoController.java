@@ -18,10 +18,12 @@ import isi.deso.desarrollotrabajopractico.TipoDePago;
 import isi.deso.desarrollotrabajopractico.Vendedor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PedidoController implements ActionListener{
+public class PedidoController implements ActionListener, WindowListener {
     private ListaDePedidos listaDePedidos;
     private CrearPedido interfazCrearPedido;
     private ModificarPedido interfazModificarPedido;
@@ -46,6 +48,7 @@ public class PedidoController implements ActionListener{
 
     public void setCrearPedido(CrearPedido crearPedido) {
         this.interfazCrearPedido = crearPedido;
+        interfazCrearPedido.addWindowListener(this);
     }
 
     public void setModificarPedido(ModificarPedido modificarPedido) {
@@ -65,6 +68,7 @@ public class PedidoController implements ActionListener{
             interfazCrearPedido = new CrearPedido();  
             interfazCrearPedido.setControlador(this);
             setCrearPedido(interfazCrearPedido);  
+            pedidosDetalles = new ArrayList<>();
             interfazCrearPedido.getCampoEstado().setEnabled(false);
             int idPedido = obtenerID();
             interfazCrearPedido.getCampoIDpedido().setText(String.valueOf(idPedido));
@@ -215,8 +219,8 @@ public class PedidoController implements ActionListener{
                 
                 double total = crearPedido(cliente.getPedidoActual(), TipoDePago.valueOf(formaDePago), cliente);
                 listaDePedidos.agregarPedidoALaTabla(idPedido, idCliente,  idVendedor, total, formaDePago, estado); 
+                pedidosDetalles = null;
                 interfazCrearPedido.dispose();
-                    
                 }
              }
            }
@@ -597,5 +601,27 @@ public class PedidoController implements ActionListener{
     private int obtenerID() {
         PedidoMySQLDAO pedidoMySQLDAO = (PedidoMySQLDAO) FactoryDAO.getPedidoDAO();
         return pedidoMySQLDAO.obtenerID();
+    }
+
+    public void windowOpened(WindowEvent e) {
+    }
+
+    public void windowClosing(WindowEvent e) {
+        pedidosDetalles = new ArrayList<>();
+    }
+
+    public void windowClosed(WindowEvent e) {
+    }
+
+    public void windowIconified(WindowEvent e) {
+    }
+
+    public void windowDeiconified(WindowEvent e) {
+    }
+
+    public void windowActivated(WindowEvent e) {
+    }
+
+    public void windowDeactivated(WindowEvent e) {
     }
 }
