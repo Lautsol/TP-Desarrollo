@@ -213,7 +213,7 @@ public class PedidoController implements ActionListener{
                     cliente.agregarProducto(pd); 
                 }
                 
-                double total = crearPedido(cliente.getPedidoActual(), TipoDePago.valueOf(formaDePago));
+                double total = crearPedido(cliente.getPedidoActual(), TipoDePago.valueOf(formaDePago), cliente);
                 listaDePedidos.agregarPedidoALaTabla(idPedido, idCliente,  idVendedor, total, formaDePago, estado); 
                 interfazCrearPedido.dispose();
                     
@@ -304,6 +304,7 @@ public class PedidoController implements ActionListener{
             Pedido pedido = buscarPedido(idPedido);
             
             double precioFinal = actualizarPedido(pedido, cliente,  vendedor);
+            interfazModificarPedido.mostrarPagoGenerado(pedido.getPago());
             listaDePedidos.getModelo().setValueAt(idPedido, row, 0);
             listaDePedidos.getModelo().setValueAt(idCliente,row,1);
             listaDePedidos.getModelo().setValueAt(idVendedor,row,2);
@@ -396,7 +397,7 @@ public class PedidoController implements ActionListener{
         }
     }
      
-    public double crearPedido(Pedido pedido, TipoDePago tipoDePago) {
+    public double crearPedido(Pedido pedido, TipoDePago tipoDePago, Cliente cliente) {
         
         cliente.confirmarPedido(tipoDePago);
         pedido.calcularPrecioPedido();
@@ -426,8 +427,6 @@ public class PedidoController implements ActionListener{
         vendedor.agregarPedido(pedido);
         cliente.suscripcionEstadoPedido(pedido);
         vendedor.cambiarEstadoPedido(pedido);
-        
-        interfazModificarPedido.mostrarPagoGenerado(pedido.getPago());
         
         FactoryDAO.getPedidoDAO().actualizarPedido(pedido);
         
