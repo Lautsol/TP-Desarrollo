@@ -25,7 +25,7 @@ public class ItemMenuControllerTest {
     @AfterAll
     static void tearDownAfterClass() throws SQLException {
         
-        List<Integer> itemsAEliminar = Arrays.asList(100, 101, 102, 103, 104);  
+        List<Integer> itemsAEliminar = Arrays.asList(100, 101, 102, 103, 104, 105);  
 
         String queryDelete = "DELETE FROM itemsmenu WHERE id = ?";
 
