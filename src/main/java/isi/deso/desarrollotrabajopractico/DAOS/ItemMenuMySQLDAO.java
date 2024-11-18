@@ -52,8 +52,10 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
     
     public void crearItemMenu(ItemMenu itemMenu) {
         
+        Connection connection = null;
+        
         try {
-            Connection connection = getConnection();
+            connection = getConnection();
 
             Statement stmt = connection.createStatement();
 
@@ -69,15 +71,20 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
                 pstmtItemMenu.executeUpdate();
             }
             
-            connection.close();
-            
         } catch (SQLException ex) {
             Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-         
+        } finally {
+        if (connection != null) {
+            try {
+                connection.close();  
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, "Error al cerrar la conexión", ex);
+            }
+        } 
     }
+ }
     
     public void actualizarItemMenu(ItemMenu itemMenu) {
         
@@ -95,7 +102,6 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
             pstmtItemMenu.setInt(7, itemMenu.getId());
            
             pstmtItemMenu.executeUpdate();
-            connection.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -184,7 +190,6 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
             stmt.setInt(1, id);
 
             stmt.executeUpdate();
-            connection.close();
             
         } catch (SQLException ex) {
             Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -346,26 +351,25 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
         return itemMenu;
     }
 
-    public int obtenerID() {
-        
+     public int obtenerID() {
         String consulta = "SELECT MAX(id) AS ultimo_id FROM grupo11.itemsMenu";
         int nuevoID = 1; 
 
-        try (PreparedStatement stmt = getConnection().prepareStatement(consulta)) {
-            ResultSet rs = stmt.executeQuery();
+        try (Connection connection = getConnection();  
+             PreparedStatement stmt = connection.prepareStatement(consulta);
+             ResultSet rs = stmt.executeQuery()) { 
+
             if (rs.next()) {
                 int ultimoID = rs.getInt("ultimo_id");
                 nuevoID = ultimoID + 1;
             }
-            
+
         } catch (SQLException ex) {
-            Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return nuevoID;
     }
-    
-    
 }

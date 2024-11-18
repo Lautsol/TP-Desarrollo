@@ -48,6 +48,7 @@ public class VendedorMySQLDAO implements VendedorDAO {
     }
     
     public void crearVendedor(Vendedor vendedor) {
+        
         Connection connection = null;
         PreparedStatement pstmtVendedor = null;
 
@@ -55,7 +56,6 @@ public class VendedorMySQLDAO implements VendedorDAO {
             
             connection = getConnection();
 
-            // Primero, insertar el vendedor
             String sqlVendedor = "INSERT INTO grupo11.vendedores (id, nombre, direccion) VALUES (?, ?, ?)";
             pstmtVendedor = connection.prepareStatement(sqlVendedor);
             pstmtVendedor.setInt(1, vendedor.getId());
@@ -63,7 +63,6 @@ public class VendedorMySQLDAO implements VendedorDAO {
             pstmtVendedor.setString(3, vendedor.getDireccion());
             pstmtVendedor.executeUpdate();  
 
-        
         } catch (SQLException e) {
             e.printStackTrace();  
             
@@ -71,7 +70,7 @@ public class VendedorMySQLDAO implements VendedorDAO {
             Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
             
         } finally {
-        
+            
         try {
                 pstmtVendedor.close();
                 connection.close();
@@ -94,7 +93,6 @@ public class VendedorMySQLDAO implements VendedorDAO {
             pstmtVendedor.setInt(3, vendedor.getId());
            
             pstmtVendedor.executeUpdate();
-            connection.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -126,13 +124,13 @@ public class VendedorMySQLDAO implements VendedorDAO {
                 vendedores.add(vendedor);
                 
             }
-            connection.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         return vendedores;
         
     }
@@ -148,7 +146,6 @@ public class VendedorMySQLDAO implements VendedorDAO {
             stmt.setInt(1, id);
 
             stmt.executeUpdate();
-            connection.close();
             
         } catch (SQLException ex) {
             Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -223,24 +220,25 @@ public class VendedorMySQLDAO implements VendedorDAO {
     }
     
     public int obtenerID() {
-        
         String consulta = "SELECT MAX(id) AS ultimo_id FROM grupo11.vendedores";
         int nuevoID = 1; 
 
-        try (PreparedStatement stmt = getConnection().prepareStatement(consulta)) {
-            ResultSet rs = stmt.executeQuery();
+        try (Connection connection = getConnection();  // Cerrar la conexión automáticamente
+             PreparedStatement stmt = connection.prepareStatement(consulta);
+             ResultSet rs = stmt.executeQuery()) { 
+
             if (rs.next()) {
                 int ultimoID = rs.getInt("ultimo_id");
                 nuevoID = ultimoID + 1;
             }
-            
+
         } catch (SQLException ex) {
-            Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return nuevoID;
     }
-   
+
 }

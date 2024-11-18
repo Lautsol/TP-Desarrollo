@@ -51,8 +51,10 @@ public class PedidoMySQLDAO implements PedidoDAO {
     
     public void crearPedido(Pedido pedido) {
         
+        Connection connection = null;
+        
         try {
-            Connection connection = getConnection();
+            connection = getConnection();
 
             Statement stmt = connection.createStatement();
 
@@ -66,16 +68,21 @@ public class PedidoMySQLDAO implements PedidoDAO {
                 pstmtPedido.setString(6, pedido.getEstado().toString());
                 pstmtPedido.executeUpdate();
             }
-               
-            connection.close();
             
         } catch (SQLException ex) {
             Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+        if (connection != null) {
+            try {
+                connection.close();  
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, "Error al cerrar la conexión", ex);
+            }
         }
-         
     }
+ }
     
     public void actualizarPedido(Pedido pedido) {
         
@@ -90,7 +97,6 @@ public class PedidoMySQLDAO implements PedidoDAO {
             pstmtPedido.setInt(4, pedido.getId_pedido());
            
             pstmtPedido.executeUpdate();
-            connection.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -125,7 +131,6 @@ public class PedidoMySQLDAO implements PedidoDAO {
                 pedidos.add(pedido);
                 
             }
-            connection.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -147,7 +152,6 @@ public class PedidoMySQLDAO implements PedidoDAO {
             stmt.setInt(1, id);
 
             stmt.executeUpdate();
-            connection.close();
             
         } catch (SQLException ex) {
             Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -271,20 +275,22 @@ public class PedidoMySQLDAO implements PedidoDAO {
         String consulta = "SELECT MAX(id) AS ultimo_id FROM grupo11.pedidos";
         int nuevoID = 1; 
 
-        try (PreparedStatement stmt = getConnection().prepareStatement(consulta)) {
-            ResultSet rs = stmt.executeQuery();
+        try (Connection connection = getConnection();  
+             PreparedStatement stmt = connection.prepareStatement(consulta);
+             ResultSet rs = stmt.executeQuery()) { 
+
             if (rs.next()) {
                 int ultimoID = rs.getInt("ultimo_id");
                 nuevoID = ultimoID + 1;
             }
-            
+
         } catch (SQLException ex) {
-            Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return nuevoID;
     }
-    
+
 }

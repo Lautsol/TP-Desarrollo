@@ -51,7 +51,7 @@ public class VendedorControllerTest {
         
         String nombre = "Carlos Gómez";
         int id = 40;
-        String direccion = "Av. Siempre Viva 123";
+        String direccion = "Av. Ramírez 123";
         ArrayList<ItemMenu> itemsMenu = new ArrayList();
         Categoria categoria1 = new Categoria(1, "Pizza", TipoItem.COMIDA);
         Plato item1 = new Plato(10,"Pizza Margherita","Pizza clásica con tomate, mozzarella y albahaca.",8.99,categoria1,10,1,false,false,false);
@@ -73,7 +73,7 @@ public class VendedorControllerTest {
         
         String nombre = "Carlos Gómez";
         int id = 41;
-        String direccion = "Av. Siempre Viva 123";
+        String direccion = "Av. Ramírez 123";
         ArrayList<ItemMenu> itemsMenu = new ArrayList();
         Categoria categoria1 = new Categoria(1, "Pizza", TipoItem.COMIDA);
         Plato item1 = new Plato(10,"Pizza Margherita","Pizza clásica con tomate, mozzarella y albahaca.",8.99,categoria1,10,1,false,false,false);
@@ -82,7 +82,7 @@ public class VendedorControllerTest {
         vendedorController.crearVendedor(nombre, id, direccion, itemsMenu);
 
         String nuevoNombre = "Carlos Alberto Gómez";
-        String nuevaDireccion = "Calle Ficticia 456";
+        String nuevaDireccion = "San Juan 456";
         ArrayList<ItemMenu> nuevoitemMenu = new ArrayList();
         Categoria categoria2 = new Categoria(1, "", TipoItem.BEBIDA);
         Gaseosa item2 = new Gaseosa(9,"Coca Cola","Coca Cola clásica",5.99,categoria2,10);
@@ -104,7 +104,7 @@ public class VendedorControllerTest {
         
         String nombre = "Carlos Gómez";
         int id = 42;
-        String direccion = "Av. Siempre Viva 123";
+        String direccion = "Av. Ramírez 123";
         ArrayList<ItemMenu> itemsMenu = new ArrayList();
         Categoria categoria1 = new Categoria(1, "Pizza", TipoItem.COMIDA);
         Plato item1 = new Plato(10,"Pizza Margherita","Pizza clásica con tomate, mozzarella y albahaca.",8.99,categoria1,10,1,false,false,false);
@@ -127,7 +127,7 @@ public class VendedorControllerTest {
         
          String nombre = "Carlos Gómez";
         int id = 43;
-        String direccion = "Av. Siempre Viva 123";
+        String direccion = "Av. Ramírez 123";
         ArrayList<ItemMenu> itemsMenu = new ArrayList();
         Categoria categoria1 = new Categoria(1, "Pizza", TipoItem.COMIDA);
         Plato item1 = new Plato(10,"Pizza Margherita","Pizza clásica con tomate, mozzarella y albahaca.",8.99,categoria1,10,1,false,false,false);
@@ -155,8 +155,8 @@ public class VendedorControllerTest {
         Categoria categoria2 = new Categoria(1, "", TipoItem.BEBIDA);
         Gaseosa item2 = new Gaseosa(9,"Coca Cola","Coca Cola clásica",5.99,categoria2,10);
         itemsMenu2.add(item2);
-        vendedorController.crearVendedor("Marcelo López", 44, "Av. Siempre Viva 123", itemsMenu);
-        vendedorController.crearVendedor("Ana Pérez", 45, "Francia 1000", itemsMenu2);
+        vendedorController.crearVendedor("Marcelo López", 44, "Av. Ramírez 123", itemsMenu);
+        vendedorController.crearVendedor("Ana Pérez", 45, "Mendoza 1350", itemsMenu2);
 
         List<Vendedor> vendedores = vendedorController.listarVendedores("Marcelo López");
 

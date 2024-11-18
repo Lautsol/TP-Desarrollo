@@ -48,8 +48,10 @@ public class ClienteMySQLDAO implements ClienteDAO {
     
     public void crearCliente(Cliente cliente) {
         
+        Connection connection = null;
+        
          try {
-            Connection connection = getConnection();
+            connection = getConnection();
 
             Statement stmt = connection.createStatement();
 
@@ -64,16 +66,21 @@ public class ClienteMySQLDAO implements ClienteDAO {
                 pstmtCliente.setString(7, cliente.getAlias());
                 pstmtCliente.executeUpdate();
             }
-               
-            connection.close();
             
         } catch (SQLException ex) {
             Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+        if (connection != null) {
+            try {
+                connection.close();  
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, "Error al cerrar la conexión", ex);
+            }
         }
-         
     }
+ }
     
     public void actualizarCliente(Cliente cliente) {
         
@@ -91,7 +98,6 @@ public class ClienteMySQLDAO implements ClienteDAO {
             pstmtCliente.setInt(7, cliente.getId());
             
             pstmtCliente.executeUpdate();
-            connection.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -127,7 +133,6 @@ public class ClienteMySQLDAO implements ClienteDAO {
                 clientes.add(cliente);
                 
             }
-            connection.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -149,7 +154,6 @@ public class ClienteMySQLDAO implements ClienteDAO {
             stmt.setInt(1, id);
 
             stmt.executeUpdate();
-            connection.close();
             
         } catch (SQLException ex) {
             Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -233,17 +237,19 @@ public class ClienteMySQLDAO implements ClienteDAO {
     }
     
     public int obtenerID() {
-        
+
         String consulta = "SELECT MAX(id) AS ultimo_id FROM grupo11.clientes";
         int nuevoID = 1; 
 
-        try (PreparedStatement stmt = getConnection().prepareStatement(consulta)) {
-            ResultSet rs = stmt.executeQuery();
+        try (Connection connection = getConnection();  
+             PreparedStatement stmt = connection.prepareStatement(consulta);
+             ResultSet rs = stmt.executeQuery()) { 
+
             if (rs.next()) {
                 int ultimoID = rs.getInt("ultimo_id");
                 nuevoID = ultimoID + 1;
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -252,7 +258,6 @@ public class ClienteMySQLDAO implements ClienteDAO {
 
         return nuevoID;
     }
- 
 
     public Cliente buscarClientePorCuit(long cuit) {
         

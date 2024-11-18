@@ -79,6 +79,7 @@ public class CategoriaMySQLDAO implements CategoriaDAO {
     }
     
     public ArrayList<Categoria> obtenerTodasLasCategorias() {
+        
         ArrayList<Categoria> categorias = new ArrayList<>();
         String sql = "SELECT * FROM categorias";  
 

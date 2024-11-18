@@ -52,6 +52,7 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
     
     
     public void agregarItemsVendedor(Vendedor vendedor) {
+        
         Connection connection = null;
         PreparedStatement pstmtItemsVendedor = null;
 
@@ -113,6 +114,7 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
     } 
     
     public ArrayList<ItemMenu> obtenerItemsMenuDeVendedor(Vendedor vendedor) {
+        
         ArrayList<ItemMenu> itemsMenu = new ArrayList<>();
     
         String[] tipos = {"PLATO", "GASEOSA", "ALCOHOL"};
@@ -177,7 +179,6 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
                 e.printStackTrace(); 
             } catch (ClassNotFoundException ex) {
             Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-            
             }
         }
     
@@ -260,7 +261,7 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
         }   
 
         return itemMenu;  
-}
+    }
 
 }
 
