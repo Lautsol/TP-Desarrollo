@@ -47,40 +47,27 @@ public class ClienteMySQLDAO implements ClienteDAO {
     }
     
     public void crearCliente(Cliente cliente) {
-        
-        Connection connection = null;
-        
-         try {
-            connection = getConnection();
+        String sqlCliente = "INSERT INTO grupo11.clientes (id, nombre, cuit, email, direccion, cbu, alias) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-            Statement stmt = connection.createStatement();
+        try (Connection connection = getConnection();
+             PreparedStatement pstmtCliente = connection.prepareStatement(sqlCliente)) {
 
-            String sqlCliente = "INSERT INTO grupo11.clientes (id, nombre, cuit, email, direccion, cbu, alias) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            try(PreparedStatement pstmtCliente = connection.prepareStatement(sqlCliente)) {
-                pstmtCliente.setInt(1, cliente.getId());
-                pstmtCliente.setString(2, cliente.getNombre());
-                pstmtCliente.setLong(3, cliente.getCuit());
-                pstmtCliente.setString(4, cliente.getEmail());
-                pstmtCliente.setString(5, cliente.getDireccion());
-                pstmtCliente.setObject(6, cliente.getCbu(), java.sql.Types.BIGINT);
-                pstmtCliente.setString(7, cliente.getAlias());
-                pstmtCliente.executeUpdate();
-            }
-            
+            pstmtCliente.setInt(1, cliente.getId());
+            pstmtCliente.setString(2, cliente.getNombre());
+            pstmtCliente.setLong(3, cliente.getCuit());
+            pstmtCliente.setString(4, cliente.getEmail());
+            pstmtCliente.setString(5, cliente.getDireccion());
+            pstmtCliente.setObject(6, cliente.getCbu(), java.sql.Types.BIGINT);
+            pstmtCliente.setString(7, cliente.getAlias());
+
+            pstmtCliente.executeUpdate();
+
         } catch (SQLException ex) {
-            Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, "Error en la creación del cliente", ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-        if (connection != null) {
-            try {
-                connection.close();  
-            } catch (SQLException ex) {
-                Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, "Error al cerrar la conexión", ex);
-            }
+            Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, "Clase no encontrada", ex);
         }
     }
- }
     
     public void actualizarCliente(Cliente cliente) {
         

@@ -49,37 +49,22 @@ public class VendedorMySQLDAO implements VendedorDAO {
     
     public void crearVendedor(Vendedor vendedor) {
         
-        Connection connection = null;
-        PreparedStatement pstmtVendedor = null;
+        String sqlVendedor = "INSERT INTO grupo11.vendedores (id, nombre, direccion) VALUES (?, ?, ?)";
 
-        try {
-            
-            connection = getConnection();
-
-            String sqlVendedor = "INSERT INTO grupo11.vendedores (id, nombre, direccion) VALUES (?, ?, ?)";
-            pstmtVendedor = connection.prepareStatement(sqlVendedor);
+        try (Connection connection = getConnection(); 
+            PreparedStatement pstmtVendedor = connection.prepareStatement(sqlVendedor)     
+        ) {
             pstmtVendedor.setInt(1, vendedor.getId());
             pstmtVendedor.setString(2, vendedor.getNombre());
             pstmtVendedor.setString(3, vendedor.getDireccion());
-            pstmtVendedor.executeUpdate();  
-
+            pstmtVendedor.executeUpdate(); 
         } catch (SQLException e) {
-            e.printStackTrace();  
-            
+            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, "Error al crear el vendedor", e);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-            
-        } finally {
-            
-        try {
-                pstmtVendedor.close();
-                connection.close();
-                
-        } catch (SQLException e) {
-                e.printStackTrace();
-        } 
+            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, "Clase no encontrada", ex);
+        }
     }
-}
+
 
     public void actualizarVendedor(Vendedor vendedor) {
         
@@ -220,10 +205,11 @@ public class VendedorMySQLDAO implements VendedorDAO {
     }
     
     public int obtenerID() {
+        
         String consulta = "SELECT MAX(id) AS ultimo_id FROM grupo11.vendedores";
         int nuevoID = 1; 
 
-        try (Connection connection = getConnection();  // Cerrar la conexión automáticamente
+        try (Connection connection = getConnection();  
              PreparedStatement stmt = connection.prepareStatement(consulta);
              ResultSet rs = stmt.executeQuery()) { 
 

@@ -10,7 +10,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,39 +51,27 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
     
     public void crearItemMenu(ItemMenu itemMenu) {
         
-        Connection connection = null;
-        
-        try {
-            connection = getConnection();
+        String sqlItemMenu = "INSERT INTO grupo11.itemsMenu (id, tipo_item, nombre, descripcion, precio, id_categoria, item) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-            Statement stmt = connection.createStatement();
+        try (Connection connection = getConnection(); 
+            PreparedStatement pstmtItemMenu = connection.prepareStatement(sqlItemMenu) 
+        ) {
+            pstmtItemMenu.setInt(1, itemMenu.getId());
+            pstmtItemMenu.setString(2, itemMenu.getCategoria().getTipo_item().toString());
+            pstmtItemMenu.setString(3, itemMenu.getNombre());
+            pstmtItemMenu.setString(4, itemMenu.getDescripcion());
+            pstmtItemMenu.setDouble(5, itemMenu.getPrecio());
+            pstmtItemMenu.setInt(6, itemMenu.getCategoria().getId());
+            pstmtItemMenu.setString(7, itemMenu.getClass().getSimpleName().toUpperCase());
 
-            String sqlItemMenu = "INSERT INTO grupo11.itemsMenu (id, tipo_item, nombre, descripcion, precio, id_categoria, item) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            try(PreparedStatement pstmtItemMenu = connection.prepareStatement(sqlItemMenu)) {
-                pstmtItemMenu.setInt(1, itemMenu.getId());
-                pstmtItemMenu.setString(2, itemMenu.getCategoria().getTipo_item().toString());
-                pstmtItemMenu.setString(3, itemMenu.getNombre());
-                pstmtItemMenu.setString(4, itemMenu.getDescripcion());
-                pstmtItemMenu.setDouble(5, itemMenu.getPrecio());
-                pstmtItemMenu.setInt(6, itemMenu.getCategoria().getId());
-                pstmtItemMenu.setString(7, itemMenu.getClass().getSimpleName().toUpperCase());
-                pstmtItemMenu.executeUpdate();
-            }
-            
+            pstmtItemMenu.executeUpdate(); 
         } catch (SQLException ex) {
-            Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, "Error al crear el ítem del menú", ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-        if (connection != null) {
-            try {
-                connection.close();  
-            } catch (SQLException ex) {
-                Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, "Error al cerrar la conexión", ex);
-            }
-        } 
+            Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, "Clase no encontrada", ex);
+        }
     }
- }
+
     
     public void actualizarItemMenu(ItemMenu itemMenu) {
         
@@ -112,6 +99,7 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
     }
     
     public ArrayList<ItemMenu> obtenerTodosLosItemsMenu() {
+        
         ArrayList<ItemMenu> itemsMenu = new ArrayList<>();
     
         // Consultas SQL para los diferentes tipos de items
@@ -200,6 +188,7 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
     }
     
     public ArrayList<ItemMenu> buscarItemsMenuPorNombre(String nombre) {
+        
         ArrayList<ItemMenu> itemsMenu = new ArrayList<>();
     
         String sqlComida = "SELECT * FROM itemsMenu WHERE nombre LIKE ? AND item = 'PLATO'";
@@ -278,6 +267,7 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
 
     
     public ItemMenu buscarItemMenuPorID(int id) {
+        
         ItemMenu itemMenu = null;
         String sqlComida = "SELECT * FROM itemsMenu WHERE id = ? AND item = 'PLATO'";
         String sqlGaseosa = "SELECT * FROM itemsMenu WHERE id = ? AND item = 'GASEOSA'";

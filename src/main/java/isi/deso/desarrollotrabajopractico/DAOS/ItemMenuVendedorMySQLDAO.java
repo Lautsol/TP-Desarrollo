@@ -53,39 +53,23 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
     
     public void agregarItemsVendedor(Vendedor vendedor) {
         
-        Connection connection = null;
-        PreparedStatement pstmtItemsVendedor = null;
+        String sqlItemsVendedor = "INSERT IGNORE INTO itemsMenuVendedor (idVendedor, idItem) VALUES (?, ?)";
 
-        try {
-            
-            connection = getConnection();
-
-            String sqlItemsVendedor = "INSERT IGNORE INTO itemsMenuVendedor (idVendedor, idItem) VALUES (?, ?)";
-            pstmtItemsVendedor = connection.prepareStatement(sqlItemsVendedor);
-
+        try (Connection connection = getConnection(); 
+            PreparedStatement pstmtItemsVendedor = connection.prepareStatement(sqlItemsVendedor) 
+        ) {
             for (ItemMenu item : vendedor.getItems()) {
-                pstmtItemsVendedor.setInt(1, vendedor.getId());  
-                pstmtItemsVendedor.setInt(2, item.getId());      
-                pstmtItemsVendedor.executeUpdate();               
+                pstmtItemsVendedor.setInt(1, vendedor.getId());
+                pstmtItemsVendedor.setInt(2, item.getId());
+                pstmtItemsVendedor.executeUpdate(); 
             }
-        
         } catch (SQLException e) {
-            e.printStackTrace();  
-            
+            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, "Error al agregar ítems al vendedor", e);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-            
-        } finally {
-        
-        try {
-                pstmtItemsVendedor.close();
-                connection.close();
-                
-        } catch (SQLException e) {
-                e.printStackTrace();
-        } 
+            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, "Clase no encontrada", ex);
+        }
     }
-  }
+
     
     public boolean itemMenuDeVendedor(int idVendedor, int idItem) {
         

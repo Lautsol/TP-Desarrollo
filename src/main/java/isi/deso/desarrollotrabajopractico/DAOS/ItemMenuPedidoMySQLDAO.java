@@ -45,38 +45,23 @@ public class ItemMenuPedidoMySQLDAO implements ItemMenuPedidoDAO {
     }
     
     public void agregarItemsPedido(Pedido pedido) {
-        Connection connection = null;
-        PreparedStatement pstmtItemsPedido = null;
+        
+        String sqlItemsVendedor = "INSERT INTO itemsMenuPedido (idPedido, idItem, cantidad) VALUES (?, ?, ?)";
 
-        try {
-            
-            connection = getConnection();
-
-            String sqlItemsVendedor = "INSERT INTO itemsMenuPedido (idPedido, idItem, cantidad) VALUES (?, ?, ?)";
-            pstmtItemsPedido = connection.prepareStatement(sqlItemsVendedor);
-
+        try (Connection connection = getConnection(); 
+            PreparedStatement pstmtItemsPedido = connection.prepareStatement(sqlItemsVendedor)  
+        ) {
             for (PedidoDetalle pd : pedido.getPedidoDetalle()) {
-                pstmtItemsPedido.setInt(1, pedido.getId_pedido());  
+                pstmtItemsPedido.setInt(1, pedido.getId_pedido());
                 pstmtItemsPedido.setInt(2, pd.getProducto().getId());
                 pstmtItemsPedido.setInt(3, pd.getCantidad());
-                pstmtItemsPedido.executeUpdate();               
+                pstmtItemsPedido.executeUpdate();
             }
-        
         } catch (SQLException e) {
-            e.printStackTrace();  
-            
+            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, "Error al agregar ítems al pedido", e);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-            
-        } finally {
-        
-        try {
-                pstmtItemsPedido.close();
-                connection.close();
-                
-        } catch (SQLException e) {
-                e.printStackTrace();
-        } 
+            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, "Clase no encontrada", ex);
+        }
     }
-  }
 }
+

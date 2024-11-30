@@ -51,38 +51,26 @@ public class PedidoMySQLDAO implements PedidoDAO {
     
     public void crearPedido(Pedido pedido) {
         
-        Connection connection = null;
-        
-        try {
-            connection = getConnection();
+        String sqlPedido = "INSERT INTO grupo11.pedidos (id, id_cliente, id_vendedor, total, tipo_pago, estado) VALUES (?, ?, ?, ?, ?, ?)";
 
-            Statement stmt = connection.createStatement();
-
-            String sqlPedido = "INSERT INTO grupo11.pedidos (id, id_cliente, id_vendedor, total, tipo_pago, estado) VALUES (?, ?, ?, ?, ?, ?)";
-            try(PreparedStatement pstmtPedido = connection.prepareStatement(sqlPedido)) {
-                pstmtPedido.setInt(1, pedido.getId_pedido());
-                pstmtPedido.setInt(2, pedido.getCliente().getId());
-                pstmtPedido.setInt(3, pedido.getVendedor().getId());
-                pstmtPedido.setDouble(4, pedido.getTotal());
-                pstmtPedido.setString(5, pedido.getTipoPago().toString());
-                pstmtPedido.setString(6, pedido.getEstado().toString());
-                pstmtPedido.executeUpdate();
-            }
+        try (Connection connection = getConnection(); 
+            PreparedStatement pstmtPedido = connection.prepareStatement(sqlPedido)   
+        ) {
+            pstmtPedido.setInt(1, pedido.getId_pedido());
+            pstmtPedido.setInt(2, pedido.getCliente().getId());
+            pstmtPedido.setInt(3, pedido.getVendedor().getId());
+            pstmtPedido.setDouble(4, pedido.getTotal());
+            pstmtPedido.setString(5, pedido.getTipoPago().toString());
+            pstmtPedido.setString(6, pedido.getEstado().toString());
+            pstmtPedido.executeUpdate();
             
         } catch (SQLException ex) {
-            Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, "Error al crear el pedido", ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-        if (connection != null) {
-            try {
-                connection.close();  
-            } catch (SQLException ex) {
-                Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, "Error al cerrar la conexión", ex);
-            }
+            Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, "Clase no encontrada", ex);
         }
     }
- }
+
     
     public void actualizarPedido(Pedido pedido) {
         
