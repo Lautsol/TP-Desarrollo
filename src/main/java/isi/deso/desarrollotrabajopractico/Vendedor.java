@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Vendedor {
+    
     private int id;
     private String nombre;
     private String direccion;
     private Coordenada coordenadas;
     private ArrayList<ItemMenu> items;
     private ArrayList<Pedido> pedidos;
-    
     
     public Vendedor(int id, String nombre, String direccion, Coordenada coordenadas){
         this.id = id;

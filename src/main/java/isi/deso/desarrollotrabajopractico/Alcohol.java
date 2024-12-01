@@ -3,8 +3,8 @@ package isi.deso.desarrollotrabajopractico;
 public class Alcohol extends Bebida {
     private double graduacion_alcoholica;
     
-    public Alcohol(){
-    }
+    public Alcohol(){}
+    
     public Alcohol(int id, String nombre, String descripcion, double precio, Categoria categoria, double volumen, double graduacion_alcoholica){
         this.id = id;
         this.nombre = nombre;

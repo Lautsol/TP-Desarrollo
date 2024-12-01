@@ -2,12 +2,15 @@
 package isi.deso.desarrollotrabajopractico;
 
 public class Plato extends ItemMenu{
+    
     private double peso;
     private int calorias;
     private boolean apto_vegano;
     private boolean apto_vegetariano;
     private boolean apto_celiaco;
+    
     public Plato(){}
+    
     public Plato(int id, String nombre, String descripcion, double precio, Categoria categoria, double peso, int calorias, boolean vegano, boolean vegetariano, boolean celiaco){
         this.id = id;
         this.nombre = nombre;

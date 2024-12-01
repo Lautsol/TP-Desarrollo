@@ -4,6 +4,7 @@ package isi.deso.desarrollotrabajopractico;
 import java.util.ArrayList;
 
 public  abstract class PedidoObservable {
+    
     protected ArrayList<ClienteObserver> clientesObserver;
     public abstract void addObserver(ClienteObserver cliente);
     public abstract boolean removeObserver(ClienteObserver cliente);

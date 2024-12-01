@@ -4,10 +4,8 @@ package isi.deso.desarrollotrabajopractico;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ItemsPedidoMemory implements ItemsPedidoDAO{
-   
     
     public ArrayList<PedidoDetalle> filtrarPorCliente(ArrayList<Cliente> clientes, int idCliente) throws ItemNoEncontradoException {
        

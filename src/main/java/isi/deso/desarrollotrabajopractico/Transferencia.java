@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 
 public class Transferencia extends Pago {
+    
     private long cbu;
     private long cuit;
     

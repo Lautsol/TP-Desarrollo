@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Pedido  extends PedidoObservable {
+    
     private int id_pedido;
     private Cliente cliente;
     private ArrayList<PedidoDetalle> pedidoDetalle;
@@ -25,8 +26,7 @@ public class Pedido  extends PedidoObservable {
         formaDePago = null;
     }
 
-    public Pedido() {
-    }
+    public Pedido() {}
 
     public void setId_pedido(int id_pedido) {
         this.id_pedido = id_pedido;

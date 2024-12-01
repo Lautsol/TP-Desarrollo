@@ -1,7 +1,9 @@
 package isi.deso.desarrollotrabajopractico;
 
 public class Gaseosa extends Bebida{
+    
     public Gaseosa(){}
+    
     public Gaseosa(int id, String nombre, String descripcion, double precio, Categoria categoria, double volumen){
         this.id = id;
         this.nombre = nombre;

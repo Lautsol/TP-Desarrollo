@@ -1,8 +1,6 @@
 
 package isi.deso.desarrollotrabajopractico;
 
-import isi.deso.desarrollotrabajopractico.DAOS.FactoryDAO;
-import isi.deso.desarrollotrabajopractico.DAOS.ItemMenuVendedorMySQLDAO;
 import java.util.ArrayList;
 
 public class Cliente implements ClienteObserver{
