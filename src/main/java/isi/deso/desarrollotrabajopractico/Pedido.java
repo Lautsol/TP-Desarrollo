@@ -102,6 +102,7 @@ public class Pedido  extends PedidoObservable {
         try{
             if(formaDePago != null) throw new PagoYaEfectuadoException();
             formaDePago = new Transferencia(cliente.getCbu(), cliente.getCuit(), LocalDate.now());
+            formaDePago.setId_pedido(id_pedido);
             calcularPrecioFinal();
             setEstado(Estado.RECIBIDO);
         }
@@ -117,6 +118,7 @@ public class Pedido  extends PedidoObservable {
          try{
             if(formaDePago != null) throw new PagoYaEfectuadoException();
             formaDePago = new MercadoPago(cliente.getAlias(), LocalDate.now());
+            formaDePago.setId_pedido(id_pedido);
             calcularPrecioFinal();
             setEstado(Estado.RECIBIDO);
         }

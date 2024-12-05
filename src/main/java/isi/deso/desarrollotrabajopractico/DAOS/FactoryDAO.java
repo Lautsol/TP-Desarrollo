@@ -30,4 +30,8 @@ public class FactoryDAO {
     public static ItemMenuPedidoDAO getItemMenuPedidoDAO() {
         return ItemMenuPedidoMySQLDAO.obtenerInstancia();
     }
+    
+    public static PagoDAO getPagoDAO() {
+        return PagoMySQLDAO.obtenerInstancia();
+    }
 }
