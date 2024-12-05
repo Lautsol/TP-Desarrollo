@@ -51,7 +51,7 @@ public class PedidoMySQLDAO implements PedidoDAO {
     
     public void crearPedido(Pedido pedido) {
         
-        String sqlPedido = "INSERT INTO grupo11.pedidos (id, id_cliente, id_vendedor, total, tipo_pago, estado) VALUES (?, ?, ?, ?, ?, ?)";
+        String sqlPedido = "INSERT INTO grupo11.pedidos (id, id_cliente, id_vendedor, total, tipo_pago, estado, id_pago) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = getConnection(); 
             PreparedStatement pstmtPedido = connection.prepareStatement(sqlPedido)   
@@ -62,6 +62,7 @@ public class PedidoMySQLDAO implements PedidoDAO {
             pstmtPedido.setDouble(4, pedido.getTotal());
             pstmtPedido.setString(5, pedido.getTipoPago().toString());
             pstmtPedido.setString(6, pedido.getEstado().toString());
+            pstmtPedido.setNull(7, java.sql.Types.INTEGER);
             pstmtPedido.executeUpdate();
             
         } catch (SQLException ex) {
@@ -74,7 +75,7 @@ public class PedidoMySQLDAO implements PedidoDAO {
     
     public void actualizarPedido(Pedido pedido) {
         
-        String sqlPedido = "UPDATE grupo11.pedidos SET total = ?, tipo_pago = ?, estado = ? WHERE id = ?";
+        String sqlPedido = "UPDATE grupo11.pedidos SET total = ?, tipo_pago = ?, estado = ?, id_pago = ? WHERE id = ?";
       
         try (Connection connection = getConnection(); 
              PreparedStatement pstmtPedido = connection.prepareStatement(sqlPedido)) {
@@ -82,8 +83,9 @@ public class PedidoMySQLDAO implements PedidoDAO {
             pstmtPedido.setDouble(1, pedido.getTotal());
             pstmtPedido.setString(2, pedido.getTipoPago().toString());
             pstmtPedido.setString(3, pedido.getEstado().toString());
-            pstmtPedido.setInt(4, pedido.getId_pedido());
-           
+            pstmtPedido.setInt(4, pedido.getPago().getId());
+            pstmtPedido.setInt(5, pedido.getId_pedido());
+            
             pstmtPedido.executeUpdate();
 
         } catch (SQLException ex) {

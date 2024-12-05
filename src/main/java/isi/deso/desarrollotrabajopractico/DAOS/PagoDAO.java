@@ -1,9 +1,9 @@
 
 package isi.deso.desarrollotrabajopractico.DAOS;
 
-import isi.deso.desarrollotrabajopractico.Pago;
+import isi.deso.desarrollotrabajopractico.Pedido;
 
 public interface PagoDAO {
     
-    public void registrarPago(Pago pago);
+    public void registrarPago(Pedido pedido);
 }

@@ -432,7 +432,7 @@ public class PedidoController implements ActionListener, WindowListener {
         cliente.suscripcionEstadoPedido(pedido);
         vendedor.cambiarEstadoPedido(pedido);
         
-        FactoryDAO.getPagoDAO().registrarPago(pedido.getPago());
+        FactoryDAO.getPagoDAO().registrarPago(pedido);
         FactoryDAO.getPedidoDAO().actualizarPedido(pedido);
         
         return pedido.getTotal();

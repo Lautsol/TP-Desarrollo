@@ -58,9 +58,9 @@ public class ItemMenuPedidoMySQLDAO implements ItemMenuPedidoDAO {
                 pstmtItemsPedido.executeUpdate();
             }
         } catch (SQLException e) {
-            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, "Error al agregar ítems al pedido", e);
+            Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, "Error al agregar ítems al pedido", e);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, "Clase no encontrada", ex);
+            Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, "Clase no encontrada", ex);
         }
     }
 }

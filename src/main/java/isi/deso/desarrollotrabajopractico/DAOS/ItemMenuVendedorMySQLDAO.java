@@ -90,7 +90,7 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
         e.printStackTrace();
         
         } catch (ClassNotFoundException ex) {
-        Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     
         return false; 
@@ -162,7 +162,7 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
             } catch (SQLException e) {
                 e.printStackTrace(); 
             } catch (ClassNotFoundException ex) {
-            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     
