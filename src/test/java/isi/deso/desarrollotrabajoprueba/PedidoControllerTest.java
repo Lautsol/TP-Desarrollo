@@ -100,7 +100,8 @@ public class PedidoControllerTest {
         assertEquals(cliente1.getId(), pedidoActualizado.getCliente().getId());
         assertEquals(vendedor1.getId(), pedidoActualizado.getVendedor().getId());
         assertEquals(Estado.RECIBIDO, pedidoActualizado.getEstado());
-        assertEquals(10400, pedidoActualizado.getTotal());
+        assertNotNull(pedidoActualizado.getPago());
+        assertEquals(10400, pedidoActualizado.getPago().getMonto());
     }
 
     @Test
