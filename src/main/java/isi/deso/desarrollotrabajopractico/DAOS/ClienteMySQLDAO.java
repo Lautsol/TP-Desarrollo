@@ -31,8 +31,7 @@ public class ClienteMySQLDAO implements ClienteDAO {
         
         return instancia;
     }
-    
-    
+
     public Connection getConnection() throws SQLException, ClassNotFoundException {
         
         con = null;
@@ -186,7 +185,6 @@ public class ClienteMySQLDAO implements ClienteDAO {
         return clientes;
     }
 
-    
     public Cliente buscarClientePorID(int id) {
         
         Cliente cliente = null;  

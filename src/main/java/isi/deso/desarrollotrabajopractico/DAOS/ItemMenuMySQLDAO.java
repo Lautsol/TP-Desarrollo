@@ -35,7 +35,6 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
         return instancia;
     }
     
-    
     public Connection getConnection() throws SQLException, ClassNotFoundException {
         
         con = null;
@@ -72,7 +71,6 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
         }
     }
 
-    
     public void actualizarItemMenu(ItemMenu itemMenu) {
         
         String sqlItemMenu = "UPDATE grupo11.itemsMenu SET tipo_item = ?, nombre = ?, descripcion = ?, precio = ?, id_categoria = ?, item = ? WHERE id = ?";
@@ -165,7 +163,7 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
         }
 
         return itemsMenu;
-}
+    }
 
     public void eliminarItemMenu(int id) {
         
@@ -265,7 +263,6 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
         return itemsMenu;
     }
 
-    
     public ItemMenu buscarItemMenuPorID(int id) {
         
         ItemMenu itemMenu = null;
@@ -341,7 +338,7 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
         return itemMenu;
     }
 
-     public int obtenerID() {
+    public int obtenerID() {
         String consulta = "SELECT MAX(id) AS ultimo_id FROM grupo11.itemsMenu";
         int nuevoID = 1; 
 

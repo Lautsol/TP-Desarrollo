@@ -1,6 +1,6 @@
 package isi.deso.desarrollotrabajopractico;
 
-public class Gaseosa extends Bebida{
+public class Gaseosa extends Bebida {
     
     public Gaseosa(){}
     
@@ -13,7 +13,7 @@ public class Gaseosa extends Bebida{
         this.volumen = volumen;
     }
     
-     public double peso(){
+    public double peso(){
         return volumen * 1.04 + volumen * 0.2;  
     }
     

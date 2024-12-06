@@ -33,7 +33,6 @@ public class VendedorMySQLDAO implements VendedorDAO {
         return instancia;
     }
     
-    
     public Connection getConnection() throws SQLException, ClassNotFoundException {
         
         con = null;
@@ -64,7 +63,6 @@ public class VendedorMySQLDAO implements VendedorDAO {
             Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, "Clase no encontrada", ex);
         }
     }
-
 
     public void actualizarVendedor(Vendedor vendedor) {
         

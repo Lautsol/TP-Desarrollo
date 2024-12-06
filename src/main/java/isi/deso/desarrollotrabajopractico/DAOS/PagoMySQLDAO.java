@@ -46,7 +46,7 @@ public class PagoMySQLDAO implements PagoDAO {
     }
 
     public void registrarPago(Pedido pedido) {
-        String sqlPago = "INSERT INTO grupo11.pagos (total, fecha) VALUES (?, ?)";
+        String sqlPago = "INSERT INTO grupo11.pagos (monto, fecha) VALUES (?, ?)";
 
         try (Connection connection = getConnection();
              PreparedStatement pstmtPago = connection.prepareStatement(sqlPago, Statement.RETURN_GENERATED_KEYS)) {

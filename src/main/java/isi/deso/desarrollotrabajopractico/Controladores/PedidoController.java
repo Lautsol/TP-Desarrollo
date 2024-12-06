@@ -307,7 +307,7 @@ public class PedidoController implements ActionListener, WindowListener {
             Vendedor vendedor = new VendedorController().buscarPorIdVendedor(idVendedor);
             Pedido pedido = buscarPedido(idPedido);
             
-            double precioFinal = actualizarPedido(pedido, cliente,  vendedor);
+            double precioFinal = actualizarPedido(pedido, cliente, vendedor);
             interfazModificarPedido.mostrarPagoGenerado(pedido.getPago());
             listaDePedidos.getModelo().setValueAt(idPedido, row, 0);
             listaDePedidos.getModelo().setValueAt(idCliente,row,1);
@@ -328,19 +328,24 @@ public class PedidoController implements ActionListener, WindowListener {
             restablecerTablaConDatosOriginales();
         }
 
-  }
+    }
     
     private void actualizarTabla(List<Pedido> pedidos) {
         // Limpia la tabla actual
         listaDePedidos.getModelo().setRowCount(0); 
-
+        double total;
+        
         // Agregar los pedidos a la tabla
         for (Pedido pedido : pedidos) {
+            
+            if(pedido.getPago() == null) total = pedido.getTotal();
+            else total = pedido.getPago().getMonto();
+            
             Object[] rowData = {
                 pedido.getId_pedido(),
                 pedido.getCliente().getId(),
                 pedido.getVendedor().getId(),
-                pedido.getTotal(),
+                total,
                 pedido.getTipoPago(),
                 pedido.getEstado()
             };
@@ -348,16 +353,20 @@ public class PedidoController implements ActionListener, WindowListener {
         }
     }
     
-   private void actualizarTablaConPedido(Pedido pedido) {
+    private void actualizarTablaConPedido(Pedido pedido) {
         // Limpia la tabla actual
         listaDePedidos.getModelo().setRowCount(0); 
-
+        double total;
+        
+        if(pedido.getPago() == null) total = pedido.getTotal();
+        else total = pedido.getPago().getMonto();
+        
         // Agregar el pedido a la tabla
         Object[] rowData = {
             pedido.getId_pedido(),
             pedido.getCliente().getId(),
             pedido.getVendedor().getId(),
-            pedido.getTotal(),
+            total,
             pedido.getTipoPago(),
             pedido.getEstado()
         };
@@ -385,20 +394,26 @@ public class PedidoController implements ActionListener, WindowListener {
             listaDePedidos.getModelo().addRow(rowData);
         }
         */
+            
+        PedidoMySQLDAO pedidoMySQLDAO = (PedidoMySQLDAO) FactoryDAO.getPedidoDAO();
+        double total;
         
-            PedidoMySQLDAO pedidoMySQLDAO = (PedidoMySQLDAO) FactoryDAO.getPedidoDAO();
-            for (Pedido pedido : pedidoMySQLDAO.obtenerTodosLosPedidos()) {
-                Object[] rowData = {
+        for (Pedido pedido : pedidoMySQLDAO.obtenerTodosLosPedidos()) {
+                
+            if(pedido.getPago() == null) total = pedido.getTotal();
+            else total = pedido.getPago().getMonto();
+                
+            Object[] rowData = {
                 pedido.getId_pedido(),
                 pedido.getCliente().getId(),
                 pedido.getVendedor().getId(),
-                pedido.getTotal(),
+                total,
                 pedido.getTipoPago(),
                 pedido.getEstado()
             };
         
-            listaDePedidos.getModelo().addRow(rowData);
-        }
+        listaDePedidos.getModelo().addRow(rowData);
+      }
     }
      
     public double crearPedido(Pedido pedido, TipoDePago tipoDePago, Cliente cliente) {
@@ -435,7 +450,7 @@ public class PedidoController implements ActionListener, WindowListener {
         FactoryDAO.getPagoDAO().registrarPago(pedido);
         FactoryDAO.getPedidoDAO().actualizarPedido(pedido);
         
-        return pedido.getTotal();
+        return pedido.getPago().getMonto();
     }
     
     public void eliminarPedido(int id_pedido) {
@@ -482,7 +497,7 @@ public class PedidoController implements ActionListener, WindowListener {
         return FactoryDAO.getPedidoDAO().buscarPedidosPorCliente(id_cliente);
     }
     
-     public ArrayList<Pedido> listarPedidosVendedor(int id_vendedor) {
+    public ArrayList<Pedido> listarPedidosVendedor(int id_vendedor) {
          
         /*
         ArrayList<Pedido> pedidoFiltrados = new ArrayList<>();
@@ -496,7 +511,6 @@ public class PedidoController implements ActionListener, WindowListener {
         
         return FactoryDAO.getPedidoDAO().buscarPedidosPorVendedor(id_vendedor);
     }
-     
      
     private boolean validarCamposVacios(CrearPedido interfaz) {
         
@@ -520,7 +534,7 @@ public class PedidoController implements ActionListener, WindowListener {
         return correcto;
     }
     
-     private boolean validarCamposVaciosModificar(ModificarPedido interfaz) {
+    private boolean validarCamposVaciosModificar(ModificarPedido interfaz) {
         
         boolean vacio = false;
         

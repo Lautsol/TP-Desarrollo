@@ -36,7 +36,6 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
         return instancia;
     }
     
-    
     public Connection getConnection() throws SQLException, ClassNotFoundException {
         
         con = null;
@@ -49,7 +48,6 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
         }
         return con;
     }
-    
     
     public void agregarItemsVendedor(Vendedor vendedor) {
         
@@ -70,7 +68,6 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
         }
     }
 
-    
     public boolean itemMenuDeVendedor(int idVendedor, int idItem) {
         
         String sql = "SELECT 1 FROM itemsMenuVendedor WHERE idVendedor = ? AND idItem = ?";

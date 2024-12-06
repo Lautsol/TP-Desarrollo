@@ -33,7 +33,6 @@ public class CategoriaMySQLDAO implements CategoriaDAO {
         return instancia;
     }
     
-    
     public Connection getConnection() throws SQLException, ClassNotFoundException {
         
         con = null;

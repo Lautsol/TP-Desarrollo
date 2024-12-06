@@ -113,7 +113,7 @@ public class Vendedor {
            }
         }
         return platos;
-   }
+    }
     
     public ArrayList<Bebida> getBebidasSinAlcohol(){
         ArrayList<Bebida> bebidas = getBebidas();
@@ -126,7 +126,7 @@ public class Vendedor {
            }
         }
         return bebidas;
-   }
+    }
 
     public ArrayList<Pedido> getPedidos() {
         return pedidos;
@@ -136,11 +136,11 @@ public class Vendedor {
         this.pedidos = pedidos;
     }
     
-   public void agregarPedido(Pedido pedido){
+    public void agregarPedido(Pedido pedido){
        pedidos.add(pedido);
     }
    
-   public ArrayList<Pedido> buscarPedidosPorEstado(Estado estado){
+    public ArrayList<Pedido> buscarPedidosPorEstado(Estado estado){
       ArrayList<Pedido> pedidosPorEstado = new ArrayList();
        
        for(Pedido p : pedidos){
@@ -149,16 +149,16 @@ public class Vendedor {
            }
        }
        return pedidosPorEstado;
-   }
+    }
    
-   public void agregarItems(ArrayList<ItemMenu> items) {
+    public void agregarItems(ArrayList<ItemMenu> items) {
        
        for(ItemMenu im : items) {
            this.items.add(im);
        }
-   }
+    }
   
-   public void cambiarEstadoPedido(PedidoObservable pedido){
+    public void cambiarEstadoPedido(PedidoObservable pedido){
      
      ArrayList<Pedido> pedidosEnProceso = buscarPedidosPorEstado(Estado.EN_PROCESO);
      

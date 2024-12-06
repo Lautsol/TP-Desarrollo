@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-public class ItemsPedidoMemory implements ItemsPedidoDAO{
+public class ItemsPedidoMemory implements ItemsPedidoDAO {
     
     public ArrayList<PedidoDetalle> filtrarPorCliente(ArrayList<Cliente> clientes, int idCliente) throws ItemNoEncontradoException {
        

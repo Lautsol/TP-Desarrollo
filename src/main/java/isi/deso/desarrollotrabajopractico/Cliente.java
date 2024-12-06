@@ -3,7 +3,7 @@ package isi.deso.desarrollotrabajopractico;
 
 import java.util.ArrayList;
 
-public class Cliente implements ClienteObserver{
+public class Cliente implements ClienteObserver {
    private int id;
    private long cuit;
    private String email;
@@ -70,7 +70,7 @@ public class Cliente implements ClienteObserver{
         return exito;
     }
     
-     public boolean confirmarPedido(TipoDePago tipoPago) {
+    public boolean confirmarPedido(TipoDePago tipoPago) {
         boolean confirmado = false;
         
         if(pedidoActual != null && !pedidoActual.getPedidoDetalle().isEmpty()){

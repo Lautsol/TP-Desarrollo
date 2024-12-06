@@ -39,7 +39,7 @@ public class Principal extends javax.swing.JFrame {
         });
 
         itemMenusBoton.setBackground(new java.awt.Color(102, 102, 102));
-        itemMenusBoton.setText("ItemMenus");
+        itemMenusBoton.setText("Items Menú");
         itemMenusBoton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 itemMenusBotonActionPerformed(evt);

@@ -1,7 +1,7 @@
 
 package isi.deso.desarrollotrabajopractico;
 
-public class Plato extends ItemMenu{
+public class Plato extends ItemMenu {
     
     private double peso;
     private int calorias;

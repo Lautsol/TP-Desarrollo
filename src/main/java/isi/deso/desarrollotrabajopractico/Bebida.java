@@ -1,7 +1,7 @@
 
 package isi.deso.desarrollotrabajopractico;
 
-public abstract class Bebida extends ItemMenu{
+public abstract class Bebida extends ItemMenu {
     protected double volumen;
    
     public boolean esBebida(){

@@ -199,7 +199,7 @@ public class VendedorController implements ActionListener, WindowListener {
             }
             else interfazItemsMenuPedido.mostrarMensajeError("El vendedor ya tiene ese item.");
             
-    }
+        }
 
         else if (comando.equals("Guardar")) {
             
@@ -236,7 +236,7 @@ public class VendedorController implements ActionListener, WindowListener {
             restablecerTablaConDatosOriginales();
             listaDeVendedores.getjTextField1().setText("Buscar por nombre o por ID");
         }
-   }
+    }
 
     private void restablecerTablaConDatosOriginales() {
       listaDeVendedores.getModelo().setRowCount(0); // Limpiar la tabla actual
@@ -267,7 +267,7 @@ public class VendedorController implements ActionListener, WindowListener {
           listaDeVendedores.getModelo().addRow(rowData);
       }
       
-  }
+    }
     
     private void actualizarTablaConVendedor(Vendedor vendedor) {
         // Limpia la tabla actual
@@ -435,7 +435,7 @@ public class VendedorController implements ActionListener, WindowListener {
         return existe;
     }
     
-     public void cargarDatosOriginalesEnTablaItems() {
+    public void cargarDatosOriginalesEnTablaItems() {
         
         /*
         for (ItemMenu itemMenu : ItemMenuMemory.listaItemMenu) {
