@@ -131,9 +131,9 @@ public class Pedido  extends PedidoObservable {
     }
 
     private double calcularPrecioFinal() {
-        total = formaDePago.calcularPrecio(total);
-        formaDePago.setMonto(total);
-        return total;
+        double montoFinal = formaDePago.calcularPrecio(total);
+        formaDePago.setMonto(montoFinal);
+        return montoFinal;
     }
         
     public double getTotal() {
@@ -171,11 +171,11 @@ public class Pedido  extends PedidoObservable {
         return estado;
     }
     
-    public void addObserver(ClienteObserver cliente){
+    public void addObserver(ClienteObserver cliente) {
          clientesObserver.add(cliente);
     }
     
-    public boolean removeObserver(ClienteObserver cliente){
+    public boolean removeObserver(ClienteObserver cliente) {
         return clientesObserver.remove(cliente);
     }
      

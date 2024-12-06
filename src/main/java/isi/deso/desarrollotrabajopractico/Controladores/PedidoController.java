@@ -441,7 +441,7 @@ public class PedidoController implements ActionListener, WindowListener {
             }
         }
         */
-        
+ 
         cliente.agregarPedido(pedido);
         vendedor.agregarPedido(pedido);
         cliente.suscripcionEstadoPedido(pedido);
