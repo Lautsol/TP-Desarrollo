@@ -11,4 +11,6 @@ public interface VendedorDAO {
     public void eliminarVendedor(int id);
     public ArrayList<Vendedor> buscarVendedoresPorNombre(String nombre);
     public Vendedor buscarVendedorPorID(int id);
+    public ArrayList<Vendedor> obtenerTodosLosVendedores();
+    
 }

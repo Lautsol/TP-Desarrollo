@@ -87,8 +87,12 @@ public class VendedorControllerTest {
         Categoria categoria2 = new Categoria(1, "", TipoItem.BEBIDA);
         Gaseosa item2 = new Gaseosa(9,"Coca Cola","Coca Cola clásica",5.99,categoria2,10);
         itemsMenu.add(item2);
+        Vendedor vendedorActualizar = new Vendedor();
+        vendedorActualizar.setNombre(nuevoNombre);
+        vendedorActualizar.setId(id);
+        vendedorActualizar.setDireccion(nuevaDireccion);
 
-        vendedorController.actualizarVendedor(nuevoNombre, id, nuevaDireccion, nuevoitemMenu);
+        vendedorController.actualizarVendedor(vendedorActualizar, nuevoitemMenu);
 
         // Verificar que los cambios se han realizado correctamente
         Vendedor vendedorActualizado = vendedorController.buscarPorIdVendedor(id);

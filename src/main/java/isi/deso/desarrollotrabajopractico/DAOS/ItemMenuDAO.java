@@ -11,5 +11,6 @@ public interface ItemMenuDAO {
     public void eliminarItemMenu(int id);
     public ArrayList<ItemMenu> buscarItemsMenuPorNombre(String nombre);
     public ItemMenu buscarItemMenuPorID(int id);
+    public ArrayList<ItemMenu> obtenerTodosLosItemsMenu();
     
 }

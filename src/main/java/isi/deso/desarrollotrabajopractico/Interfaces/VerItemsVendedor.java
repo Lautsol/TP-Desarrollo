@@ -1,14 +1,11 @@
 
 package isi.deso.desarrollotrabajopractico.Interfaces;
 
-import isi.deso.desarrollotrabajopractico.Controladores.PedidoController;
 import isi.deso.desarrollotrabajopractico.Controladores.VendedorController;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
@@ -18,62 +15,39 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-public class ItemsMenuPedido extends javax.swing.JFrame {
+public class VerItemsVendedor extends javax.swing.JFrame {
 
-    private PedidoController controladorPedido;
-    private VendedorController controladorVendedor;
-    
-    public ItemsMenuPedido(PedidoController controlador) {
+    VendedorController controlador;
+
+    public VerItemsVendedor(VendedorController controlador) {
         initComponents();
         setVisible(true);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        controladorPedido = controlador;
-        
-       // Configurar las columnas para que no se puedan redimensionar
-       for (int i = 0; i < jTable1.getColumnModel().getColumnCount(); i++) {
-           jTable1.getColumnModel().getColumn(i).setResizable(false);
-       }
+        this.controlador = controlador;
 
-       // Crear un renderizador personalizado para la columna de acciones
-       jTable1.getColumnModel().getColumn(7).setCellRenderer(new ActionCellRenderer());
+        // Configurar las columnas para que no se puedan redimensionar
+        for (int i = 0; i < jTable1.getColumnModel().getColumnCount(); i++) {
+            jTable1.getColumnModel().getColumn(i).setResizable(false);
+        }
 
-       // Crear un editor personalizado para la columna de acciones
-       jTable1.getColumnModel().getColumn(7).setCellEditor(new ActionCellEditor(jTable1));
-        
+        // Crear un renderizador personalizado para la columna de acciones
+        jTable1.getColumnModel().getColumn(7).setCellRenderer(new ActionCellRenderer());
+
+        // Crear un editor personalizado para la columna de acciones
+        jTable1.getColumnModel().getColumn(7).setCellEditor(new ActionCellEditor(jTable1));
     }
-    
-   public ItemsMenuPedido(VendedorController controlador) {
-        initComponents();
-        setVisible(true);
-        setResizable(false);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        controladorVendedor = controlador;
-        
-       // Configurar las columnas para que no se puedan redimensionar
-       for (int i = 0; i < jTable1.getColumnModel().getColumnCount(); i++) {
-           jTable1.getColumnModel().getColumn(i).setResizable(false);
-       }
 
-       // Crear un renderizador personalizado para la columna de acciones
-       jTable1.getColumnModel().getColumn(7).setCellRenderer(new ActionCellRenderer());
-
-       // Crear un editor personalizado para la columna de acciones
-       jTable1.getColumnModel().getColumn(7).setCellEditor(new ActionCellEditor(jTable1));
-        
-    }
-    
     // Renderizador de celdas para los botones
     private class ActionCellRenderer extends JPanel implements TableCellRenderer {
 
-        private final JButton agregarButton = new JButton("Agregar");
+        private final JButton eliminarButton = new JButton("Eliminar");
 
         public ActionCellRenderer() {
             setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
-            add(agregarButton);
-            
+            eliminarButton.setActionCommand("EliminarItem"); // ActionCommand configurado correctamente
+            add(eliminarButton);
         }
 
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -85,51 +59,42 @@ public class ItemsMenuPedido extends javax.swing.JFrame {
     private class ActionCellEditor extends AbstractCellEditor implements TableCellEditor {
 
         private final JPanel panel;
-        private final JButton agregarButton;
+        private final JButton eliminarButton;
         private final JTable table;
 
         public ActionCellEditor(JTable table) {
             this.table = table;
             panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
-            agregarButton = new JButton("Agregar");
-           
-            panel.add(agregarButton);
-            
-            agregarButton.addActionListener(controladorPedido);
-            agregarButton.addActionListener(controladorVendedor);
+            eliminarButton = new JButton("Eliminar");
+
+            eliminarButton.setActionCommand("EliminarItem"); // Establecer ActionCommand
+            eliminarButton.addActionListener(controlador); // Asegúrate de que el controlador maneje la acción
+
+            panel.add(eliminarButton);
         }
 
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            
             return panel;
         }
 
         public Object getCellEditorValue() {
-            return null; 
+            return null;
         }
     }
-    
+
     public DefaultTableModel getModelo() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         return model;
     }
-    
+
     public JTable getjTable1() {
         return jTable1;
     }
-    
+
     public void ocultarColumna() {
         TableColumnModel columnModel = jTable1.getColumnModel();
-        TableColumn column = columnModel.getColumn(6); 
+        TableColumn column = columnModel.getColumn(6); // Número de columna de la que se quiere eliminar
         columnModel.removeColumn(column); // Oculta la columna
-    }
-    
-    public void mostrarMensajeExitoso() {
-        showMessageDialog(null, "El item se agregó con éxito.", "SE AGREGÓ EL ITEM.", JOptionPane.INFORMATION_MESSAGE);
-    }
-    
-    public void mostrarMensajeError(String mensaje) {
-        showMessageDialog(null, mensaje, "ERROR", JOptionPane.ERROR_MESSAGE);
     }
     
     @SuppressWarnings("unchecked")
@@ -170,17 +135,6 @@ public class ItemsMenuPedido extends javax.swing.JFrame {
         });
         jTable1.setRowHeight(30);
         jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setHeaderValue("Nombre");
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
-            jTable1.getColumnModel().getColumn(4).setResizable(false);
-            jTable1.getColumnModel().getColumn(4).setHeaderValue("Precio");
-            jTable1.getColumnModel().getColumn(5).setResizable(false);
-            jTable1.getColumnModel().getColumn(5).setHeaderValue("ID categoría");
-            jTable1.getColumnModel().getColumn(6).setHeaderValue("Cantidad");
-            jTable1.getColumnModel().getColumn(7).setHeaderValue("Acciones");
-        }
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
 
@@ -266,20 +220,19 @@ public class ItemsMenuPedido extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ItemsMenuPedido.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VerItemsVendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ItemsMenuPedido.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VerItemsVendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ItemsMenuPedido.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VerItemsVendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ItemsMenuPedido.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VerItemsVendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-            }
+            public void run() {}
         });
     }
 

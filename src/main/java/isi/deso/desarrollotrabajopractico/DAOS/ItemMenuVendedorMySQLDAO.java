@@ -97,74 +97,78 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
     public ArrayList<ItemMenu> obtenerItemsMenuDeVendedor(Vendedor vendedor) {
         
         ArrayList<ItemMenu> itemsMenu = new ArrayList<>();
-    
-        String[] tipos = {"PLATO", "GASEOSA", "ALCOHOL"};
-    
-        for (String tipo : tipos) {
-        
-            String sql = "SELECT im.* " +
-                        "FROM grupo11.itemsMenuVendedor imv " +
-                        "JOIN grupo11.itemsMenu im ON imv.idItem = im.id " +
-                        "WHERE imv.idVendedor = ? AND im.tipo_item = ?";
-        
-            try (Connection connection = getConnection();
-                PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
-                pstmt.setInt(1, vendedor.getId());  
-                pstmt.setString(2, tipo);  
-            
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    while (rs.next()) {
-                        ItemMenu itemMenu = null;
-                    
-                        if (tipo.equals("PLATO")) {
-                            itemMenu = new Plato(
-                                rs.getInt("id"),
-                                rs.getString("nombre"),
-                                rs.getString("descripcion"),
-                                rs.getDouble("precio"),
-                                FactoryDAO.getCategoriaDAO().buscarCategoria(rs.getInt("id_categoria")),
-                                0,
-                                0,
-                                false,
-                                false,
-                                false
-                            );
-                        } else if (tipo.equals("GASEOSA")) {
-                            itemMenu = new Gaseosa(
-                                rs.getInt("id"),
-                                rs.getString("nombre"),
-                                rs.getString("descripcion"),
-                                rs.getDouble("precio"),
-                                FactoryDAO.getCategoriaDAO().buscarCategoria(rs.getInt("id_categoria")),
-                                0
-                            );
-                        } else if (tipo.equals("ALCOHOL")) {
-                            itemMenu = new Alcohol(
-                                rs.getInt("id"),
-                                rs.getString("nombre"),
-                                rs.getString("descripcion"),
-                                rs.getDouble("precio"),
-                                FactoryDAO.getCategoriaDAO().buscarCategoria(rs.getInt("id_categoria")),
-                                0,
-                                0
-                            );
-                        }
-                    
-                        if (itemMenu != null) {
-                            itemsMenu.add(itemMenu);
+        String sql = "SELECT im.* " +
+                     "FROM itemsMenuVendedor imv " +
+                     "JOIN itemsMenu im ON imv.idItem = im.id " +
+                     "WHERE imv.idVendedor = ? AND im.item = ?";
+
+        // Tipos de ítems que queremos consultar
+        String[] tipos = {"PLATO", "GASEOSA", "ALCOHOL"};
+
+        try (Connection connection = getConnection()) {
+            // Recorremos los tipos de items
+            for (String tipo : tipos) {
+                try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                    pstmt.setInt(1, vendedor.getId());  
+                    pstmt.setString(2, tipo);  
+
+                    try (ResultSet rs = pstmt.executeQuery()) {
+                        while (rs.next()) {
+                            ItemMenu itemMenu = null;
+
+                            if (tipo.equals("PLATO")) {
+                                itemMenu = new Plato(
+                                    rs.getInt("id"),
+                                    rs.getString("nombre"),
+                                    rs.getString("descripcion"),
+                                    rs.getDouble("precio"),
+                                    FactoryDAO.getCategoriaDAO().buscarCategoria(rs.getInt("id_categoria")),
+                                    0,
+                                    0,
+                                    false,
+                                    false,
+                                    false
+                                );
+                            } else if (tipo.equals("GASEOSA")) {
+                                itemMenu = new Gaseosa(
+                                    rs.getInt("id"),
+                                    rs.getString("nombre"),
+                                    rs.getString("descripcion"),
+                                    rs.getDouble("precio"),
+                                    FactoryDAO.getCategoriaDAO().buscarCategoria(rs.getInt("id_categoria")),
+                                    0
+                                );
+                            } else if (tipo.equals("ALCOHOL")) {
+                                itemMenu = new Alcohol(
+                                    rs.getInt("id"),
+                                    rs.getString("nombre"),
+                                    rs.getString("descripcion"),
+                                    rs.getDouble("precio"),
+                                    FactoryDAO.getCategoriaDAO().buscarCategoria(rs.getInt("id_categoria")),
+                                    0,
+                                    0
+                                );
+                            }
+
+                            if (itemMenu != null) {
+                                itemsMenu.add(itemMenu);
+                            }
                         }
                     }
+                } catch (SQLException ex) {
+                    Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, "Error en consulta SQL", ex);
                 }
-            } catch (SQLException e) {
-                e.printStackTrace(); 
-            } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, "Error al conectar con la base de datos", ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, "Clase no encontrada", ex);
         }
-    
+
         return itemsMenu;
     }
+
 
     public ItemMenu buscarItemMenuPorIDyVendedor(int idVendedor, int idItem) {
         
@@ -242,6 +246,25 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
         }   
 
         return itemMenu;  
+    }
+    
+    public void eliminarItemsVendedor(Vendedor vendedor, ArrayList<ItemMenu> items) {
+        String sqlEliminarItems = "DELETE FROM itemsMenuVendedor WHERE idVendedor = ? AND idItem = ?";
+
+        try (Connection connection = getConnection(); 
+             PreparedStatement pstmtEliminarItems = connection.prepareStatement(sqlEliminarItems)) {
+
+            for (ItemMenu item : items) {
+                pstmtEliminarItems.setInt(1, vendedor.getId());
+                pstmtEliminarItems.setInt(2, item.getId());
+                pstmtEliminarItems.executeUpdate(); 
+            }
+
+        } catch (SQLException e) {
+            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, "Error al eliminar ítems del vendedor", e);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, "Clase no encontrada", ex);
+        }
     }
 
 }

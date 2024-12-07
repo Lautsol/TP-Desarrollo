@@ -11,6 +11,6 @@ public interface ClienteDAO {
     public void eliminarCliente(int id);
     public ArrayList<Cliente> buscarClientesPorNombre(String nombre);
     public Cliente buscarClientePorID(int id);
-    
-            
+    public ArrayList<Cliente> obtenerTodosLosClientes();
+     
 }

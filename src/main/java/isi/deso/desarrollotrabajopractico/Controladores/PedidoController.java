@@ -4,6 +4,7 @@ package isi.deso.desarrollotrabajopractico.Controladores;
 import isi.deso.desarrollotrabajopractico.Cliente;
 import isi.deso.desarrollotrabajopractico.DAOS.FactoryDAO;
 import isi.deso.desarrollotrabajopractico.DAOS.ItemMenuMySQLDAO;
+import isi.deso.desarrollotrabajopractico.DAOS.ItemMenuVendedorMySQLDAO;
 import isi.deso.desarrollotrabajopractico.DAOS.PedidoMySQLDAO;
 import isi.deso.desarrollotrabajopractico.Estado;
 import isi.deso.desarrollotrabajopractico.Interfaces.CrearPedido;
@@ -63,7 +64,6 @@ public class PedidoController implements ActionListener, WindowListener {
         String comando = e.getActionCommand();
         Object source = e.getSource();
         
-
         if (comando.equals("Crear nuevo pedido")) {
             interfazCrearPedido = new CrearPedido();  
             interfazCrearPedido.setControlador(this);
@@ -224,17 +224,17 @@ public class PedidoController implements ActionListener, WindowListener {
                 }
              }
            }
-         }
+        }
        
-        
         else if (comando.equals("Agregar items")) {
                 if(interfazCrearPedido.getCampoIDvendedor().getText().trim().isEmpty() 
                 || (!verificarVendedor(Integer.parseInt(interfazCrearPedido.getCampoIDvendedor().getText())))) interfazCrearPedido.mostrarMensajeVendedor();
                 else {
+                    int idVendedor = Integer.parseInt(interfazCrearPedido.getCampoIDvendedor().getText());
                     interfazCrearPedido.getCampoIDvendedor().setEditable(false);
                     interfazItemsMenuPedido = new ItemsMenuPedido(this);
                     setItemsMenuPedido(interfazItemsMenuPedido);
-                    cargarDatosOriginalesEnTablaItems();
+                    cargarDatosOriginalesEnTablaItems(idVendedor);
                 }
         }
         
@@ -247,16 +247,14 @@ public class PedidoController implements ActionListener, WindowListener {
             int row = interfazItemsMenuPedido.getjTable1().getSelectedRow(); // Obtener la fila seleccionada
            
             if(interfazItemsMenuPedido.getModelo().getValueAt(row, 6) != null) {
-            try {
-                int id = (Integer) interfazItemsMenuPedido.getModelo().getValueAt(row, 0);
-                int cantidad = (Integer) interfazItemsMenuPedido.getModelo().getValueAt(row, 6);
+            
+            int id = (Integer) interfazItemsMenuPedido.getModelo().getValueAt(row, 0);
+            int cantidad = (Integer) interfazItemsMenuPedido.getModelo().getValueAt(row, 6);
                 
             if(cantidad <= 0) interfazItemsMenuPedido.mostrarMensajeError("La cantidad debe ser mayor a 0.");
             
          
             else {
-                
-                (new VendedorController()).verificarProducto(Integer.parseInt(interfazCrearPedido.getCampoIDvendedor().getText()), id);
                 
                 ItemMenu item = (new ItemMenuController()).buscarItemMenu(id);
             
@@ -277,9 +275,6 @@ public class PedidoController implements ActionListener, WindowListener {
 
             interfazItemsMenuPedido.mostrarMensajeExitoso();
           }
-          } catch (ProductoDeOtroVendedorException e1) {
-                interfazCrearPedido.mostrarMensajeProductoOtroVendedor();
-          } 
        }
     }
         
@@ -581,7 +576,7 @@ public class PedidoController implements ActionListener, WindowListener {
         return (new VendedorController()).verificarID(id_vendedor);
     }
     
-    public void cargarDatosOriginalesEnTablaItems() {
+    public void cargarDatosOriginalesEnTablaItems(int idVendedor) {
         
         /*
         for (ItemMenu itemMenu : ItemMenuMemory.listaItemMenu) {
@@ -598,8 +593,11 @@ public class PedidoController implements ActionListener, WindowListener {
         }
         */
         
-        ItemMenuMySQLDAO itemMenuMySQLDAO = (ItemMenuMySQLDAO) FactoryDAO.getItemMenuDAO();
-        for (ItemMenu itemMenu : itemMenuMySQLDAO.obtenerTodosLosItemsMenu()) {
+        Vendedor vendedor = new Vendedor();
+        vendedor.setId(idVendedor);
+        ItemMenuVendedorMySQLDAO itemMenuVendedorMySQLDAO = (ItemMenuVendedorMySQLDAO) FactoryDAO.getItemMenuVendedorDAO();
+        
+        for (ItemMenu itemMenu : itemMenuVendedorMySQLDAO.obtenerItemsMenuDeVendedor(vendedor)) {
                 Object[] rowData = {
                 itemMenu.getId(),
                 itemMenu.getCategoria().getTipo_item().toString(),

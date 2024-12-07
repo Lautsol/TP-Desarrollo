@@ -12,4 +12,6 @@ public interface PedidoDAO {
     public ArrayList<Pedido> buscarPedidosPorCliente(int id_cliente);
     public ArrayList<Pedido> buscarPedidosPorVendedor(int id_vendedor);
     public Pedido buscarPedidoPorID(int id);
+    public ArrayList<Pedido> obtenerTodosLosPedidos();
+    
 }
