@@ -1,5 +1,7 @@
 package isi.deso.desarrollotrabajopractico;
 
+import isi.deso.desarrollotrabajopractico.modelo.Vendedor;
+import isi.deso.desarrollotrabajopractico.modelo.Cliente;
 import isi.deso.desarrollotrabajopractico.Interfaces.Principal;
 import java.util.ArrayList;
 import java.util.Iterator;

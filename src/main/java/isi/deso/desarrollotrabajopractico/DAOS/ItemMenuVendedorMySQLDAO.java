@@ -1,11 +1,11 @@
 
 package isi.deso.desarrollotrabajopractico.DAOS;
 
-import isi.deso.desarrollotrabajopractico.Alcohol;
-import isi.deso.desarrollotrabajopractico.Gaseosa;
-import isi.deso.desarrollotrabajopractico.ItemMenu;
-import isi.deso.desarrollotrabajopractico.Plato;
-import isi.deso.desarrollotrabajopractico.Vendedor;
+import isi.deso.desarrollotrabajopractico.modelo.Alcohol;
+import isi.deso.desarrollotrabajopractico.modelo.Gaseosa;
+import isi.deso.desarrollotrabajopractico.modelo.ItemMenu;
+import isi.deso.desarrollotrabajopractico.modelo.Plato;
+import isi.deso.desarrollotrabajopractico.modelo.Vendedor;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -67,32 +67,6 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
             Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, "Clase no encontrada", ex);
         }
     }
-
-    public boolean itemMenuDeVendedor(int idVendedor, int idItem) {
-        
-        String sql = "SELECT 1 FROM itemsMenuVendedor WHERE idVendedor = ? AND idItem = ?";
-    
-        try (Connection connection = getConnection(); 
-        PreparedStatement pstmt = connection.prepareStatement(sql)) {
-        
-        pstmt.setInt(1, idVendedor);
-        pstmt.setInt(2, idItem);
-        
-        ResultSet rs = pstmt.executeQuery();
-        
-        // Si hay un resultado, el ItemMenu existe
-        return (rs.next());
-        
-        } catch (SQLException e) {
-        e.printStackTrace();
-        
-        } catch (ClassNotFoundException ex) {
-        Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    
-        return false; 
-
-    } 
     
     public ArrayList<ItemMenu> obtenerItemsMenuDeVendedor(Vendedor vendedor) {
         
@@ -101,13 +75,11 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
         String sql = "SELECT im.* " +
                      "FROM itemsMenuVendedor imv " +
                      "JOIN itemsMenu im ON imv.idItem = im.id " +
-                     "WHERE imv.idVendedor = ? AND im.item = ?";
+                     "WHERE imv.idVendedor = ? AND im.item = ? ORDER BY im.id";
 
-        // Tipos de ítems que queremos consultar
         String[] tipos = {"PLATO", "GASEOSA", "ALCOHOL"};
 
         try (Connection connection = getConnection()) {
-            // Recorremos los tipos de items
             for (String tipo : tipos) {
                 try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                     pstmt.setInt(1, vendedor.getId());  
@@ -168,7 +140,6 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
 
         return itemsMenu;
     }
-
 
     public ItemMenu buscarItemMenuPorIDyVendedor(int idVendedor, int idItem) {
         

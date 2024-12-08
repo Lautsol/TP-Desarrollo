@@ -2,16 +2,14 @@
 package isi.deso.desarrollotrabajopractico.Controladores;
 
 import isi.deso.desarrollotrabajopractico.DAOS.FactoryDAO;
-import isi.deso.desarrollotrabajopractico.DAOS.ItemMenuVendedorMySQLDAO;
 import isi.deso.desarrollotrabajopractico.DAOS.VendedorMySQLDAO;
 import isi.deso.desarrollotrabajopractico.Interfaces.CrearVendedor;
 import isi.deso.desarrollotrabajopractico.Interfaces.ItemsMenuPedido;
 import isi.deso.desarrollotrabajopractico.Interfaces.ListaDeVendedores;
 import isi.deso.desarrollotrabajopractico.Interfaces.ModificarVendedor;
 import isi.deso.desarrollotrabajopractico.Interfaces.VerItemsVendedor;
-import isi.deso.desarrollotrabajopractico.ItemMenu;
-import isi.deso.desarrollotrabajopractico.ProductoDeOtroVendedorException;
-import isi.deso.desarrollotrabajopractico.Vendedor;
+import isi.deso.desarrollotrabajopractico.modelo.ItemMenu;
+import isi.deso.desarrollotrabajopractico.modelo.Vendedor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -69,15 +67,12 @@ public class VendedorController implements ActionListener, WindowListener {
             interfazCrearVendedor = new CrearVendedor();  
             interfazCrearVendedor.setControlador(this);
             setCrearVendedor(interfazCrearVendedor); 
-            int idVendedor = obtenerID();
-            interfazCrearVendedor.getjTextField4().setText(String.valueOf(idVendedor));
-            interfazCrearVendedor.getjTextField4().setEditable(false);
-            
         } 
     
         else if(comando.equals("Editar")) {
             
            itemsMenu = new ArrayList<>();
+           itemsMenuEliminar = new ArrayList<>();
            interfazModificarVendedor = new ModificarVendedor();  
            interfazModificarVendedor.setControlador(this);
            setModificarVendedor(interfazModificarVendedor); 
@@ -139,29 +134,30 @@ public class VendedorController implements ActionListener, WindowListener {
             listaDeVendedores.getjTable1().getCellEditor().stopCellEditing(); // Detener la edición si está activa
             }
             
-            int row = listaDeVendedores.getjTable1().getSelectedRow();
-            
-            int id = (Integer) listaDeVendedores.getModelo().getValueAt(row, 1);
-            eliminarVendedor(id);
-            listaDeVendedores.getModelo().removeRow(row);
+            if(listaDeVendedores.confirmarAccion()) {
+                int row = listaDeVendedores.getjTable1().getSelectedRow();
+
+                int id = (Integer) listaDeVendedores.getModelo().getValueAt(row, 1);
+                eliminarVendedor(id);
+                listaDeVendedores.getModelo().removeRow(row);
+            }
           
         } 
      
         else if (comando.equals("Crear")) {
             
             if(validarCamposVacios(interfazCrearVendedor)) interfazCrearVendedor.mostrarMensajeCamposVacios();
-            else if (!validarTiposDeDatos(interfazCrearVendedor)) interfazCrearVendedor.mostrarMensajeDatosInvalidos();
+            else if(!validarTiposDeDatos(interfazCrearVendedor)) interfazCrearVendedor.mostrarMensajeDatosInvalidos();
             else {
             String nombre = interfazCrearVendedor.getjTextField1().getText();
-            int id = Integer.parseInt(interfazCrearVendedor.getjTextField4().getText());
             String direccion = interfazCrearVendedor.getjTextField5().getText();
             
             if(itemsMenu == null || itemsMenu.isEmpty()) interfazCrearVendedor.mostrarMensajeItem();
-            else{
-            crearVendedor(nombre, id, direccion, itemsMenu);
-            listaDeVendedores.agregarVendedorALaTabla(nombre, id, direccion);
-            itemsMenu = new ArrayList<>();
-            interfazCrearVendedor.dispose();
+            else if(interfazCrearVendedor.confirmarAccion()) {
+                crearVendedor(nombre, direccion, itemsMenu);
+                restablecerTablaConDatosOriginales();
+                itemsMenu = new ArrayList<>();
+                interfazCrearVendedor.dispose();
             }
           }
         } 
@@ -234,7 +230,6 @@ public class VendedorController implements ActionListener, WindowListener {
         
         else if (comando.equals("Ver items")) {
             
-            itemsMenuEliminar = new ArrayList<>();
             interfazItemsVendedor = new VerItemsVendedor(this); 
             setVerItemsVendedor(interfazItemsVendedor); 
             interfazItemsVendedor.ocultarColumna();
@@ -242,6 +237,18 @@ public class VendedorController implements ActionListener, WindowListener {
             int id = Integer.parseInt(interfazModificarVendedor.getjTextField4().getText());
             vendedor.setId(id);
             ArrayList<ItemMenu> listaItemsVendedor = FactoryDAO.getItemMenuVendedorDAO().obtenerItemsMenuDeVendedor(vendedor);
+            
+            Iterator<ItemMenu> iterator = listaItemsVendedor.iterator();
+            while (iterator.hasNext()) {
+                ItemMenu item = iterator.next();
+                for (ItemMenu itemEliminar : itemsMenuEliminar) {
+                    if (itemEliminar.getId() == item.getId()) {
+                        iterator.remove();
+                        break;
+                    }
+                }
+            }
+
             cargarDatosOriginalesEnTablaItems(listaItemsVendedor, interfazItemsVendedor);
         }
         
@@ -251,39 +258,38 @@ public class VendedorController implements ActionListener, WindowListener {
             interfazItemsVendedor.getjTable1().getCellEditor().stopCellEditing(); // Detener la edición si está activa
             }
             
-            int row = interfazItemsVendedor.getjTable1().getSelectedRow();
-            
-            int id = (Integer) interfazItemsVendedor.getModelo().getValueAt(row, 0);
-            ItemMenu item = (new ItemMenuController()).buscarItemMenu(id);
-            itemsMenuEliminar.add(item);
-            interfazItemsVendedor.getModelo().removeRow(row);
+            if(interfazItemsVendedor.confirmarAccion()) {
+                int row = interfazItemsVendedor.getjTable1().getSelectedRow();
+
+                int id = (Integer) interfazItemsVendedor.getModelo().getValueAt(row, 0);
+                ItemMenu item = (new ItemMenuController()).buscarItemMenu(id);
+                itemsMenuEliminar.add(item);
+                interfazItemsVendedor.getModelo().removeRow(row);
+            }
         }
 
         else if (comando.equals("Guardar")) {
             
             if(validarCamposVaciosModificar(interfazModificarVendedor)) interfazModificarVendedor.mostrarMensajeCamposVacios();
-            else if (!validarTiposDeDatosModificar(interfazModificarVendedor)) interfazModificarVendedor.mostrarMensajeDatosInvalidos();
-            else {
-            int row = listaDeVendedores.getjTable1().getSelectedRow(); // Obtener la fila seleccionada
-            
-            String nombre = interfazModificarVendedor.getjTextField1().getText();
+            else if(!validarTiposDeDatosModificar(interfazModificarVendedor)) interfazModificarVendedor.mostrarMensajeDatosInvalidos();
             int id = Integer.parseInt(interfazModificarVendedor.getjTextField4().getText());
-            String direccion = interfazModificarVendedor.getjTextField5().getText();
-            
             Vendedor vendedor = new Vendedor();
-            vendedor.setNombre(nombre);
             vendedor.setId(id);
-            vendedor.setDireccion(direccion);
-            actualizarVendedor(vendedor, itemsMenu);
-            vendedor.setId(id);
-            FactoryDAO.getItemMenuVendedorDAO().eliminarItemsVendedor(vendedor, itemsMenuEliminar);
-            
-            listaDeVendedores.getModelo().setValueAt(nombre, row, 0); 
-            listaDeVendedores.getModelo().setValueAt(id, row, 1);         
-            listaDeVendedores.getModelo().setValueAt(direccion, row, 2); 
-            itemsMenu = new ArrayList<>();
-            interfazModificarVendedor.dispose();
-            interfazModificarVendedor = null;
+            if(itemsMenuEliminar.size() == FactoryDAO.getItemMenuVendedorDAO().obtenerItemsMenuDeVendedor(vendedor).size() && itemsMenu.isEmpty()) interfazModificarVendedor.mostrarMensajeItem();
+            else if(interfazModificarVendedor.confirmarAccion()) {
+                String nombre = interfazModificarVendedor.getjTextField1().getText();
+                String direccion = interfazModificarVendedor.getjTextField5().getText();
+
+                vendedor.setNombre(nombre);
+                vendedor.setDireccion(direccion);
+                actualizarVendedor(vendedor, itemsMenu);
+                vendedor.setId(id);
+                FactoryDAO.getItemMenuVendedorDAO().eliminarItemsVendedor(vendedor, itemsMenuEliminar);
+
+                itemsMenu = new ArrayList<>();
+                interfazModificarVendedor.dispose();
+                restablecerTablaConDatosOriginales();
+                interfazModificarVendedor = null;
             }
         } 
         
@@ -346,17 +352,18 @@ public class VendedorController implements ActionListener, WindowListener {
         listaDeVendedores.getModelo().addRow(rowData);
     }
     
-    public void crearVendedor(String nombre, int id, String direccion, ArrayList<ItemMenu> itemsMenu) {
+    public int crearVendedor(String nombre, String direccion, ArrayList<ItemMenu> itemsMenu) {
         
         Vendedor vendedor = new Vendedor();
         vendedor.setNombre(nombre);
-        vendedor.setId(id);
         vendedor.setDireccion(direccion);
         vendedor.setItems(itemsMenu);
 
         // VendedorMemory.listaVendedores.add(vendedor);  
-        FactoryDAO.getVendedorDAO().crearVendedor(vendedor);
+        int id = FactoryDAO.getVendedorDAO().crearVendedor(vendedor);
+        vendedor.setId(id);
         FactoryDAO.getItemMenuVendedorDAO().agregarItemsVendedor(vendedor);
+        return id;
     }
     
     public void eliminarVendedor(int id) {
@@ -445,8 +452,7 @@ public class VendedorController implements ActionListener, WindowListener {
         
         boolean vacio = false;
         
-        if(interfaz.getjTextField4().getText().trim().isEmpty() || 
-           interfaz.getjTextField1().getText().trim().isEmpty() ||
+        if(interfaz.getjTextField1().getText().trim().isEmpty() ||
            interfaz.getjTextField5().getText().trim().isEmpty()) vacio = true;
         
         return vacio;
@@ -456,8 +462,7 @@ public class VendedorController implements ActionListener, WindowListener {
         
         boolean correcto = true;
         
-        if(!interfaz.getjTextField4().getText().matches("\\d+") || 
-           !interfaz.getjTextField1().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+") ||
+        if(!interfaz.getjTextField1().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+") ||
            !interfaz.getjTextField5().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s]+")) correcto = false;
         
         return correcto;
@@ -544,11 +549,6 @@ public class VendedorController implements ActionListener, WindowListener {
         
             interfaz.getModelo().addRow(rowData);
         }
-    }
-    
-    private int obtenerID() {
-        VendedorMySQLDAO vendedorMySQLDAO = (VendedorMySQLDAO) FactoryDAO.getVendedorDAO();
-        return vendedorMySQLDAO.obtenerID();
     }
     
     public void windowOpened(WindowEvent e) {

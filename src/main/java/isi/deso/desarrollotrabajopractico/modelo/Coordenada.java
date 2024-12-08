@@ -1,5 +1,5 @@
 
-package isi.deso.desarrollotrabajopractico;
+package isi.deso.desarrollotrabajopractico.modelo;
 
 public class Coordenada {
     private double latitud;

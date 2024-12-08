@@ -1,8 +1,8 @@
 
 package isi.deso.desarrollotrabajopractico.Memory;
 
-import isi.deso.desarrollotrabajopractico.Categoria;
-import isi.deso.desarrollotrabajopractico.TipoItem;
+import isi.deso.desarrollotrabajopractico.modelo.Categoria;
+import isi.deso.desarrollotrabajopractico.modelo.TipoItem;
 import java.util.ArrayList;
 
 public class CategoriaMemory {

@@ -12,7 +12,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
@@ -20,32 +23,38 @@ public class ListaDeClientes extends javax.swing.JPanel {
 
     private ClienteController controlador;
       
-    
     public ListaDeClientes() {
-       initComponents();
-       controlador = new ClienteController(this);
-       jButton1.addActionListener(controlador);
-       jTextField1.addActionListener(controlador);
-       jButton4.addActionListener(controlador);
-       jTable1.getTableHeader().setReorderingAllowed(false);
-       
-       jTextField1.addFocusListener(new FocusAdapter() {
-        public void focusGained(FocusEvent e) {
-            jTextField1.setText(""); 
-        }
-    });
+        initComponents();
+        controlador = new ClienteController(this);
+        jButton1.addActionListener(controlador);
+        jTextField1.addActionListener(controlador);
+        jButton4.addActionListener(controlador);
+        jTable1.getTableHeader().setReorderingAllowed(false);
 
-       // Configurar las columnas para que no se puedan redimensionar
-       for (int i = 0; i < jTable1.getColumnModel().getColumnCount(); i++) {
-           jTable1.getColumnModel().getColumn(i).setResizable(false);
-       }
+        jTextField1.addFocusListener(new FocusAdapter() {
+         public void focusGained(FocusEvent e) {
+             jTextField1.setText(""); 
+            }
+        });
 
-       // Crear un renderizador personalizado para la columna de acciones
-       jTable1.getColumnModel().getColumn(7).setCellRenderer(new ActionCellRenderer());
-
-       // Crear un editor personalizado para la columna de acciones
-       jTable1.getColumnModel().getColumn(7).setCellEditor(new ActionCellEditor(jTable1));
+        DefaultTableCellRenderer rendererCentrado = new DefaultTableCellRenderer();
+        rendererCentrado.setHorizontalAlignment(SwingConstants.CENTER);
         
+        for (int i = 0; i < jTable1.getColumnModel().getColumnCount(); i++) {
+            jTable1.getColumnModel().getColumn(i).setResizable(false);
+            jTable1.getColumnModel().getColumn(i).setCellRenderer(rendererCentrado);
+        }
+        
+        // Centrar los encabezados de las columnas
+        JTableHeader encabezado = jTable1.getTableHeader();
+        DefaultTableCellRenderer rendererEncabezado = (DefaultTableCellRenderer) encabezado.getDefaultRenderer();
+        rendererEncabezado.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Crear un renderizador personalizado para la columna de acciones
+        jTable1.getColumnModel().getColumn(7).setCellRenderer(new ActionCellRenderer());
+
+        // Crear un editor personalizado para la columna de acciones
+        jTable1.getColumnModel().getColumn(7).setCellEditor(new ActionCellEditor(jTable1)); 
     }
     
     public ClienteController getControlador() {
@@ -132,6 +141,20 @@ public class ListaDeClientes extends javax.swing.JPanel {
         JOptionPane.showMessageDialog(null, "No se encontró ningún cliente.", "CLIENTE/S NO ENCONTRADO/S", JOptionPane.ERROR_MESSAGE);
     }
     
+    public boolean confirmarAccion() {
+        String[] opciones = {"Aceptar", "Cancelar"};
+        int opcion = JOptionPane.showOptionDialog(
+                null,
+                "¿Está seguro de que desea eliminar el cliente?",
+                "Confirmar acción",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones[0] 
+        );
+        return opcion == 0; 
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

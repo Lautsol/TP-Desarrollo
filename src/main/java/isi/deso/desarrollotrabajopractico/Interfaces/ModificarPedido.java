@@ -2,7 +2,7 @@
 package isi.deso.desarrollotrabajopractico.Interfaces;
 
 import isi.deso.desarrollotrabajopractico.Controladores.PedidoController;
-import isi.deso.desarrollotrabajopractico.Pago;
+import isi.deso.desarrollotrabajopractico.modelo.Pago;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
@@ -81,6 +81,21 @@ public class ModificarPedido extends javax.swing.JFrame {
     
     public void mostrarPagoGenerado(Pago pago) {
         showMessageDialog(null, "Fecha: " + pago.getFecha() + "\nMonto: " + pago.getMonto(), "PAGO REALIZADO CON ÉXITO", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public boolean confirmarAccion() {
+        String[] opciones = {"Aceptar", "Cancelar"};
+        int opcion = JOptionPane.showOptionDialog(
+                null,
+                "¿Está seguro de que desea guardar los cambios?",
+                "Confirmar acción",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones[0] 
+        );
+        return opcion == 0; 
     }
     
     @SuppressWarnings("unchecked")

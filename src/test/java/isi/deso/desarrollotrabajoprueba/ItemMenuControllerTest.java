@@ -1,12 +1,12 @@
 package isi.deso.desarrollotrabajoprueba;
 
-import isi.deso.desarrollotrabajopractico.ItemMenu;
+import isi.deso.desarrollotrabajopractico.modelo.ItemMenu;
 import isi.deso.desarrollotrabajopractico.Controladores.ItemMenuController;
-import isi.deso.desarrollotrabajopractico.TipoItem;
+import isi.deso.desarrollotrabajopractico.modelo.TipoItem;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.sql.*;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,17 +15,17 @@ public class ItemMenuControllerTest {
 
     private static ItemMenuController itemMenuController;  
     private static Connection connection;
+    private static List<Integer> itemsAEliminar;
     
     @BeforeAll
     static void setUp() throws SQLException {
         connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/grupo11", "root", "grupo11");
         itemMenuController = new ItemMenuController();
+        itemsAEliminar = new ArrayList<>(); 
     }
     
     @AfterAll
     static void tearDownAfterClass() throws SQLException {
-        
-        List<Integer> itemsAEliminar = Arrays.asList(100, 101, 102, 103, 104, 105);  
 
         String queryDelete = "DELETE FROM itemsmenu WHERE id = ?";
 
@@ -45,13 +45,12 @@ public class ItemMenuControllerTest {
     void testCrearItemMenu() throws SQLException {
         
         String nombre = "Pizza Margherita";
-        int id = 100;
         String descripcion = "Pizza clásica con tomate, mozzarella y albahaca.";
         double precio = 8.99;
         int idCategoria = 1; 
         String tipoItem = "PLATO";
 
-        itemMenuController.crearItemMenu(id, nombre, descripcion, precio, idCategoria, tipoItem);
+        int id = itemMenuController.crearItemMenu(nombre, descripcion, precio, idCategoria, tipoItem);
 
         ItemMenu itemCreado = itemMenuController.buscarItemMenu(id);
         assertNotNull(itemCreado);
@@ -60,19 +59,20 @@ public class ItemMenuControllerTest {
         assertEquals(descripcion, itemCreado.getDescripcion());
         assertEquals(precio, itemCreado.getPrecio());
         assertEquals(idCategoria, itemCreado.getCategoria().getId());
+        
+        itemsAEliminar.add(id);
     }
 
     @Test
     void testActualizarItemMenu() throws SQLException {
         
         String nombre = "Pizza Margherita";
-        int id = 101;
         String descripcion = "Pizza clásica con tomate, mozzarella y albahaca.";
         double precio = 8.99;
         int idCategoria = 1;
         String tipoItem = "PLATO";
 
-        itemMenuController.crearItemMenu(id, nombre, descripcion, precio, idCategoria, tipoItem);
+        int id = itemMenuController.crearItemMenu(nombre, descripcion, precio, idCategoria, tipoItem);
 
         String nuevoNombre = "Pizza Diavola";
         String nuevaDescripcion = "Pizza con salami picante y mozzarella.";
@@ -89,19 +89,20 @@ public class ItemMenuControllerTest {
         assertEquals(nuevaDescripcion, itemActualizado.getDescripcion());
         assertEquals(nuevoPrecio, itemActualizado.getPrecio());
         assertEquals(nuevaCategoria, itemActualizado.getCategoria().getId());
+        
+        itemsAEliminar.add(id);
     }
 
     @Test
     void testEliminarItemMenu() throws SQLException {
         
         String nombre = "Pizza Funghi";
-        int id = 102;
         String descripcion = "Pizza con champiñones y mozzarella.";
         double precio = 9.99;
         int idCategoria = 1;
         String tipoItem = "PLATO";
 
-        itemMenuController.crearItemMenu(id, nombre, descripcion, precio, idCategoria, tipoItem);
+        int id = itemMenuController.crearItemMenu(nombre, descripcion, precio, idCategoria, tipoItem);
 
         ItemMenu itemAntesDeEliminar = itemMenuController.buscarItemMenu(id);
         assertNotNull(itemAntesDeEliminar);
@@ -117,13 +118,12 @@ public class ItemMenuControllerTest {
     void testBuscarItemMenuPorId() throws SQLException {
         
         String nombre = "Pizza Napolitana";
-        int id = 103; 
         String descripcion = "Pizza clásica con anchoas, alcaparras y aceitunas.";
         double precio = 9.50;
         int idCategoria = 1;
         String tipoItem = "PLATO";
 
-        itemMenuController.crearItemMenu(id, nombre, descripcion, precio, idCategoria, tipoItem);
+        int id = itemMenuController.crearItemMenu(nombre, descripcion, precio, idCategoria, tipoItem);
 
         ItemMenu itemBuscado = itemMenuController.buscarItemMenu(id);
 
@@ -134,13 +134,15 @@ public class ItemMenuControllerTest {
         assertEquals(descripcion, itemBuscado.getDescripcion());
         assertEquals(precio, itemBuscado.getPrecio());
         assertEquals(idCategoria, itemBuscado.getCategoria().getId());
+        
+        itemsAEliminar.add(id);
     }
 
     @Test
     void testListarItemsMenuPorNombre() throws SQLException {
         
-        itemMenuController.crearItemMenu(104, "Pizza Cuatro Quesos", "Pizza con cuatro tipos de queso.", 10.50, 1, "PLATO");
-        itemMenuController.crearItemMenu(105, "Pizza Vegetariana", "Pizza con vegetales frescos.", 9.50, 1, "PLATO");
+        int id1 = itemMenuController.crearItemMenu("Pizza Cuatro Quesos", "Pizza con cuatro tipos de queso.", 10.50, 1, "PLATO");
+        int id2 = itemMenuController.crearItemMenu("Pizza Vegetariana", "Pizza con vegetales frescos.", 9.50, 1, "PLATO");
 
         List<ItemMenu> items = itemMenuController.listarItemsMenu("Pizza Cuatro Quesos");
 
@@ -148,5 +150,8 @@ public class ItemMenuControllerTest {
         assertNotNull(items);
         assertEquals(1, items.size());  // Debería haber solo un item con el nombre "Pizza Cuatro Quesos"
         assertEquals("Pizza Cuatro Quesos", items.get(0).getNombre());
+        
+        itemsAEliminar.add(id1);
+        itemsAEliminar.add(id2);
     }
 }

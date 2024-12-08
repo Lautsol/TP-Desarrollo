@@ -6,10 +6,14 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -27,10 +31,18 @@ public class VerItemsVendedor extends javax.swing.JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.controlador = controlador;
 
-        // Configurar las columnas para que no se puedan redimensionar
+        DefaultTableCellRenderer rendererCentrado = new DefaultTableCellRenderer();
+        rendererCentrado.setHorizontalAlignment(SwingConstants.CENTER);
+        
         for (int i = 0; i < jTable1.getColumnModel().getColumnCount(); i++) {
             jTable1.getColumnModel().getColumn(i).setResizable(false);
+            jTable1.getColumnModel().getColumn(i).setCellRenderer(rendererCentrado);
         }
+        
+        // Centrar los encabezados de las columnas
+        JTableHeader encabezado = jTable1.getTableHeader();
+        DefaultTableCellRenderer rendererEncabezado = (DefaultTableCellRenderer) encabezado.getDefaultRenderer();
+        rendererEncabezado.setHorizontalAlignment(SwingConstants.CENTER);
 
         // Crear un renderizador personalizado para la columna de acciones
         jTable1.getColumnModel().getColumn(7).setCellRenderer(new ActionCellRenderer());
@@ -95,6 +107,21 @@ public class VerItemsVendedor extends javax.swing.JFrame {
         TableColumnModel columnModel = jTable1.getColumnModel();
         TableColumn column = columnModel.getColumn(6); // Número de columna de la que se quiere eliminar
         columnModel.removeColumn(column); // Oculta la columna
+    }
+    
+    public boolean confirmarAccion() {
+        String[] opciones = {"Aceptar", "Cancelar"};
+        int opcion = JOptionPane.showOptionDialog(
+                null,
+                "¿Está seguro de que desea eliminar el item menú del vendedor?",
+                "Confirmar acción",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones[0] 
+        );
+        return opcion == 0; 
     }
     
     @SuppressWarnings("unchecked")

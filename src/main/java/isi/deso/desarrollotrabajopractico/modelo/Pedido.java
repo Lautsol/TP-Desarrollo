@@ -1,5 +1,5 @@
 
-package isi.deso.desarrollotrabajopractico;
+package isi.deso.desarrollotrabajopractico.modelo;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,8 +16,17 @@ public class Pedido  extends PedidoObservable {
     private boolean cambioEstado;
     private TipoDePago tipoPago;
      
+    public Pedido(Cliente cliente, Vendedor vendedor) {
+        this.cliente = cliente;
+        this.vendedor = vendedor;
+        pedidoDetalle = new ArrayList<>();
+        estado = Estado.EN_PROCESO;
+        clientesObserver = new ArrayList<>();
+        formaDePago = null;
+    }
+    
     public Pedido(int id, Cliente cliente, Vendedor vendedor) {
-        id_pedido = id;
+        this.id_pedido = id;
         this.cliente = cliente;
         this.vendedor = vendedor;
         pedidoDetalle = new ArrayList<>();

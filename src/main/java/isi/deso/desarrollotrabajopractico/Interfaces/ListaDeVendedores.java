@@ -12,12 +12,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 public class ListaDeVendedores extends javax.swing.JPanel {
- private VendedorController controlador;
+    
+    private VendedorController controlador;
+    
     public ListaDeVendedores() {
         initComponents();
         setVisible(true);
@@ -29,16 +34,25 @@ public class ListaDeVendedores extends javax.swing.JPanel {
         jTextField1.addFocusListener(new FocusAdapter() {
         public void focusGained(FocusEvent e) {
             jTextField1.setText(""); 
-        }
-    });
+            }
+        });
        
         jTable1.getTableHeader().setReorderingAllowed(false);
         
-         for (int i = 0; i < jTable1.getColumnModel().getColumnCount(); i++) {
-                jTable1.getColumnModel().getColumn(i).setResizable(false);
-            }
+        DefaultTableCellRenderer rendererCentrado = new DefaultTableCellRenderer();
+        rendererCentrado.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        for (int i = 0; i < jTable1.getColumnModel().getColumnCount(); i++) {
+            jTable1.getColumnModel().getColumn(i).setResizable(false);
+            jTable1.getColumnModel().getColumn(i).setCellRenderer(rendererCentrado);
+        }
+        
+        // Centrar los encabezados de las columnas
+        JTableHeader encabezado = jTable1.getTableHeader();
+        DefaultTableCellRenderer rendererEncabezado = (DefaultTableCellRenderer) encabezado.getDefaultRenderer();
+        rendererEncabezado.setHorizontalAlignment(SwingConstants.CENTER);
        
-      // Crear un renderizador personalizado para la columna de acciones
+        // Crear un renderizador personalizado para la columna de acciones
         jTable1.getColumnModel().getColumn(3).setCellRenderer(new ActionCellRenderer());
 
         // Crear un editor personalizado para la columna de acciones
@@ -66,7 +80,6 @@ public class ListaDeVendedores extends javax.swing.JPanel {
         }
     }
     
-
     // Editor de celdas para los botones
     private class ActionCellEditor extends AbstractCellEditor implements TableCellEditor {
 
@@ -98,6 +111,7 @@ public class ListaDeVendedores extends javax.swing.JPanel {
             return null; // No es necesario devolver ningún valor aquí
         }
     }
+    
     public void agregarVendedorALaTabla(String nombre, int id, String direccion) {
        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
        jTable1.setModel(model);
@@ -120,6 +134,21 @@ public class ListaDeVendedores extends javax.swing.JPanel {
     
     public void mostrarMensaje() {
         JOptionPane.showMessageDialog(null, "No se encontró ningún vendedor.", "VENDEDOR/S NO ENCONTRADO/S", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    public boolean confirmarAccion() {
+        String[] opciones = {"Aceptar", "Cancelar"};
+        int opcion = JOptionPane.showOptionDialog(
+                null,
+                "¿Está seguro de que desea eliminar el vendedor?",
+                "Confirmar acción",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones[0] 
+        );
+        return opcion == 0; 
     }
     
     @SuppressWarnings("unchecked")

@@ -1,5 +1,5 @@
 
-package isi.deso.desarrollotrabajopractico;
+package isi.deso.desarrollotrabajopractico.modelo;
 
 public class PagoYaEfectuadoException extends Exception {
     

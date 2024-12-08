@@ -1,8 +1,8 @@
 
 package isi.deso.desarrollotrabajopractico.DAOS;
 
-import isi.deso.desarrollotrabajopractico.Pedido;
-import isi.deso.desarrollotrabajopractico.PedidoDetalle;
+import isi.deso.desarrollotrabajopractico.modelo.Pedido;
+import isi.deso.desarrollotrabajopractico.modelo.PedidoDetalle;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;

@@ -11,7 +11,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
@@ -20,18 +23,28 @@ public class ListaDePedidos extends javax.swing.JPanel {
     private PedidoController controlador;
     
     public ListaDePedidos() {
-       initComponents();
-       controlador = new PedidoController(this);
+        initComponents();
+        controlador = new PedidoController(this);
+
+        jButton1.addActionListener(controlador);
+        jTextField1.addActionListener(controlador);
+        jButton2.addActionListener(controlador);
+        jTable1.getTableHeader().setReorderingAllowed(false);
        
-       jButton1.addActionListener(controlador);
-       jTextField1.addActionListener(controlador);
-       jButton2.addActionListener(controlador);
-       jTable1.getTableHeader().setReorderingAllowed(false);
-       
-         for (int i = 0; i < jTable1.getColumnModel().getColumnCount(); i++) {
-                jTable1.getColumnModel().getColumn(i).setResizable(false);
-            }
-      // Crear un renderizador personalizado para la columna de acciones
+        DefaultTableCellRenderer rendererCentrado = new DefaultTableCellRenderer();
+        rendererCentrado.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        for (int i = 0; i < jTable1.getColumnModel().getColumnCount(); i++) {
+            jTable1.getColumnModel().getColumn(i).setResizable(false);
+            jTable1.getColumnModel().getColumn(i).setCellRenderer(rendererCentrado);
+        }
+        
+        // Centrar los encabezados de las columnas
+        JTableHeader encabezado = jTable1.getTableHeader();
+        DefaultTableCellRenderer rendererEncabezado = (DefaultTableCellRenderer) encabezado.getDefaultRenderer();
+        rendererEncabezado.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        // Crear un renderizador personalizado para la columna de acciones
         jTable1.getColumnModel().getColumn(6).setCellRenderer(new ActionCellRenderer());
 
         // Crear un editor personalizado para la columna de acciones
@@ -118,6 +131,21 @@ public class ListaDePedidos extends javax.swing.JPanel {
     
     public void mostrarMensaje() {
         JOptionPane.showMessageDialog(null, "No se encontró ningún pedido.", "PEDIDO/S NO ENCONTRADO/S", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    public boolean confirmarAccion() {
+        String[] opciones = {"Aceptar", "Cancelar"};
+        int opcion = JOptionPane.showOptionDialog(
+                null,
+                "¿Está seguro de que desea eliminar el pedido?",
+                "Confirmar acción",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones[0] 
+        );
+        return opcion == 0; 
     }
 
     @SuppressWarnings("unchecked")

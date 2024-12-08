@@ -1,7 +1,7 @@
 
 package isi.deso.desarrollotrabajopractico.DAOS;
 
-import isi.deso.desarrollotrabajopractico.Vendedor;
+import isi.deso.desarrollotrabajopractico.modelo.Vendedor;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -46,22 +46,31 @@ public class VendedorMySQLDAO implements VendedorDAO {
         return con;
     }
     
-    public void crearVendedor(Vendedor vendedor) {
-        
-        String sqlVendedor = "INSERT INTO grupo11.vendedores (id, nombre, direccion) VALUES (?, ?, ?)";
+    public int crearVendedor(Vendedor vendedor) {
+        String sqlVendedor = "INSERT INTO grupo11.vendedores (nombre, direccion) VALUES (?, ?)";
+
+        int vendedorId = -1; // Inicializa el id con un valor por defecto
 
         try (Connection connection = getConnection(); 
-            PreparedStatement pstmtVendedor = connection.prepareStatement(sqlVendedor)     
-        ) {
-            pstmtVendedor.setInt(1, vendedor.getId());
-            pstmtVendedor.setString(2, vendedor.getNombre());
-            pstmtVendedor.setString(3, vendedor.getDireccion());
-            pstmtVendedor.executeUpdate(); 
+             PreparedStatement pstmtVendedor = connection.prepareStatement(sqlVendedor, Statement.RETURN_GENERATED_KEYS)) {
+
+            pstmtVendedor.setString(1, vendedor.getNombre());
+            pstmtVendedor.setString(2, vendedor.getDireccion());
+            pstmtVendedor.executeUpdate();
+
+            try (ResultSet generatedKeys = pstmtVendedor.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    vendedorId = generatedKeys.getInt(1); 
+                }
+            }
+
         } catch (SQLException e) {
             Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, "Error al crear el vendedor", e);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, "Clase no encontrada", ex);
         }
+
+        return vendedorId; 
     }
 
     public void actualizarVendedor(Vendedor vendedor) {
@@ -88,15 +97,13 @@ public class VendedorMySQLDAO implements VendedorDAO {
     public ArrayList<Vendedor> obtenerTodosLosVendedores() {
         
         ArrayList<Vendedor> vendedores = new ArrayList<>();
-        String sql = "SELECT * FROM vendedores";
+        String sql = "SELECT * FROM vendedores ORDER BY id";
         
         try (Connection connection = getConnection(); 
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
-            // Iterar sobre los resultados de la consulta
             while (rs.next()) {
-                // Crear un nuevo objeto Vendedor y llenar con los datos de la tabla
                 Vendedor vendedor = new Vendedor(
                         rs.getInt("id"), 
                         rs.getString("nombre"),
@@ -125,7 +132,7 @@ public class VendedorMySQLDAO implements VendedorDAO {
         try (Connection connection = getConnection(); 
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            // Establecemos el parámetro de la consulta (el id del vendedor)
+            // Establecemos el parámetro de la consulta 
             stmt.setInt(1, id);
 
             stmt.executeUpdate();
@@ -150,7 +157,6 @@ public class VendedorMySQLDAO implements VendedorDAO {
             pstmt.setString(1, nombre + "%");
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                // Iterar sobre los resultados de la consulta
                 while (rs.next()) {
                     Vendedor vendedor = new Vendedor(
                         rs.getInt("id"),
@@ -178,11 +184,9 @@ public class VendedorMySQLDAO implements VendedorDAO {
         try (Connection connection = getConnection(); 
             PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
-            // Establecer el parámetro del ID en la consulta
             pstmt.setInt(1, id);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                // Si se encuentra un resultado, crear el objeto Vendedor
                 if (rs.next()) {
                     vendedor = new Vendedor(
                         rs.getInt("id"),
@@ -200,29 +204,6 @@ public class VendedorMySQLDAO implements VendedorDAO {
         }
 
         return vendedor; 
-    }
-    
-    public int obtenerID() {
-        
-        String consulta = "SELECT MAX(id) AS ultimo_id FROM grupo11.vendedores";
-        int nuevoID = 1; 
-
-        try (Connection connection = getConnection();  
-             PreparedStatement stmt = connection.prepareStatement(consulta);
-             ResultSet rs = stmt.executeQuery()) { 
-
-            if (rs.next()) {
-                int ultimoID = rs.getInt("ultimo_id");
-                nuevoID = ultimoID + 1;
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(VendedorMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return nuevoID;
     }
 
 }

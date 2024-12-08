@@ -1,22 +1,20 @@
 
 package isi.deso.desarrollotrabajopractico.Controladores;
 
-import isi.deso.desarrollotrabajopractico.Cliente;
+import isi.deso.desarrollotrabajopractico.modelo.Cliente;
 import isi.deso.desarrollotrabajopractico.DAOS.FactoryDAO;
-import isi.deso.desarrollotrabajopractico.DAOS.ItemMenuMySQLDAO;
 import isi.deso.desarrollotrabajopractico.DAOS.ItemMenuVendedorMySQLDAO;
 import isi.deso.desarrollotrabajopractico.DAOS.PedidoMySQLDAO;
-import isi.deso.desarrollotrabajopractico.Estado;
+import isi.deso.desarrollotrabajopractico.modelo.Estado;
 import isi.deso.desarrollotrabajopractico.Interfaces.CrearPedido;
 import isi.deso.desarrollotrabajopractico.Interfaces.ItemsMenuPedido;
 import isi.deso.desarrollotrabajopractico.Interfaces.ListaDePedidos;
 import isi.deso.desarrollotrabajopractico.Interfaces.ModificarPedido;
-import isi.deso.desarrollotrabajopractico.ItemMenu;
-import isi.deso.desarrollotrabajopractico.Pedido;
-import isi.deso.desarrollotrabajopractico.PedidoDetalle;
-import isi.deso.desarrollotrabajopractico.ProductoDeOtroVendedorException;
-import isi.deso.desarrollotrabajopractico.TipoDePago;
-import isi.deso.desarrollotrabajopractico.Vendedor;
+import isi.deso.desarrollotrabajopractico.modelo.ItemMenu;
+import isi.deso.desarrollotrabajopractico.modelo.Pedido;
+import isi.deso.desarrollotrabajopractico.modelo.PedidoDetalle;
+import isi.deso.desarrollotrabajopractico.modelo.TipoDePago;
+import isi.deso.desarrollotrabajopractico.modelo.Vendedor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -70,9 +68,6 @@ public class PedidoController implements ActionListener, WindowListener {
             setCrearPedido(interfazCrearPedido);  
             pedidosDetalles = new ArrayList<>();
             interfazCrearPedido.getCampoEstado().setEnabled(false);
-            int idPedido = obtenerID();
-            interfazCrearPedido.getCampoIDpedido().setText(String.valueOf(idPedido));
-            interfazCrearPedido.getCampoIDpedido().setEditable(false);
         } 
         
         else if (comando.equals("Editar")) {
@@ -90,7 +85,7 @@ public class PedidoController implements ActionListener, WindowListener {
             listaDePedidos.getjTable1().getCellEditor().stopCellEditing(); // Detener la edición si está activa
            }
            
-           int row = listaDePedidos.getjTable1().getSelectedRow(); // Obtener la fila seleccionada
+           int row = listaDePedidos.getjTable1().getSelectedRow(); 
            
            int idPedido = (Integer) listaDePedidos.getModelo().getValueAt(row,0);
            int idCliente = (Integer) listaDePedidos.getModelo().getValueAt(row, 1);
@@ -99,13 +94,13 @@ public class PedidoController implements ActionListener, WindowListener {
            
            // Obtener el valor de la forma de pago como cadena
             Object formaDePagoObj = listaDePedidos.getModelo().getValueAt(row, 4);
-            String formaDePagoStr = formaDePagoObj.toString();  // Convertir a String
-            TipoDePago tipoDePago = TipoDePago.valueOf(formaDePagoStr.toUpperCase());  // Convertir a TipoDePago
+            String formaDePagoStr = formaDePagoObj.toString();  
+            TipoDePago tipoDePago = TipoDePago.valueOf(formaDePagoStr.toUpperCase());  
 
             // Obtener el valor del estado como cadena
             Object estadoObj = listaDePedidos.getModelo().getValueAt(row, 5);
-            String estadoStr = estadoObj.toString();  // Convertir a String
-            Estado est = Estado.valueOf(estadoStr.toUpperCase());  // Convertir a Estado
+            String estadoStr = estadoObj.toString();  
+            Estado est = Estado.valueOf(estadoStr.toUpperCase());  
            
            if(est == Estado.RECIBIDO) {
                interfazModificarPedido.getjComboBox2().setEnabled(false);
@@ -176,11 +171,13 @@ public class PedidoController implements ActionListener, WindowListener {
             listaDePedidos.getjTable1().getCellEditor().stopCellEditing(); // Detener la edición si está activa
             }
             
-            int row = listaDePedidos.getjTable1().getSelectedRow();
-            
-            int idPedido = (Integer) listaDePedidos.getModelo().getValueAt(row, 0);
-            eliminarPedido(idPedido);
-            listaDePedidos.getModelo().removeRow(row);
+            if(listaDePedidos.confirmarAccion()) {
+                int row = listaDePedidos.getjTable1().getSelectedRow();
+
+                int idPedido = (Integer) listaDePedidos.getModelo().getValueAt(row, 0);
+                eliminarPedido(idPedido);
+                listaDePedidos.getModelo().removeRow(row);
+            }
           
         }
         
@@ -189,7 +186,6 @@ public class PedidoController implements ActionListener, WindowListener {
             if(validarCamposVacios(interfazCrearPedido)) interfazCrearPedido.mostrarMensajeCamposVacios();
             else if (!validarTiposDeDatos(interfazCrearPedido)) interfazCrearPedido.mostrarMensajeDatosInvalidos();
             else {
-            int idPedido = Integer.parseInt(interfazCrearPedido.getCampoIDpedido().getText());
             int idCliente  = Integer.parseInt(interfazCrearPedido.getCampoIDcliente().getText());
             int idVendedor = Integer.parseInt(interfazCrearPedido.getCampoIDvendedor().getText());
             String formaDePago = (String)interfazCrearPedido.getCampoFormaDePago().getSelectedItem();
@@ -197,7 +193,7 @@ public class PedidoController implements ActionListener, WindowListener {
               
             if(!verificarCliente(idCliente)) interfazCrearPedido.mostrarMensajeCliente();
             else if(!verificarVendedor(idVendedor)) interfazCrearPedido.mostrarMensajeVendedor();
-            else{
+            else {
             cliente = new ClienteController().buscarCliente(idCliente);
             Vendedor vendedor = new VendedorController().buscarPorIdVendedor(idVendedor);
             
@@ -210,17 +206,17 @@ public class PedidoController implements ActionListener, WindowListener {
             else if (pedidosDetalles == null || pedidosDetalles.isEmpty()) {
             interfazCrearPedido.mostrarMensajePedidoVacio();
             }
-            else {
-                cliente.iniciarPedido(idPedido, vendedor);
-                
-                for(PedidoDetalle pd : pedidosDetalles) {
-                    cliente.agregarProducto(pd); 
-                }
-                
-                double total = crearPedido(cliente.getPedidoActual(), TipoDePago.valueOf(formaDePago), cliente);
-                listaDePedidos.agregarPedidoALaTabla(idPedido, idCliente,  idVendedor, total, formaDePago, estado); 
-                pedidosDetalles = null;
-                interfazCrearPedido.dispose();
+            else if(interfazCrearPedido.confirmarAccion()) {
+                    cliente.iniciarPedido(vendedor);
+
+                    for(PedidoDetalle pd : pedidosDetalles) {
+                        cliente.agregarProducto(pd); 
+                    }
+
+                    crearPedido(cliente.getPedidoActual(), TipoDePago.valueOf(formaDePago), cliente);
+                    restablecerTablaConDatosOriginales();                
+                    pedidosDetalles = null;
+                    interfazCrearPedido.dispose();
                 }
              }
            }
@@ -279,39 +275,31 @@ public class PedidoController implements ActionListener, WindowListener {
     }
         
         else if (comando.equals("CancelarCrear")) {
-            
                 interfazCrearPedido.dispose();
-                
         }
         
         else if (comando.equals("Guardar")) {
             
             if(validarCamposVaciosModificar(interfazModificarPedido)) interfazModificarPedido.mostrarMensajeCamposVacios();
-            else if (!validarTiposDeDatosModificar(interfazModificarPedido)) interfazModificarPedido.mostrarMensajeDatosInvalidos();
-            else {
-            int row = listaDePedidos.getjTable1().getSelectedRow();
-            int idPedido = Integer.parseInt(interfazModificarPedido.getjTextField4().getText());
-            int idCliente  = Integer.parseInt(interfazModificarPedido.getjTextField1().getText());
-            int idVendedor = Integer.parseInt(interfazModificarPedido.getjTextField2().getText());
-            double total = Double.parseDouble(interfazModificarPedido.getjTextField3().getText());
-            String formaDePago = (String)interfazModificarPedido.getjComboBox1().getSelectedItem();
-            String estado = (String)interfazModificarPedido.getjComboBox2().getSelectedItem();
-            
-            if(Estado.valueOf(estado) == Estado.EN_ENVIO) {
-            Cliente cliente = new ClienteController().buscarCliente(idCliente);
-            Vendedor vendedor = new VendedorController().buscarPorIdVendedor(idVendedor);
-            Pedido pedido = buscarPedido(idPedido);
-            
-            double precioFinal = actualizarPedido(pedido, cliente, vendedor);
-            interfazModificarPedido.mostrarPagoGenerado(pedido.getPago());
-            listaDePedidos.getModelo().setValueAt(idPedido, row, 0);
-            listaDePedidos.getModelo().setValueAt(idCliente,row,1);
-            listaDePedidos.getModelo().setValueAt(idVendedor,row,2);
-            listaDePedidos.getModelo().setValueAt(precioFinal,row,3);
-            listaDePedidos.getModelo().setValueAt(formaDePago,row,4);
-            listaDePedidos.getModelo().setValueAt(String.valueOf(Estado.RECIBIDO),row,5);
-            interfazModificarPedido.dispose();
-            }
+            else if(!validarTiposDeDatosModificar(interfazModificarPedido)) interfazModificarPedido.mostrarMensajeDatosInvalidos();
+            else if(interfazModificarPedido.confirmarAccion()) {
+                int idPedido = Integer.parseInt(interfazModificarPedido.getjTextField4().getText());
+                int idCliente  = Integer.parseInt(interfazModificarPedido.getjTextField1().getText());
+                int idVendedor = Integer.parseInt(interfazModificarPedido.getjTextField2().getText());
+                double total = Double.parseDouble(interfazModificarPedido.getjTextField3().getText());
+                String formaDePago = (String)interfazModificarPedido.getjComboBox1().getSelectedItem();
+                String estado = (String)interfazModificarPedido.getjComboBox2().getSelectedItem();
+
+                if(Estado.valueOf(estado) == Estado.EN_ENVIO) {
+                Cliente cliente = new ClienteController().buscarCliente(idCliente);
+                Vendedor vendedor = new VendedorController().buscarPorIdVendedor(idVendedor);
+                Pedido pedido = buscarPedido(idPedido);
+
+                actualizarPedido(pedido, cliente, vendedor);
+                interfazModificarPedido.mostrarPagoGenerado(pedido.getPago());
+                interfazModificarPedido.dispose();
+                restablecerTablaConDatosOriginales();
+            } else interfazModificarPedido.dispose();
         }
     }
         
@@ -394,7 +382,6 @@ public class PedidoController implements ActionListener, WindowListener {
         double total;
         
         for (Pedido pedido : pedidoMySQLDAO.obtenerTodosLosPedidos()) {
-                
             if(pedido.getPago() == null) total = pedido.getTotal();
             else total = pedido.getPago().getMonto();
                 
@@ -411,18 +398,19 @@ public class PedidoController implements ActionListener, WindowListener {
       }
     }
      
-    public double crearPedido(Pedido pedido, TipoDePago tipoDePago, Cliente cliente) {
+    public int crearPedido(Pedido pedido, TipoDePago tipoDePago, Cliente cliente) {
         
         cliente.confirmarPedido(tipoDePago);
         pedido.calcularPrecioPedido();
 
         // PedidosMemory.listaPedidos.add(pedido);  
-        FactoryDAO.getPedidoDAO().crearPedido(pedido);
+        int id = FactoryDAO.getPedidoDAO().crearPedido(pedido);
+        pedido.setId_pedido(id);
         FactoryDAO.getItemMenuPedidoDAO().agregarItemsPedido(pedido);
         
         pedidosDetalles = new ArrayList<>();
         
-        return pedido.getTotal();
+        return id;
     }
     
     public double actualizarPedido(Pedido pedido, Cliente cliente, Vendedor vendedor) {
@@ -511,8 +499,7 @@ public class PedidoController implements ActionListener, WindowListener {
         
         boolean vacio = false;
         
-        if(interfaz.getCampoIDpedido().getText().trim().isEmpty() || 
-           interfaz.getCampoIDvendedor().getText().trim().isEmpty() ||
+        if(interfaz.getCampoIDvendedor().getText().trim().isEmpty() ||
            interfaz.getCampoIDcliente().getText().trim().isEmpty()) vacio = true;
         
         return vacio;
@@ -522,8 +509,7 @@ public class PedidoController implements ActionListener, WindowListener {
         
         boolean correcto = true;
         
-        if(!interfaz.getCampoIDpedido().getText().matches("\\d+") || 
-           !interfaz.getCampoIDvendedor().getText().matches("\\d+") ||
+        if(!interfaz.getCampoIDvendedor().getText().matches("\\d+") ||
            !interfaz.getCampoIDcliente().getText().matches("\\d+")) correcto = false;
         
         return correcto;
@@ -611,11 +597,6 @@ public class PedidoController implements ActionListener, WindowListener {
         }
     }
     
-    private int obtenerID() {
-        PedidoMySQLDAO pedidoMySQLDAO = (PedidoMySQLDAO) FactoryDAO.getPedidoDAO();
-        return pedidoMySQLDAO.obtenerID();
-    }
-
     public void windowOpened(WindowEvent e) {
     }
 

@@ -2,7 +2,7 @@
 package isi.deso.desarrollotrabajopractico.Interfaces;
 
 import isi.deso.desarrollotrabajopractico.Controladores.ItemMenuController;
-import isi.deso.desarrollotrabajopractico.TipoItem;
+import isi.deso.desarrollotrabajopractico.modelo.TipoItem;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.FocusAdapter;
@@ -13,7 +13,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
@@ -21,23 +24,33 @@ public class ListaDeItemMenu extends javax.swing.JPanel {
     private ItemMenuController controlador;
     
     public ListaDeItemMenu() {
-       initComponents();
-       controlador = new ItemMenuController(this);
-       jButton1.addActionListener(controlador);
-       jTextField1.addActionListener(controlador);
-       jButton2.addActionListener(controlador);
-       jTable1.getTableHeader().setReorderingAllowed(false);
-       
-       jTextField1.addFocusListener(new FocusAdapter() {
-       public void focusGained(FocusEvent e) {
-           jTextField1.setText(""); 
-       }
-   });
+        initComponents();
+        controlador = new ItemMenuController(this);
+        jButton1.addActionListener(controlador);
+        jTextField1.addActionListener(controlador);
+        jButton2.addActionListener(controlador);
+        jTable1.getTableHeader().setReorderingAllowed(false);
+
+        jTextField1.addFocusListener(new FocusAdapter() {
+        public void focusGained(FocusEvent e) {
+            jTextField1.setText(""); 
+        }
+     });
         
-         for (int i = 0; i < jTable1.getColumnModel().getColumnCount(); i++) {
-                jTable1.getColumnModel().getColumn(i).setResizable(false);
-            }
-      // Crear un renderizador personalizado para la columna de acciones
+        DefaultTableCellRenderer rendererCentrado = new DefaultTableCellRenderer();
+        rendererCentrado.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        for (int i = 0; i < jTable1.getColumnModel().getColumnCount(); i++) {
+            jTable1.getColumnModel().getColumn(i).setResizable(false);
+            jTable1.getColumnModel().getColumn(i).setCellRenderer(rendererCentrado);
+        }
+        
+        // Centrar los encabezados de las columnas
+        JTableHeader encabezado = jTable1.getTableHeader();
+        DefaultTableCellRenderer rendererEncabezado = (DefaultTableCellRenderer) encabezado.getDefaultRenderer();
+        rendererEncabezado.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        // Crear un renderizador personalizado para la columna de acciones
         jTable1.getColumnModel().getColumn(6).setCellRenderer(new ListaDeItemMenu.ActionCellRenderer());
 
         // Crear un editor personalizado para la columna de acciones
@@ -120,6 +133,21 @@ public class ListaDeItemMenu extends javax.swing.JPanel {
     
     public void mostrarMensaje() {
         JOptionPane.showMessageDialog(null, "No se encontró ningún item.", "ITEM/S NO ENCONTRADO/S", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    public boolean confirmarAccion() {
+        String[] opciones = {"Aceptar", "Cancelar"};
+        int opcion = JOptionPane.showOptionDialog(
+                null,
+                "¿Está seguro de que desea eliminar el item menú?",
+                "Confirmar acción",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones[0] 
+        );
+        return opcion == 0; 
     }
 
     @SuppressWarnings("unchecked")

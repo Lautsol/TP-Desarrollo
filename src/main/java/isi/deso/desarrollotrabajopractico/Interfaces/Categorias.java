@@ -5,30 +5,46 @@ import isi.deso.desarrollotrabajopractico.Controladores.ItemMenuController;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 public class Categorias extends javax.swing.JFrame {
 
     private ItemMenuController controlador;
     
     public Categorias(ItemMenuController controlador) {
-       initComponents();
-       this.controlador = controlador;
-       jButton2.addActionListener(controlador);
-       jTable3.getTableHeader().setReorderingAllowed(false);
-       setVisible(true);
-       setResizable(false);
-       setLocationRelativeTo(null);
-       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        initComponents();
+        this.controlador = controlador;
+        jButton2.addActionListener(controlador);
+        jTable1.getTableHeader().setReorderingAllowed(false);
+        setVisible(true);
+        setResizable(false);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+       
+        DefaultTableCellRenderer rendererCentrado = new DefaultTableCellRenderer();
+        rendererCentrado.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        for (int i = 0; i < jTable1.getColumnModel().getColumnCount(); i++) {
+            jTable1.getColumnModel().getColumn(i).setResizable(false);
+            jTable1.getColumnModel().getColumn(i).setCellRenderer(rendererCentrado);
+        }
+        
+        // Centrar los encabezados de las columnas
+        JTableHeader encabezado = jTable1.getTableHeader();
+        DefaultTableCellRenderer rendererEncabezado = (DefaultTableCellRenderer) encabezado.getDefaultRenderer();
+        rendererEncabezado.setHorizontalAlignment(SwingConstants.CENTER);
     }
     
     public DefaultTableModel getModelo() {
-        DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         return model;
     }
 
     public JTable getjTable() {
-        return jTable3;
+        return jTable1;
     }
     
     public void mostrarMensaje() {
@@ -44,7 +60,7 @@ public class Categorias extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -80,8 +96,8 @@ public class Categorias extends javax.swing.JFrame {
             }
         });
 
-        jTable3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        jTable1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -104,8 +120,8 @@ public class Categorias extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable3.setRowHeight(30);
-        jScrollPane3.setViewportView(jTable3);
+        jTable1.setRowHeight(30);
+        jScrollPane3.setViewportView(jTable1);
 
         javax.swing.GroupLayout panelItemMenu2Layout = new javax.swing.GroupLayout(panelItemMenu2);
         panelItemMenu2.setLayout(panelItemMenu2Layout);
@@ -200,7 +216,7 @@ public class Categorias extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable3;
+    private javax.swing.JTable jTable1;
     private javax.swing.JPanel panelItemMenu2;
     // End of variables declaration//GEN-END:variables
 }

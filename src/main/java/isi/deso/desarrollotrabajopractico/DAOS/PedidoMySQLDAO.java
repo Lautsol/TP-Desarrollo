@@ -1,12 +1,12 @@
 
 package isi.deso.desarrollotrabajopractico.DAOS;
 
-import isi.deso.desarrollotrabajopractico.Estado;
-import isi.deso.desarrollotrabajopractico.MercadoPago;
-import isi.deso.desarrollotrabajopractico.Pago;
-import isi.deso.desarrollotrabajopractico.Pedido;
-import isi.deso.desarrollotrabajopractico.TipoDePago;
-import isi.deso.desarrollotrabajopractico.Transferencia;
+import isi.deso.desarrollotrabajopractico.modelo.Estado;
+import isi.deso.desarrollotrabajopractico.modelo.MercadoPago;
+import isi.deso.desarrollotrabajopractico.modelo.Pago;
+import isi.deso.desarrollotrabajopractico.modelo.Pedido;
+import isi.deso.desarrollotrabajopractico.modelo.TipoDePago;
+import isi.deso.desarrollotrabajopractico.modelo.Transferencia;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -53,30 +53,38 @@ public class PedidoMySQLDAO implements PedidoDAO {
         return con;
     }
     
-    public void crearPedido(Pedido pedido) {
-        
-        String sqlPedido = "INSERT INTO grupo11.pedidos (id, id_cliente, id_vendedor, total, tipo_pago, estado, id_pago) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public int crearPedido(Pedido pedido) {
+        String sqlPedido = "INSERT INTO grupo11.pedidos (id_cliente, id_vendedor, total, tipo_pago, estado, id_pago) VALUES (?, ?, ?, ?, ?, ?)";
+
+        int pedidoId = -1; // Inicializa el id con un valor por defecto
 
         try (Connection connection = getConnection(); 
-            PreparedStatement pstmtPedido = connection.prepareStatement(sqlPedido)   
-        ) {
-            pstmtPedido.setInt(1, pedido.getId_pedido());
-            pstmtPedido.setInt(2, pedido.getCliente().getId());
-            pstmtPedido.setInt(3, pedido.getVendedor().getId());
-            pstmtPedido.setDouble(4, pedido.getTotal());
-            pstmtPedido.setString(5, pedido.getTipoPago().toString());
-            pstmtPedido.setString(6, pedido.getEstado().toString());
-            pstmtPedido.setNull(7, java.sql.Types.INTEGER);
+             PreparedStatement pstmtPedido = connection.prepareStatement(sqlPedido, Statement.RETURN_GENERATED_KEYS)) {
+
+            pstmtPedido.setInt(1, pedido.getCliente().getId());
+            pstmtPedido.setInt(2, pedido.getVendedor().getId());
+            pstmtPedido.setDouble(3, pedido.getTotal());
+            pstmtPedido.setString(4, pedido.getTipoPago().toString());
+            pstmtPedido.setString(5, pedido.getEstado().toString());
+            pstmtPedido.setNull(6, java.sql.Types.INTEGER); 
+
             pstmtPedido.executeUpdate();
-            
+
+            try (ResultSet generatedKeys = pstmtPedido.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    pedidoId = generatedKeys.getInt(1); 
+                }
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, "Error al crear el pedido", ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, "Clase no encontrada", ex);
         }
+
+        return pedidoId; 
     }
 
-    
     public void actualizarPedido(Pedido pedido) {
         
         String sqlPedido = "UPDATE grupo11.pedidos SET total = ?, tipo_pago = ?, estado = ?, id_pago = ? WHERE id = ?";
@@ -104,7 +112,7 @@ public class PedidoMySQLDAO implements PedidoDAO {
       ArrayList<Pedido> pedidos = new ArrayList<>();
       String sql = "SELECT p.id, p.id_cliente, p.id_vendedor, p.total, p.tipo_pago, p.estado, p.id_pago, pa.monto, pa.fecha "
                  + "FROM pedidos p "
-                 + "LEFT JOIN pagos pa ON p.id_pago = pa.id"; // LEFT JOIN para que no se excluyan los pedidos sin pago
+                 + "LEFT JOIN pagos pa ON p.id_pago = pa.id ORDER BY p.id"; // LEFT JOIN para que no se excluyan los pedidos sin pago
 
       try (Connection connection = getConnection(); 
            Statement stmt = connection.createStatement();
@@ -121,31 +129,29 @@ public class PedidoMySQLDAO implements PedidoDAO {
               pedido.setTipoPago(TipoDePago.valueOf(rs.getString("tipo_pago")));
               pedido.setEstado(Estado.valueOf(rs.getString("estado")));
 
-              Integer idPago = rs.getObject("id_pago", Integer.class); // Usar getObject para manejar el caso de null
+              Integer idPago = rs.getObject("id_pago", Integer.class);
               if (idPago == null) {
                   pedido.setFormaDePago(null);
               } else {
-                  // Si id_pago no es null, se recupera el tipo de pago y se crea el pago adecuado
                   String tipoPago = rs.getString("tipo_pago");
                   Pago pago = null;
                   double monto = rs.getDouble("monto");
                   Date fecha = rs.getDate("fecha");
                   LocalDate fechaPago = fecha.toLocalDate();
 
-                  // Crear el objeto de tipo adecuado según el tipo de pago
                   if ("TRANSFERENCIA".equalsIgnoreCase(tipoPago)) {
                       Transferencia transferencia = new Transferencia(pedido.getCliente().getCbu(), pedido.getCliente().getCuit(), fechaPago);
                       transferencia.setId(idPago);
                       transferencia.setMonto(monto);
                       pago = transferencia;
                       
-                  } else if ("MercadoPago".equalsIgnoreCase(tipoPago)) {
+                  } else if ("MERCADOPAGO".equalsIgnoreCase(tipoPago)) {
                       MercadoPago mercadoPago = new MercadoPago(pedido.getCliente().getAlias(), fechaPago);
                       mercadoPago.setId(idPago);
                       mercadoPago.setMonto(monto);
+                      pago = mercadoPago;
                   }
 
-                  // Asignar el pago correspondiente al pedido
                   pedido.setFormaDePago(pago);
               }
 
@@ -160,7 +166,6 @@ public class PedidoMySQLDAO implements PedidoDAO {
       return pedidos;
     }
 
-    
     public void eliminarPedido(int id) {
         
         String sql = "DELETE FROM pedidos WHERE id = ?";  
@@ -206,7 +211,7 @@ public class PedidoMySQLDAO implements PedidoDAO {
 
                     Integer idPago = rs.getObject("id_pago", Integer.class); // Manejar null con getObject
                     if (idPago == null) {
-                        pedido.setFormaDePago(null); // Si no hay pago, asignar null
+                        pedido.setFormaDePago(null); 
                     } else {
                         // Si hay un pago, se recupera el tipo de pago y se crea el objeto adecuado
                         String tipoPago = rs.getString("tipo_pago");
@@ -221,14 +226,13 @@ public class PedidoMySQLDAO implements PedidoDAO {
                             transferencia.setId(idPago);
                             transferencia.setMonto(monto);
                             pago = transferencia;
-                        } else if ("MercadoPago".equalsIgnoreCase(tipoPago)) {
+                        } else if ("MERCADOPAGO".equalsIgnoreCase(tipoPago)) {
                             MercadoPago mercadoPago = new MercadoPago(pedido.getCliente().getAlias(), fechaPago);
                             mercadoPago.setId(idPago);
                             mercadoPago.setMonto(monto);
                             pago = mercadoPago;
                         }
 
-                        // Asignar el pago correspondiente
                         pedido.setFormaDePago(pago);
                     }
 
@@ -265,9 +269,9 @@ public class PedidoMySQLDAO implements PedidoDAO {
                     pedido.setTipoPago(TipoDePago.valueOf(rs.getString("tipo_pago")));
                     pedido.setEstado(Estado.valueOf(rs.getString("estado")));
 
-                    Integer idPago = rs.getObject("id_pago", Integer.class); // Manejar null con getObject
+                    Integer idPago = rs.getObject("id_pago", Integer.class); 
                     if (idPago == null) {
-                        pedido.setFormaDePago(null); // Si no hay pago, asignar null
+                        pedido.setFormaDePago(null); 
                     } else {
                         String tipoPago = rs.getString("tipo_pago");
                         Pago pago = null;
@@ -280,7 +284,7 @@ public class PedidoMySQLDAO implements PedidoDAO {
                             transferencia.setId(idPago);
                             transferencia.setMonto(monto);
                             pago = transferencia;
-                        } else if ("MercadoPago".equalsIgnoreCase(tipoPago)) {
+                        } else if ("MERCADOPAGO".equalsIgnoreCase(tipoPago)) {
                             MercadoPago mercadoPago = new MercadoPago(pedido.getCliente().getAlias(), fechaPago);
                             mercadoPago.setId(idPago);
                             mercadoPago.setMonto(monto);
@@ -338,7 +342,7 @@ public class PedidoMySQLDAO implements PedidoDAO {
                             transferencia.setId(idPago);
                             transferencia.setMonto(monto);
                             pago = transferencia;
-                        } else if ("MercadoPago".equalsIgnoreCase(tipoPago)) {
+                        } else if ("MERCADOPAGO".equalsIgnoreCase(tipoPago)) {
                             MercadoPago mercadoPago = new MercadoPago(pedido.getCliente().getAlias(), fechaPago);
                             mercadoPago.setId(idPago);
                             mercadoPago.setMonto(monto);
@@ -356,28 +360,4 @@ public class PedidoMySQLDAO implements PedidoDAO {
 
         return pedido;
     }
-
-    public int obtenerID() {
-        
-        String consulta = "SELECT MAX(id) AS ultimo_id FROM grupo11.pedidos";
-        int nuevoID = 1; 
-
-        try (Connection connection = getConnection();  
-             PreparedStatement stmt = connection.prepareStatement(consulta);
-             ResultSet rs = stmt.executeQuery()) { 
-
-            if (rs.next()) {
-                int ultimoID = rs.getInt("ultimo_id");
-                nuevoID = ultimoID + 1;
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(PedidoMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return nuevoID;
-    }
-
 }

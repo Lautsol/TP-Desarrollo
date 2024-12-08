@@ -1,7 +1,7 @@
 
 package isi.deso.desarrollotrabajopractico.DAOS;
 
-import isi.deso.desarrollotrabajopractico.Cliente;
+import isi.deso.desarrollotrabajopractico.modelo.Cliente;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -45,27 +45,35 @@ public class ClienteMySQLDAO implements ClienteDAO {
         return con;
     }
     
-    public void crearCliente(Cliente cliente) {
-        String sqlCliente = "INSERT INTO grupo11.clientes (id, nombre, cuit, email, direccion, cbu, alias) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public int crearCliente(Cliente cliente) {
+        String sqlCliente = "INSERT INTO grupo11.clientes (nombre, cuit, email, direccion, cbu, alias) VALUES (?, ?, ?, ?, ?, ?)";
+        int clienteId = -1;
 
         try (Connection connection = getConnection();
-             PreparedStatement pstmtCliente = connection.prepareStatement(sqlCliente)) {
+             PreparedStatement pstmtCliente = connection.prepareStatement(sqlCliente, Statement.RETURN_GENERATED_KEYS)) {
 
-            pstmtCliente.setInt(1, cliente.getId());
-            pstmtCliente.setString(2, cliente.getNombre());
-            pstmtCliente.setLong(3, cliente.getCuit());
-            pstmtCliente.setString(4, cliente.getEmail());
-            pstmtCliente.setString(5, cliente.getDireccion());
-            pstmtCliente.setObject(6, cliente.getCbu(), java.sql.Types.BIGINT);
-            pstmtCliente.setString(7, cliente.getAlias());
+            pstmtCliente.setString(1, cliente.getNombre());
+            pstmtCliente.setLong(2, cliente.getCuit());
+            pstmtCliente.setString(3, cliente.getEmail());
+            pstmtCliente.setString(4, cliente.getDireccion());
+            pstmtCliente.setObject(5, cliente.getCbu(), java.sql.Types.BIGINT);
+            pstmtCliente.setString(6, cliente.getAlias());
 
             pstmtCliente.executeUpdate();
 
+            // Obtener el id generado
+            try (ResultSet generatedKeys = pstmtCliente.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    clienteId = generatedKeys.getInt(1); // Obtiene el id generado
+                }
+            }
         } catch (SQLException ex) {
             Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, "Error en la creación del cliente", ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, "Clase no encontrada", ex);
         }
+
+        return clienteId;
     }
     
     public void actualizarCliente(Cliente cliente) {
@@ -96,15 +104,13 @@ public class ClienteMySQLDAO implements ClienteDAO {
     public ArrayList<Cliente> obtenerTodosLosClientes() {
         
         ArrayList<Cliente> clientes = new ArrayList<>();
-        String sql = "SELECT * FROM clientes";
+        String sql = "SELECT * FROM clientes ORDER BY id";
         
         try (Connection connection = getConnection(); 
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
-            // Iterar sobre los resultados de la consulta
             while (rs.next()) {
-                // Crear un nuevo objeto Cliente y llenar con los datos de la tabla
                 Cliente cliente = new Cliente(
                         rs.getInt("id"), 
                         rs.getLong("cuit"),
@@ -219,29 +225,6 @@ public class ClienteMySQLDAO implements ClienteDAO {
         }
 
         return cliente; 
-    }
-    
-    public int obtenerID() {
-
-        String consulta = "SELECT MAX(id) AS ultimo_id FROM grupo11.clientes";
-        int nuevoID = 1; 
-
-        try (Connection connection = getConnection();  
-             PreparedStatement stmt = connection.prepareStatement(consulta);
-             ResultSet rs = stmt.executeQuery()) { 
-
-            if (rs.next()) {
-                int ultimoID = rs.getInt("ultimo_id");
-                nuevoID = ultimoID + 1;
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ClienteMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return nuevoID;
     }
 
     public Cliente buscarClientePorCuit(long cuit) {

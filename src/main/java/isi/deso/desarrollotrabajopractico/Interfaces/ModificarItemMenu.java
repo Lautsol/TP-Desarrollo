@@ -18,11 +18,13 @@ public class ModificarItemMenu extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
+    
     public void setControlador(ItemMenuController controlador) {
         this.controlador = controlador;
         jButton1.addActionListener(controlador);
         jButton2.addActionListener(controlador);
         jButton3.addActionListener(controlador);
+        addWindowListener(controlador);
     }
 
     public JTextField getjTextField1() {
@@ -53,12 +55,23 @@ public class ModificarItemMenu extends javax.swing.JFrame {
         showMessageDialog(null, "Hay campos inválidos.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
     }
     
-    public void mostrarMensajeCategoria() {
-        showMessageDialog(null, "No existe la categoría.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
+    public void mostrarMensajeCategoria(String mensaje) {
+        showMessageDialog(null, mensaje, "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
     }
     
-    public void mostrarMensajeCategoriaIncorrecta() {
-        showMessageDialog(null, "El tipo de item no corresponde a esa categoría.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
+    public boolean confirmarAccion() {
+        String[] opciones = {"Aceptar", "Cancelar"};
+        int opcion = JOptionPane.showOptionDialog(
+                null,
+                "¿Está seguro de que desea guardar los cambios?",
+                "Confirmar acción",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones[0] 
+        );
+        return opcion == 0; 
     }
     
     @SuppressWarnings("unchecked")

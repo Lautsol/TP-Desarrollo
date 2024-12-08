@@ -1,6 +1,12 @@
 
-package isi.deso.desarrollotrabajopractico;
+package isi.deso.desarrollotrabajopractico.DAOS;
 
+import isi.deso.desarrollotrabajopractico.modelo.Vendedor;
+import isi.deso.desarrollotrabajopractico.modelo.ItemNoEncontradoException;
+import isi.deso.desarrollotrabajopractico.modelo.PedidoDetalle;
+import isi.deso.desarrollotrabajopractico.modelo.Plato;
+import isi.deso.desarrollotrabajopractico.modelo.ItemMenu;
+import isi.deso.desarrollotrabajopractico.modelo.Cliente;
 import java.util.ArrayList;
 
 public interface ItemsPedidoDAO {

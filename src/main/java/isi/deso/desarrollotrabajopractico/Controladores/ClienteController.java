@@ -1,7 +1,7 @@
 
 package isi.deso.desarrollotrabajopractico.Controladores;
 
-import isi.deso.desarrollotrabajopractico.Cliente;
+import isi.deso.desarrollotrabajopractico.modelo.Cliente;
 import isi.deso.desarrollotrabajopractico.DAOS.ClienteMySQLDAO;
 import isi.deso.desarrollotrabajopractico.DAOS.FactoryDAO;
 import isi.deso.desarrollotrabajopractico.Interfaces.CrearCliente;
@@ -49,10 +49,7 @@ public class ClienteController implements ActionListener {
         if (comando.equals("Crear nuevo cliente")) {
             interfazCrearCliente = new CrearCliente();  
             interfazCrearCliente.setControlador(this);
-            setCrearCliente(interfazCrearCliente);  
-            int idCliente = obtenerID();
-            interfazCrearCliente.getjTextField4().setText(String.valueOf(idCliente));
-            interfazCrearCliente.getjTextField4().setEditable(false);
+            setCrearCliente(interfazCrearCliente); 
         } 
         
         else if (comando.equals("Editar")) {
@@ -129,11 +126,13 @@ public class ClienteController implements ActionListener {
             listaDeClientes.getjTable1().getCellEditor().stopCellEditing(); // Detener la edición si está activa
             }
             
-            int row = listaDeClientes.getjTable1().getSelectedRow();
-            
-            int id = (Integer) listaDeClientes.getModelo().getValueAt(row, 1);
-            eliminarCliente(id);
-            listaDeClientes.getModelo().removeRow(row);
+            if(listaDeClientes.confirmarAccion()) {
+                int row = listaDeClientes.getjTable1().getSelectedRow();
+
+                int id = (Integer) listaDeClientes.getModelo().getValueAt(row, 1);
+                eliminarCliente(id);
+                listaDeClientes.getModelo().removeRow(row);
+            }
        
       } 
         
@@ -145,7 +144,6 @@ public class ClienteController implements ActionListener {
             String nombre = interfazCrearCliente.getjTextField1().getText();
             long cuit = Long.parseLong(interfazCrearCliente.getjTextField2().getText());
             String email = interfazCrearCliente.getjTextField3().getText();
-            int id = Integer.parseInt(interfazCrearCliente.getjTextField4().getText());
             String direccion = interfazCrearCliente.getjTextField5().getText();
             Long cbu;
             if(interfazCrearCliente.getjTextField6().getText().trim().isEmpty()) cbu = null;
@@ -156,11 +154,10 @@ public class ClienteController implements ActionListener {
             
             ClienteMySQLDAO clienteMySQLDAO = (ClienteMySQLDAO) FactoryDAO.getClienteDAO();
             if(clienteMySQLDAO.buscarClientePorCuit(cuit) != null) interfazCrearCliente.mostrarMensajeCuit();
-            else{
-            crearCliente(nombre, id, cuit, alias, cbu, email, direccion);
-            listaDeClientes.agregarClienteALaTabla(nombre, id, cuit, alias, cbu, email, direccion);
-            interfazCrearCliente.dispose();
-            
+            else if(interfazCrearCliente.confirmarAccion()) {
+                crearCliente(nombre, cuit, alias, cbu, email, direccion);
+                interfazCrearCliente.dispose();
+                restablecerTablaConDatosOriginales();
             }
           }
         } 
@@ -169,33 +166,25 @@ public class ClienteController implements ActionListener {
             
             if(validarCamposVaciosModificar(interfazModificarCliente)) interfazModificarCliente.mostrarMensajeCamposVacios();
             else if (!validarTiposDeDatosModificar(interfazModificarCliente)) interfazModificarCliente.mostrarMensajeDatosInvalidos();
-            else {
-            int row = listaDeClientes.getjTable1().getSelectedRow(); // Obtener la fila seleccionada
+            else if(interfazModificarCliente.confirmarAccion()) {
+                String nombre = interfazModificarCliente.getjTextField1().getText();
+                long cuit = Long.parseLong(interfazModificarCliente.getjTextField2().getText());
+                String email = interfazModificarCliente.getjTextField3().getText();
+                int id = Integer.parseInt(interfazModificarCliente.getjTextField4().getText());
+                String direccion = interfazModificarCliente.getjTextField5().getText();
+                Long cbu;
+                if(interfazModificarCliente.getjTextField6().getText().trim().isEmpty()) cbu = null;
+                else cbu = Long.valueOf(interfazModificarCliente.getjTextField6().getText());
+                String alias;
+                if(interfazModificarCliente.getjTextField7().getText().trim().isEmpty()) alias = null;
+                else alias = interfazModificarCliente.getjTextField7().getText();
             
-            String nombre = interfazModificarCliente.getjTextField1().getText();
-            long cuit = Long.parseLong(interfazModificarCliente.getjTextField2().getText());
-            String email = interfazModificarCliente.getjTextField3().getText();
-            int id = Integer.parseInt(interfazModificarCliente.getjTextField4().getText());
-            String direccion = interfazModificarCliente.getjTextField5().getText();
-            Long cbu;
-            if(interfazModificarCliente.getjTextField6().getText().trim().isEmpty()) cbu = null;
-            else cbu = Long.valueOf(interfazModificarCliente.getjTextField6().getText());
-            String alias;
-            if(interfazModificarCliente.getjTextField7().getText().trim().isEmpty()) alias = null;
-            else alias = interfazModificarCliente.getjTextField7().getText();
-            
-            actualizarCliente(nombre, id, cuit, alias, cbu, email, direccion);
-            
-            listaDeClientes.getModelo().setValueAt(nombre, row, 0); 
-            listaDeClientes.getModelo().setValueAt(id, row, 1);      
-            listaDeClientes.getModelo().setValueAt(cuit, row, 2);    
-            listaDeClientes.getModelo().setValueAt(alias, row, 3);    
-            listaDeClientes.getModelo().setValueAt(cbu, row, 4);      
-            listaDeClientes.getModelo().setValueAt(email, row, 5);    
-            listaDeClientes.getModelo().setValueAt(direccion, row, 6); 
-            interfazModificarCliente.dispose();
+                actualizarCliente(nombre, id, cuit, alias, cbu, email, direccion);
+
+                interfazModificarCliente.dispose();
+                restablecerTablaConDatosOriginales();
+            }
         }
-    }
         
         else if (comando.equals("CancelarCrear")) {
             interfazCrearCliente.dispose();  
@@ -211,11 +200,10 @@ public class ClienteController implements ActionListener {
         }
   }
 
-    public void crearCliente(String nombre, int id, long cuit, String alias, Long cbu, String email, String direccion) {
+    public int crearCliente(String nombre, long cuit, String alias, Long cbu, String email, String direccion) {
         
         Cliente cliente = new Cliente();
         cliente.setNombre(nombre);
-        cliente.setId(id);
         cliente.setCuit(cuit);
         cliente.setAlias(alias);
         cliente.setCbu(cbu);
@@ -223,7 +211,7 @@ public class ClienteController implements ActionListener {
         cliente.setDireccion(direccion);
 
         //ClienteMemory.listaClientes.add(cliente);
-        FactoryDAO.getClienteDAO().crearCliente(cliente);
+        return FactoryDAO.getClienteDAO().crearCliente(cliente);
     }
 
     public void actualizarCliente(String nombre, int id, long cuit, String alias, Long cbu, String email, String direccion){
@@ -383,7 +371,6 @@ public class ClienteController implements ActionListener {
         if(interfaz.getjTextField1().getText().trim().isEmpty() || 
            interfaz.getjTextField2().getText().trim().isEmpty() ||
            interfaz.getjTextField3().getText().trim().isEmpty() ||
-           interfaz.getjTextField4().getText().trim().isEmpty() ||
            interfaz.getjTextField5().getText().trim().isEmpty() ||
            (interfaz.getjTextField6().getText().trim().isEmpty() &&
            interfaz.getjTextField7().getText().trim().isEmpty())) vacio = true;
@@ -398,7 +385,6 @@ public class ClienteController implements ActionListener {
         if(!interfaz.getjTextField1().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+") || 
            !interfaz.getjTextField2().getText().matches("\\d+") ||
            !interfaz.getjTextField3().getText().matches("^[\\w-\\.]+@[\\w-]+(\\.[\\w-]+)+$") ||
-           !interfaz.getjTextField4().getText().matches("\\d+") ||
            !interfaz.getjTextField5().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s]+") ||
            (!interfaz.getjTextField6().getText().trim().isEmpty() && !interfaz.getjTextField6().getText().matches("\\d+"))) correcto = false;
         
@@ -446,11 +432,6 @@ public class ClienteController implements ActionListener {
         ClienteMySQLDAO clienteMySQLDAO = (ClienteMySQLDAO) FactoryDAO.getClienteDAO();
         existe = clienteMySQLDAO.buscarClientePorID(id_cliente) != null;
         return existe;
-    }
-    
-    private int obtenerID() {
-        ClienteMySQLDAO clienteMySQLDAO = (ClienteMySQLDAO) FactoryDAO.getClienteDAO();
-        return clienteMySQLDAO.obtenerID();
     }
     
  }

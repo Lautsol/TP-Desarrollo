@@ -1,7 +1,7 @@
 
 package isi.deso.desarrollotrabajopractico.Memory;
 
-import isi.deso.desarrollotrabajopractico.ItemMenu;
+import isi.deso.desarrollotrabajopractico.modelo.ItemMenu;
 import java.util.ArrayList;
 
 public class ItemMenuMemory {

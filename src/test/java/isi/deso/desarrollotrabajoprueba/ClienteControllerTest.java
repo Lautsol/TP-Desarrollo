@@ -1,11 +1,11 @@
 
 package isi.deso.desarrollotrabajoprueba;
-import isi.deso.desarrollotrabajopractico.Cliente;
+import isi.deso.desarrollotrabajopractico.modelo.Cliente;
 import isi.deso.desarrollotrabajopractico.Controladores.ClienteController;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.sql.*;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -14,17 +14,17 @@ public class ClienteControllerTest {
 
     private static ClienteController clienteController;  
     private static Connection connection;  
+    private static List<Integer> clientesAEliminar;
 
     @BeforeAll
     static void setUp() throws SQLException {
         connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/grupo11", "root", "grupo11");
         clienteController = new ClienteController();
+        clientesAEliminar = new ArrayList<>();
     }
     
     @AfterAll
-    static void tearDownAfterClass() throws SQLException {
-        
-        List<Integer> clientesAEliminar = Arrays.asList(30, 31, 32, 33, 34, 35);  
+    static void tearDownAfterClass() throws SQLException { 
 
         String queryDelete = "DELETE FROM clientes WHERE id = ?";
 
@@ -32,7 +32,7 @@ public class ClienteControllerTest {
              PreparedStatement stmt = connection.prepareStatement(queryDelete)) {
 
             for (int clienteId : clientesAEliminar) {
-                stmt.setInt(1, clienteId);  
+                stmt.setLong(1, clienteId);  
                 stmt.executeUpdate();
             }
             
@@ -44,14 +44,13 @@ public class ClienteControllerTest {
     void testCrearCliente() throws SQLException {
         
         String nombre = "Juan Perez";
-        int id = 30;
         long cuit = 20304050607L;
         String alias = "juanp";
         Long cbu = 123456789012L;
         String email = "juan@mail.com";
         String direccion = "La Rioja 1250";
 
-        clienteController.crearCliente(nombre, id, cuit, alias, cbu, email, direccion);
+        int id = clienteController.crearCliente(nombre, cuit, alias, cbu, email, direccion);
 
         // Verificar si el cliente fue creado correctamente
         Cliente clienteCreado = clienteController.buscarCliente(id);
@@ -62,20 +61,21 @@ public class ClienteControllerTest {
         assertEquals(cbu, clienteCreado.getCbu());
         assertEquals(email, clienteCreado.getEmail());
         assertEquals(direccion, clienteCreado.getDireccion());
+        
+        clientesAEliminar.add(id);
     }
 
     @Test
     void testActualizarCliente() throws SQLException {
         
         String nombre = "Juan Perez";
-        int id = 31;
         long cuit = 20304050607L;
         String alias = "juanp";
         Long cbu = 123456789012L;
         String email = "juan@mail.com";
         String direccion = "La Rioja 1250";
 
-        clienteController.crearCliente(nombre, id, cuit, alias, cbu, email, direccion);
+        int id = clienteController.crearCliente(nombre, cuit, alias, cbu, email, direccion);
 
         // Actualizar la información del cliente
         String nuevoNombre = "Juan Carlos Perez";
@@ -94,20 +94,21 @@ public class ClienteControllerTest {
         assertEquals(nuevoCbu, clienteActualizado.getCbu());
         assertEquals(nuevoEmail, clienteActualizado.getEmail());
         assertEquals(nuevaDireccion, clienteActualizado.getDireccion());
+        
+        clientesAEliminar.add(id);
     }
 
     @Test
     void testEliminarCliente() throws SQLException {
         
         String nombre = "Juan Perez";
-        int id = 32;
         long cuit = 20304050607L;
         String alias = "juanp";
         Long cbu = 123456789012L;
         String email = "juan@correo.com";
         String direccion = "La Rioja 1250";
 
-        clienteController.crearCliente(nombre, id, cuit, alias, cbu, email, direccion);
+        int id = clienteController.crearCliente(nombre, cuit, alias, cbu, email, direccion);
 
         // Verificar que el cliente fue creado
         Cliente clienteAntesDeEliminar = clienteController.buscarCliente(id);
@@ -123,15 +124,14 @@ public class ClienteControllerTest {
     @Test
     void testBuscarClientePorId() throws SQLException {
         
-        String nombre = "Juan Perez";
-        int id = 33; 
+        String nombre = "Marcelo Perez";
         long cuit = 20304050607L;
-        String alias = "juanp";
+        String alias = "marp";
         Long cbu = 123456789012L;
-        String email = "juan@correo.com";
+        String email = "marcelo@correo.com";
         String direccion = "La Rioja 1250";
 
-        clienteController.crearCliente(nombre, id, cuit, alias, cbu, email, direccion);
+        int id = clienteController.crearCliente(nombre, cuit, alias, cbu, email, direccion);
 
         Cliente clienteBuscado = clienteController.buscarCliente(id);
 
@@ -143,13 +143,15 @@ public class ClienteControllerTest {
         assertEquals(cbu, clienteBuscado.getCbu());
         assertEquals(email, clienteBuscado.getEmail());
         assertEquals(direccion, clienteBuscado.getDireccion());
+        
+        clientesAEliminar.add(id);
     }
 
     @Test
     void testListarClientesPorNombre() throws SQLException {
         
-        clienteController.crearCliente("Juan Perez", 34, 20304050607L, "juanp", 123456789012L, "juan@mail.com", "La Rioja 1250");
-        clienteController.crearCliente("Maria Lopez", 35, 20304050608L, "marial", 123456789013L, "maria@mail.com", "San Martín 1340");
+        int id1 = clienteController.crearCliente("Juan Perez", 20304050607L, "juanp", 123456789012L, "juan@mail.com", "La Rioja 1250");
+        int id2 = clienteController.crearCliente("Maria Lopez", 20304050608L, "marial", 123456789013L, "maria@mail.com", "San Martín 1340");
 
         List<Cliente> clientes = clienteController.listarClientes("Juan Perez");
 
@@ -157,6 +159,9 @@ public class ClienteControllerTest {
         assertNotNull(clientes);
         assertEquals(1, clientes.size());  // Debería haber solo un cliente con el nombre "Juan Perez"
         assertEquals("Juan Perez", clientes.get(0).getNombre());
+        
+        clientesAEliminar.add(id1);
+        clientesAEliminar.add(id2);
     }
 }
 

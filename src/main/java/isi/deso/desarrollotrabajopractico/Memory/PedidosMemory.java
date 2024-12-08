@@ -1,7 +1,7 @@
 
 package isi.deso.desarrollotrabajopractico.Memory;
 
-import isi.deso.desarrollotrabajopractico.Pedido;
+import isi.deso.desarrollotrabajopractico.modelo.Pedido;
 import java.util.ArrayList;
 
 public class PedidosMemory {

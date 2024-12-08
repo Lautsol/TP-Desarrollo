@@ -1,19 +1,19 @@
 
 package isi.deso.desarrollotrabajopractico.Controladores;
 
-import isi.deso.desarrollotrabajopractico.Alcohol;
-import isi.deso.desarrollotrabajopractico.Categoria;
+import isi.deso.desarrollotrabajopractico.modelo.Alcohol;
+import isi.deso.desarrollotrabajopractico.modelo.Categoria;
 import isi.deso.desarrollotrabajopractico.DAOS.CategoriaMySQLDAO;
 import isi.deso.desarrollotrabajopractico.DAOS.FactoryDAO;
 import isi.deso.desarrollotrabajopractico.DAOS.ItemMenuMySQLDAO;
-import isi.deso.desarrollotrabajopractico.Gaseosa;
+import isi.deso.desarrollotrabajopractico.modelo.Gaseosa;
 import isi.deso.desarrollotrabajopractico.Interfaces.Categorias;
 import isi.deso.desarrollotrabajopractico.Interfaces.CrearItemMenu;
 import isi.deso.desarrollotrabajopractico.Interfaces.ListaDeItemMenu;
 import isi.deso.desarrollotrabajopractico.Interfaces.ModificarItemMenu;
-import isi.deso.desarrollotrabajopractico.ItemMenu;
-import isi.deso.desarrollotrabajopractico.Plato;
-import isi.deso.desarrollotrabajopractico.TipoItem;
+import isi.deso.desarrollotrabajopractico.modelo.ItemMenu;
+import isi.deso.desarrollotrabajopractico.modelo.Plato;
+import isi.deso.desarrollotrabajopractico.modelo.TipoItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -67,9 +67,6 @@ public class ItemMenuController implements ActionListener, WindowListener {
             interfazCrearItemMenu.setControlador(this);
             setCrearItemMenu(interfazCrearItemMenu);  
             idCategoria = 0;
-            int idItemMenu = obtenerID();
-            interfazCrearItemMenu.getjTextField1().setText(String.valueOf(idItemMenu));
-            interfazCrearItemMenu.getjTextField1().setEditable(false);
         } 
         
         else if (comando.equals("Editar")) {
@@ -146,11 +143,13 @@ public class ItemMenuController implements ActionListener, WindowListener {
             listaDeItemMenu.getjTable1().getCellEditor().stopCellEditing(); // Detener la edición si está activa
             }
             
-            int row = listaDeItemMenu.getjTable1().getSelectedRow();
-            
-            int id = (Integer) listaDeItemMenu.getModelo().getValueAt(row, 0);
-            eliminarItemMenu(id);
-            listaDeItemMenu.getModelo().removeRow(row);
+            if(listaDeItemMenu.confirmarAccion()) {
+                int row = listaDeItemMenu.getjTable1().getSelectedRow();
+
+                int id = (Integer) listaDeItemMenu.getModelo().getValueAt(row, 0);
+                eliminarItemMenu(id);
+                listaDeItemMenu.getModelo().removeRow(row);
+            }
           
         } 
         
@@ -159,10 +158,12 @@ public class ItemMenuController implements ActionListener, WindowListener {
             interfazCategorias = new Categorias(this);
             setInterfazCategorias(interfazCategorias);
             cargarCategoriasTabla();
-            int row = listaDeItemMenu.getjTable1().getSelectedRow();
-            if(row != -1) {
-                int idItem = Integer.parseInt(interfazModificarItemMenu.getjTextField1().getText());
-                seleccionarFilaPorID(interfazCategorias.getjTable(), buscarItemMenu(idItem).getCategoria().getId());
+            if(interfazModificarItemMenu != null) {
+                int row = listaDeItemMenu.getjTable1().getSelectedRow();
+                if(row != -1) {
+                    int idItem = Integer.parseInt(interfazModificarItemMenu.getjTextField1().getText());
+                    seleccionarFilaPorID(interfazCategorias.getjTable(), buscarItemMenu(idItem).getCategoria().getId());
+                }
             }
         }
         
@@ -180,9 +181,9 @@ public class ItemMenuController implements ActionListener, WindowListener {
         else if (comando.equals("Crear")) {
             
             if(validarCamposVacios(interfazCrearItemMenu)) interfazCrearItemMenu.mostrarMensajeCamposVacios();
-            else if (!validarTiposDeDatos(interfazCrearItemMenu)) interfazCrearItemMenu.mostrarMensajeDatosInvalidos();
+            else if(idCategoria == 0) interfazCrearItemMenu.mostrarMensajeCategoria("Debe especificar la categoría del item menú.");
+            else if(!validarTiposDeDatos(interfazCrearItemMenu)) interfazCrearItemMenu.mostrarMensajeDatosInvalidos();
             else {
-            int id = Integer.parseInt(interfazCrearItemMenu.getjTextField1().getText());
             String nombre = interfazCrearItemMenu.getjTextField2().getText();
             String descripcion = interfazCrearItemMenu.getjTextField3().getText();
             double precio = Double.parseDouble(interfazCrearItemMenu.getjTextField4().getText());
@@ -192,18 +193,16 @@ public class ItemMenuController implements ActionListener, WindowListener {
             if(opcion.equals("PLATO")) tipoItem = TipoItem.COMIDA;
             else tipoItem = TipoItem.BEBIDA;
             
-            Categoria categoria = verificarCategoria(idCategoria);
+            Categoria categoria = buscarCategoria(idCategoria);
             
-            if(categoria == null) interfazCrearItemMenu.mostrarMensajeCategoria();
-            else if (!categoriaCorrecta(categoria, tipoItem)) interfazCrearItemMenu.mostrarMensajeCategoriaIncorrecta();
-            else{
-            crearItemMenu(id, nombre, descripcion, precio, idCategoria, opcion);
-            listaDeItemMenu.agregarItemMenuALaTabla(id, tipoItem, nombre, descripcion, precio, idCategoria);
-            idCategoria = 0;
-            listaDeItemMenu.getjTable1().clearSelection();
-            interfazCrearItemMenu.dispose();
+            if (!categoriaCorrecta(categoria, tipoItem)) interfazCrearItemMenu.mostrarMensajeCategoria("El tipo de item no corresponde a esa categoría.");
+            else if(interfazCrearItemMenu.confirmarAccion()) {
+                crearItemMenu(nombre, descripcion, precio, idCategoria, opcion);
+                restablecerTablaConDatosOriginales();
+                idCategoria = 0;
+                listaDeItemMenu.getjTable1().clearSelection();
+                interfazCrearItemMenu.dispose();
            }
-         
         }
       } 
 
@@ -212,7 +211,6 @@ public class ItemMenuController implements ActionListener, WindowListener {
             if(validarCamposVaciosModificar(interfazModificarItemMenu)) interfazModificarItemMenu.mostrarMensajeCamposVacios();
             else if (!validarTiposDeDatosModificar(interfazModificarItemMenu)) interfazModificarItemMenu.mostrarMensajeDatosInvalidos();
             else {
-            int row = listaDeItemMenu.getjTable1().getSelectedRow(); // Obtener la fila seleccionada
             int id = Integer.parseInt(interfazModificarItemMenu.getjTextField1().getText());
             String nombre = interfazModificarItemMenu.getjTextField2().getText();
             String descripcion = interfazModificarItemMenu.getjTextField3().getText();
@@ -224,32 +222,25 @@ public class ItemMenuController implements ActionListener, WindowListener {
             if(tipoDeItem.equals("PLATO")) tipoItem = TipoItem.COMIDA;
             else tipoItem = TipoItem.BEBIDA;
             
-            Categoria categoria = verificarCategoria(idCategoria);
+            Categoria categoria = buscarCategoria(idCategoria);
             
-            if(categoria == null) interfazModificarItemMenu.mostrarMensajeCategoria();
-            else if (!categoriaCorrecta(categoria, tipoItem)) interfazModificarItemMenu.mostrarMensajeCategoriaIncorrecta();
-            else{
-            
-            actualizarItemMenu(id, tipoItem, nombre, descripcion, precio, idCategoria, item);
-            
-            listaDeItemMenu.getModelo().setValueAt(id, row, 0); 
-            listaDeItemMenu.getModelo().setValueAt(tipoItem.toString(), row, 1);
-            listaDeItemMenu.getModelo().setValueAt(nombre, row, 2);      
-            listaDeItemMenu.getModelo().setValueAt(descripcion, row, 3);    
-            listaDeItemMenu.getModelo().setValueAt(precio, row, 4);    
-            listaDeItemMenu.getModelo().setValueAt(idCategoria, row, 5);
-            listaDeItemMenu.getjTable1().clearSelection();
-            interfazModificarItemMenu.dispose();
+            if (!categoriaCorrecta(categoria, tipoItem)) interfazModificarItemMenu.mostrarMensajeCategoria("El tipo de item no corresponde a esa categoría.");
+            else if(interfazModificarItemMenu.confirmarAccion()) {
+                actualizarItemMenu(id, tipoItem, nombre, descripcion, precio, idCategoria, item);
+                restablecerTablaConDatosOriginales();
+                interfazModificarItemMenu.dispose();
             }
           }
         } 
         
         else if (comando.equals("CancelarCrear")) {
             interfazCrearItemMenu.dispose();
+            interfazCrearItemMenu = null;
         } 
         
         else if (comando.equals("CancelarModificar")) {
                 interfazModificarItemMenu.dispose();  
+                interfazModificarItemMenu = null;
         }
         
         else if(comando.equals("Reiniciar la búsqueda")) {
@@ -373,7 +364,7 @@ public class ItemMenuController implements ActionListener, WindowListener {
         FactoryDAO.getItemMenuDAO().eliminarItemMenu(id);
     }
     
-    public void crearItemMenu(int id, String nombre, String descripcion, double precio, int idCategoria, String opcion) {
+    public int crearItemMenu(String nombre, String descripcion, double precio, int idCategoria, String opcion) {
         
         ItemMenu itemMenu;
         Categoria categoria;
@@ -381,37 +372,35 @@ public class ItemMenuController implements ActionListener, WindowListener {
         if(opcion.equals("PLATO")){
             itemMenu=new Plato(); 
             categoria=FactoryDAO.getCategoriaDAO().buscarCategoria(idCategoria);
-            itemMenu.setId(id);
             itemMenu.setNombre(nombre);
             itemMenu.setDescripcion(descripcion);
             itemMenu.setPrecio(precio);
             itemMenu.setCategoria(categoria);
             // ItemMenuMemory.listaItemMenu.add(itemMenu); 
-            FactoryDAO.getItemMenuDAO().crearItemMenu(itemMenu);
+            return FactoryDAO.getItemMenuDAO().crearItemMenu(itemMenu);
         }
         else if(opcion.equals("GASEOSA")){
             itemMenu=new Gaseosa(); 
             categoria=FactoryDAO.getCategoriaDAO().buscarCategoria(idCategoria);
-            itemMenu.setId(id);
             itemMenu.setNombre(nombre);
             itemMenu.setDescripcion(descripcion);
             itemMenu.setPrecio(precio);
             itemMenu.setCategoria(categoria);
             // ItemMenuMemory.listaItemMenu.add(itemMenu); 
-            FactoryDAO.getItemMenuDAO().crearItemMenu(itemMenu);
+            return FactoryDAO.getItemMenuDAO().crearItemMenu(itemMenu);
         }
         else if(opcion.equals("ALCOHOL")){
             itemMenu=new Alcohol(); 
             categoria=FactoryDAO.getCategoriaDAO().buscarCategoria(idCategoria);
-            itemMenu.setId(id);
             itemMenu.setNombre(nombre);
             itemMenu.setDescripcion(descripcion);
             itemMenu.setPrecio(precio);
             itemMenu.setCategoria(categoria);
             // ItemMenuMemory.listaItemMenu.add(itemMenu); 
-            FactoryDAO.getItemMenuDAO().crearItemMenu(itemMenu);
+            return FactoryDAO.getItemMenuDAO().crearItemMenu(itemMenu);
         }
         
+        return 0;
     }
     
     public void actualizarItemMenu(int id, TipoItem tipoItem, String nombre, String descripcion, double precio, int idCategoria, String item) {
@@ -469,11 +458,9 @@ public class ItemMenuController implements ActionListener, WindowListener {
         
         boolean vacio = false;
         
-        if(interfaz.getjTextField1().getText().trim().isEmpty() || 
-           interfaz.getjTextField2().getText().trim().isEmpty() ||
+        if(interfaz.getjTextField2().getText().trim().isEmpty() ||
            interfaz.getjTextField3().getText().trim().isEmpty() ||
-           interfaz.getjTextField4().getText().trim().isEmpty() ||
-           idCategoria == 0) vacio = true;
+           interfaz.getjTextField4().getText().trim().isEmpty()) vacio = true;
         
         return vacio;
     }
@@ -482,8 +469,7 @@ public class ItemMenuController implements ActionListener, WindowListener {
         
         boolean correcto = true;
         
-        if(!interfaz.getjTextField1().getText().matches("\\d+") || 
-           !interfaz.getjTextField2().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+") ||
+        if(!interfaz.getjTextField2().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+") ||
            !interfaz.getjTextField3().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s,]+") ||
            !interfaz.getjTextField4().getText().matches("-?\\d+(\\.\\d+)?")) correcto = false;
         
@@ -512,7 +498,7 @@ public class ItemMenuController implements ActionListener, WindowListener {
         return correcto;
     }
     
-    private Categoria verificarCategoria(int id_categoria) {
+    private Categoria buscarCategoria(int id_categoria) {
         
         /*
         Categoria categoria = null; 
@@ -532,11 +518,6 @@ public class ItemMenuController implements ActionListener, WindowListener {
         
         // return (categoria.getTipo_item() == tipoItem);
         return(FactoryDAO.getCategoriaDAO().buscarCategoria(categoria.getId()).getTipo_item() == tipoItem);
-    }
-    
-    private int obtenerID() {
-        ItemMenuMySQLDAO itemMenuMySQLDAO = (ItemMenuMySQLDAO) FactoryDAO.getItemMenuDAO();
-        return itemMenuMySQLDAO.obtenerID();
     }
     
     private void cargarCategoriasTabla() {
@@ -566,7 +547,7 @@ public class ItemMenuController implements ActionListener, WindowListener {
     }
 
     public void windowClosing(WindowEvent e) {
-        listaDeItemMenu.getjTable1().clearSelection();
+        interfazModificarItemMenu = null;
     }
 
     public void windowClosed(WindowEvent e) {

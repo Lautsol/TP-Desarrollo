@@ -1,5 +1,5 @@
 
-package isi.deso.desarrollotrabajopractico;
+package isi.deso.desarrollotrabajopractico.modelo;
 
 import java.util.ArrayList;
 
@@ -51,10 +51,10 @@ public class Cliente implements ClienteObserver {
     
     public Cliente(){}
     
-    public Pedido iniciarPedido(int id_pedido, Vendedor vendedor) {
+    public Pedido iniciarPedido(Vendedor vendedor) {
         
         if(pedidoActual == null){
-            pedidoActual = new Pedido(id_pedido, this, vendedor);
+            pedidoActual = new Pedido(this, vendedor);
         }
         
         return pedidoActual;

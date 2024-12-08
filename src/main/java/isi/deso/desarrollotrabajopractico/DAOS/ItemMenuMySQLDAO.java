@@ -1,15 +1,16 @@
 
 package isi.deso.desarrollotrabajopractico.DAOS;
 
-import isi.deso.desarrollotrabajopractico.Alcohol;
-import isi.deso.desarrollotrabajopractico.Gaseosa;
-import isi.deso.desarrollotrabajopractico.ItemMenu;
-import isi.deso.desarrollotrabajopractico.Plato;
+import isi.deso.desarrollotrabajopractico.modelo.Alcohol;
+import isi.deso.desarrollotrabajopractico.modelo.Gaseosa;
+import isi.deso.desarrollotrabajopractico.modelo.ItemMenu;
+import isi.deso.desarrollotrabajopractico.modelo.Plato;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,27 +49,36 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
         return con;
     }
     
-    public void crearItemMenu(ItemMenu itemMenu) {
-        
-        String sqlItemMenu = "INSERT INTO grupo11.itemsMenu (id, tipo_item, nombre, descripcion, precio, id_categoria, item) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public int crearItemMenu(ItemMenu itemMenu) {
+        String sqlItemMenu = "INSERT INTO grupo11.itemsMenu (tipo_item, nombre, descripcion, precio, id_categoria, item) VALUES (?, ?, ?, ?, ?, ?)";
+
+        int itemMenuId = -1; // Inicializa el id con un valor por defecto
 
         try (Connection connection = getConnection(); 
-            PreparedStatement pstmtItemMenu = connection.prepareStatement(sqlItemMenu) 
-        ) {
-            pstmtItemMenu.setInt(1, itemMenu.getId());
-            pstmtItemMenu.setString(2, itemMenu.getCategoria().getTipo_item().toString());
-            pstmtItemMenu.setString(3, itemMenu.getNombre());
-            pstmtItemMenu.setString(4, itemMenu.getDescripcion());
-            pstmtItemMenu.setDouble(5, itemMenu.getPrecio());
-            pstmtItemMenu.setInt(6, itemMenu.getCategoria().getId());
-            pstmtItemMenu.setString(7, itemMenu.getClass().getSimpleName().toUpperCase());
+             PreparedStatement pstmtItemMenu = connection.prepareStatement(sqlItemMenu, Statement.RETURN_GENERATED_KEYS)) {
 
-            pstmtItemMenu.executeUpdate(); 
+            pstmtItemMenu.setString(1, itemMenu.getCategoria().getTipo_item().toString());
+            pstmtItemMenu.setString(2, itemMenu.getNombre());
+            pstmtItemMenu.setString(3, itemMenu.getDescripcion());
+            pstmtItemMenu.setDouble(4, itemMenu.getPrecio());
+            pstmtItemMenu.setInt(5, itemMenu.getCategoria().getId());
+            pstmtItemMenu.setString(6, itemMenu.getClass().getSimpleName().toUpperCase());
+
+            pstmtItemMenu.executeUpdate();
+
+            try (ResultSet generatedKeys = pstmtItemMenu.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    itemMenuId = generatedKeys.getInt(1); 
+                }
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, "Error al crear el ítem del menú", ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, "Clase no encontrada", ex);
         }
+
+        return itemMenuId; 
     }
 
     public void actualizarItemMenu(ItemMenu itemMenu) {
@@ -97,24 +107,25 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
     }
     
     public ArrayList<ItemMenu> obtenerTodosLosItemsMenu() {
-        
         ArrayList<ItemMenu> itemsMenu = new ArrayList<>();
-    
-        // Consultas SQL para los diferentes tipos de items
-        String sql = "SELECT * FROM itemsMenu WHERE item = ?";  
+
+        String sql = "SELECT * FROM itemsMenu WHERE item IN (?, ?, ?) ORDER BY id";  
 
         try (Connection connection = getConnection()) {
 
-        // Obtener los items de tipo comida, gaseosa y alcohol
-        String[] tipos = {"PLATO", "GASEOSA", "ALCOHOL"};
-        for (String tipo : tipos) {
+            String[] tipos = {"PLATO", "GASEOSA", "ALCOHOL"};
+
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                pstmt.setString(1, tipo);  // Establecer el tipo de item a buscar
+                pstmt.setString(1, tipos[0]);
+                pstmt.setString(2, tipos[1]);
+                pstmt.setString(3, tipos[2]);
+
                 try (ResultSet rs = pstmt.executeQuery()) {
                     while (rs.next()) {
                         ItemMenu itemMenu = null;
-                        
-                        if (tipo.equals("PLATO")) {
+
+                        // Crear el objeto correspondiente según el tipo de item
+                        if (rs.getString("item").equals("PLATO")) {
                             itemMenu = new Plato(
                                 rs.getInt("id"),
                                 rs.getString("nombre"),
@@ -127,7 +138,7 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
                                 false,
                                 false
                             );
-                        } else if (tipo.equals("GASEOSA")) {
+                        } else if (rs.getString("item").equals("GASEOSA")) {
                             itemMenu = new Gaseosa(
                                 rs.getInt("id"),
                                 rs.getString("nombre"),
@@ -136,7 +147,7 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
                                 FactoryDAO.getCategoriaDAO().buscarCategoria(rs.getInt("id_categoria")),
                                 0
                             );
-                        } else if (tipo.equals("ALCOHOL")) {
+                        } else if (rs.getString("item").equals("ALCOHOL")) {
                             itemMenu = new Alcohol(
                                 rs.getInt("id"),
                                 rs.getString("nombre"),
@@ -154,7 +165,6 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
                     }
                 }
             }
-        }
 
         } catch (SQLException ex) {
             Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -337,26 +347,5 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
 
         return itemMenu;
     }
-
-    public int obtenerID() {
-        String consulta = "SELECT MAX(id) AS ultimo_id FROM grupo11.itemsMenu";
-        int nuevoID = 1; 
-
-        try (Connection connection = getConnection();  
-             PreparedStatement stmt = connection.prepareStatement(consulta);
-             ResultSet rs = stmt.executeQuery()) { 
-
-            if (rs.next()) {
-                int ultimoID = rs.getInt("ultimo_id");
-                nuevoID = ultimoID + 1;
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ItemMenuMySQLDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return nuevoID;
-    }
+    
 }

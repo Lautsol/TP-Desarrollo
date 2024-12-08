@@ -10,7 +10,6 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 public class ModificarCliente extends javax.swing.JFrame {
     
     private ClienteController controlador;
-  
  
     public ModificarCliente() {
         initComponents();
@@ -60,6 +59,21 @@ public class ModificarCliente extends javax.swing.JFrame {
     
     public void mostrarMensajeDatosInvalidos() {
         showMessageDialog(null, "Hay campos inválidos.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public boolean confirmarAccion() {
+        String[] opciones = {"Aceptar", "Cancelar"};
+        int opcion = JOptionPane.showOptionDialog(
+                null,
+                "¿Está seguro de que desea guardar los cambios?",
+                "Confirmar acción",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones[0] 
+        );
+        return opcion == 0; 
     }
     
     @SuppressWarnings("unchecked")

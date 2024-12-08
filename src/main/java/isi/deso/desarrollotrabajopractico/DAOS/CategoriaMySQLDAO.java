@@ -1,8 +1,8 @@
 
 package isi.deso.desarrollotrabajopractico.DAOS;
 
-import isi.deso.desarrollotrabajopractico.Categoria;
-import isi.deso.desarrollotrabajopractico.TipoItem;
+import isi.deso.desarrollotrabajopractico.modelo.Categoria;
+import isi.deso.desarrollotrabajopractico.modelo.TipoItem;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -54,11 +54,9 @@ public class CategoriaMySQLDAO implements CategoriaDAO {
         try (Connection connection = getConnection(); 
             PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
-            // Establecer el parámetro del ID en la consulta
             pstmt.setInt(1, id);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                // Si se encuentra un resultado, crear el objeto Categoria
                 if (rs.next()) {
                     categoria = new Categoria(
                         rs.getInt("id"),
@@ -80,7 +78,7 @@ public class CategoriaMySQLDAO implements CategoriaDAO {
     public ArrayList<Categoria> obtenerTodasLasCategorias() {
         
         ArrayList<Categoria> categorias = new ArrayList<>();
-        String sql = "SELECT * FROM categorias";  
+        String sql = "SELECT * FROM categorias ORDER BY id";  
 
         try (Connection connection = getConnection(); 
             PreparedStatement pstmt = connection.prepareStatement(sql)) {
