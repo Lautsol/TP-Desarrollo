@@ -189,7 +189,6 @@ public class PedidoController implements ActionListener, WindowListener {
             int idCliente  = Integer.parseInt(interfazCrearPedido.getCampoIDcliente().getText());
             int idVendedor = Integer.parseInt(interfazCrearPedido.getCampoIDvendedor().getText());
             String formaDePago = (String)interfazCrearPedido.getCampoFormaDePago().getSelectedItem();
-            String estado = (String)interfazCrearPedido.getCampoEstado().getSelectedItem();
               
             if(!verificarCliente(idCliente)) interfazCrearPedido.mostrarMensajeCliente();
             else if(!verificarVendedor(idVendedor)) interfazCrearPedido.mostrarMensajeVendedor();
@@ -401,7 +400,6 @@ public class PedidoController implements ActionListener, WindowListener {
     public int crearPedido(Pedido pedido, TipoDePago tipoDePago, Cliente cliente) {
         
         cliente.confirmarPedido(tipoDePago);
-        pedido.calcularPrecioPedido();
 
         // PedidosMemory.listaPedidos.add(pedido);  
         int id = FactoryDAO.getPedidoDAO().crearPedido(pedido);

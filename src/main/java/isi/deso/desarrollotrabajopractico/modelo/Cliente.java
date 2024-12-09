@@ -77,6 +77,7 @@ public class Cliente implements ClienteObserver {
            pedidoActual.setTipoPago(tipoPago);
            pedidos.add(pedidoActual);
            pedidoActual.getVendedor().agregarPedido(pedidoActual);
+           pedidoActual.calcularPrecioPedido();
            pedidoActual = null;
            confirmado = true;
         }

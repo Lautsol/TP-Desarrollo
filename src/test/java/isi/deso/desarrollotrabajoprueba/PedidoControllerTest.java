@@ -59,6 +59,7 @@ public class PedidoControllerTest {
         Categoria cat1 = new Categoria(1,"Saludable",TipoItem.COMIDA);
         Plato plato1 = new Plato(1,"Ensalada vegana","Ensalada con quinoa, espinaca y aguacate",3500,cat1,300,450,true,true,true);
         PedidoDetalle pd = new PedidoDetalle(plato1, 2);
+        
         cliente1.iniciarPedido(vendedor1);
         cliente1.agregarProducto(pd);
         
@@ -82,6 +83,7 @@ public class PedidoControllerTest {
         Categoria cat1 = new Categoria(1,"Saludable",TipoItem.COMIDA);
         Plato plato1 = new Plato(1,"Ensalada vegana","Ensalada con quinoa, espinaca y aguacate",5000,cat1,300,450,true,true,true);
         PedidoDetalle pd = new PedidoDetalle(plato1, 2);
+        
         cliente1.iniciarPedido(vendedor1);
         cliente1.agregarProducto(pd);
         
@@ -114,6 +116,7 @@ public class PedidoControllerTest {
         Categoria cat1 = new Categoria(1,"Saludable",TipoItem.COMIDA);
         Plato plato1 = new Plato(1,"Ensalada vegana","Ensalada con quinoa, espinaca y aguacate",5000,cat1,300,450,true,true,true);
         PedidoDetalle pd = new PedidoDetalle(plato1, 2);
+        
         cliente1.iniciarPedido(vendedor1);
         cliente1.agregarProducto(pd);
         
@@ -139,6 +142,7 @@ public class PedidoControllerTest {
         Categoria cat1 = new Categoria(1,"Saludable",TipoItem.COMIDA);
         Plato plato1 = new Plato(1,"Ensalada vegana","Ensalada con quinoa, espinaca y aguacate",5000,cat1,300,450,true,true,true);
         PedidoDetalle pd = new PedidoDetalle(plato1, 2);
+        
         cliente1.iniciarPedido(vendedor1);
         cliente1.agregarProducto(pd);
         
@@ -166,6 +170,7 @@ public class PedidoControllerTest {
 
         cliente1.iniciarPedido(vendedor1);
         cliente1.agregarProducto(pd);
+        
         Pedido pedido1 = cliente1.getPedidoActual();
         int id = pedidoController.crearPedido(pedido1, TipoDePago.MERCADOPAGO, cliente1);
 
@@ -192,13 +197,12 @@ public class PedidoControllerTest {
         Plato plato1 = new Plato(1, "Ensalada vegana", "Ensalada con quinoa, espinaca y aguacate", 5000, cat1, 300, 450, true, true, true);
         PedidoDetalle pd = new PedidoDetalle(plato1, 2);
 
-        // Crear un pedido con el cliente
         cliente1.iniciarPedido(vendedor1);
         cliente1.agregarProducto(pd);
+        
         Pedido pedido1 = cliente1.getPedidoActual();
         int id = pedidoController.crearPedido(pedido1, TipoDePago.MERCADOPAGO, cliente1);
 
-        // Buscar pedidos por id del cliente
         List<Pedido> pedidosDelCliente = pedidoController.listarPedidosCliente(cliente1.getId());
 
         // Verificar que los pedidos están asociados al cliente correcto
