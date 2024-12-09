@@ -35,7 +35,9 @@ public class Pedido  extends PedidoObservable {
         formaDePago = null;
     }
 
-    public Pedido() {}
+    public Pedido() {
+        pedidoDetalle = new ArrayList<>();
+    }
 
     public void setId_pedido(int id_pedido) {
         this.id_pedido = id_pedido;

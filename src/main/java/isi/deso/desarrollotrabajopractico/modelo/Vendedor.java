@@ -163,15 +163,16 @@ public class Vendedor {
      ArrayList<Pedido> pedidosEnProceso = buscarPedidosPorEstado(Estado.EN_PROCESO);
      
      if(pedido instanceof Pedido){
-     Pedido p = (Pedido) pedido;
-     
-     if(pedidosEnProceso.contains(p)){
-       p.setEstado(Estado.EN_ENVIO);
-       p.setChanged();
-       p.notifyObservers();
-     }
-    }
-   }
+        Pedido p = (Pedido) pedido;
 
+        if(pedidosEnProceso.contains(p)){
+            p.setEstado(Estado.EN_ENVIO);
+            p.setChanged();
+            p.notifyObservers();
+          }
+        }
+    }
+
+    
   }
  

@@ -1,6 +1,7 @@
 
 package isi.deso.desarrollotrabajopractico.Interfaces;
 
+import isi.deso.desarrollotrabajopractico.Controladores.PedidoController;
 import isi.deso.desarrollotrabajopractico.Controladores.VendedorController;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -16,49 +17,61 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-public class VerItemsVendedor extends javax.swing.JFrame {
+public class VerItems extends javax.swing.JFrame {
+    private VendedorController controladorVendedor;
+    private PedidoController controladorPedido;
 
-    VendedorController controlador;
-
-    public VerItemsVendedor(VendedorController controlador) {
+    public VerItems() {
         initComponents();
         setVisible(true);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.controlador = controlador;
 
+        // Centrar contenido de las celdas
         DefaultTableCellRenderer rendererCentrado = new DefaultTableCellRenderer();
         rendererCentrado.setHorizontalAlignment(SwingConstants.CENTER);
-        
         for (int i = 0; i < jTable1.getColumnModel().getColumnCount(); i++) {
             jTable1.getColumnModel().getColumn(i).setResizable(false);
             jTable1.getColumnModel().getColumn(i).setCellRenderer(rendererCentrado);
         }
-        
-        // Centrar los encabezados de las columnas
+
+        // Centrar encabezados de las columnas
         JTableHeader encabezado = jTable1.getTableHeader();
         DefaultTableCellRenderer rendererEncabezado = (DefaultTableCellRenderer) encabezado.getDefaultRenderer();
         rendererEncabezado.setHorizontalAlignment(SwingConstants.CENTER);
+    }
 
-        // Crear un renderizador personalizado para la columna de acciones
-        jTable1.getColumnModel().getColumn(7).setCellRenderer(new ActionCellRenderer());
+    public void setControladorVendedor(VendedorController controlador) {
+        this.controladorVendedor = controlador;
+        actualizarColumnasAcciones();
+    }
 
-        // Crear un editor personalizado para la columna de acciones
-        jTable1.getColumnModel().getColumn(7).setCellEditor(new ActionCellEditor(jTable1));
+    public void setControladorPedido(PedidoController controlador) {
+        this.controladorPedido = controlador;
+        actualizarColumnasAcciones();
+    }
+
+    private void actualizarColumnasAcciones() {
+        if (controladorVendedor != null || controladorPedido != null) {
+            jTable1.getColumnModel().getColumn(7).setCellRenderer(new ActionCellRenderer(controladorVendedor, controladorPedido));
+            jTable1.getColumnModel().getColumn(7).setCellEditor(new ActionCellEditor(jTable1, controladorVendedor, controladorPedido));
+        }
     }
 
     // Renderizador de celdas para los botones
-    private class ActionCellRenderer extends JPanel implements TableCellRenderer {
+    private static class ActionCellRenderer extends JPanel implements TableCellRenderer {
 
-        private final JButton eliminarButton = new JButton("Eliminar");
+        private final JButton eliminarButton;
 
-        public ActionCellRenderer() {
+        public ActionCellRenderer(VendedorController controladorVendedor, PedidoController controladorPedido) {
             setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
-            eliminarButton.setActionCommand("EliminarItem"); // ActionCommand configurado correctamente
+            eliminarButton = new JButton("Eliminar");
+            eliminarButton.setActionCommand("EliminarItem");
+            eliminarButton.addActionListener(controladorVendedor);
+            eliminarButton.addActionListener(controladorPedido);
             add(eliminarButton);
         }
 
@@ -68,20 +81,17 @@ public class VerItemsVendedor extends javax.swing.JFrame {
     }
 
     // Editor de celdas para los botones
-    private class ActionCellEditor extends AbstractCellEditor implements TableCellEditor {
+    private static class ActionCellEditor extends AbstractCellEditor implements TableCellEditor {
 
         private final JPanel panel;
         private final JButton eliminarButton;
-        private final JTable table;
 
-        public ActionCellEditor(JTable table) {
-            this.table = table;
+        public ActionCellEditor(JTable table, VendedorController controladorVendedor, PedidoController controladorPedido) {
             panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
             eliminarButton = new JButton("Eliminar");
-
-            eliminarButton.setActionCommand("EliminarItem"); // Establecer ActionCommand
-            eliminarButton.addActionListener(controlador); // Asegúrate de que el controlador maneje la acción
-
+            eliminarButton.setActionCommand("EliminarItem");
+            eliminarButton.addActionListener(controladorVendedor);
+            eliminarButton.addActionListener(controladorPedido);
             panel.add(eliminarButton);
         }
 
@@ -95,8 +105,7 @@ public class VerItemsVendedor extends javax.swing.JFrame {
     }
 
     public DefaultTableModel getModelo() {
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        return model;
+        return (DefaultTableModel) jTable1.getModel();
     }
 
     public JTable getjTable1() {
@@ -105,23 +114,27 @@ public class VerItemsVendedor extends javax.swing.JFrame {
 
     public void ocultarColumna() {
         TableColumnModel columnModel = jTable1.getColumnModel();
-        TableColumn column = columnModel.getColumn(6); // Número de columna de la que se quiere eliminar
-        columnModel.removeColumn(column); // Oculta la columna
+        columnModel.removeColumn(columnModel.getColumn(6)); 
     }
-    
-    public boolean confirmarAccion() {
+
+    public void ocultarColumnaAcciones() {
+        TableColumnModel columnModel = jTable1.getColumnModel();
+        columnModel.removeColumn(columnModel.getColumn(7)); 
+    }
+
+    public boolean confirmarAccion(String mensaje) {
         String[] opciones = {"Aceptar", "Cancelar"};
         int opcion = JOptionPane.showOptionDialog(
                 null,
-                "¿Está seguro de que desea eliminar el item menú del vendedor?",
+                mensaje,
                 "Confirmar acción",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 opciones,
-                opciones[0] 
+                opciones[0]
         );
-        return opcion == 0; 
+        return opcion == 0;
     }
     
     @SuppressWarnings("unchecked")
@@ -247,14 +260,15 @@ public class VerItemsVendedor extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VerItemsVendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VerItems.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VerItemsVendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VerItems.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VerItemsVendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VerItems.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VerItemsVendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VerItems.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

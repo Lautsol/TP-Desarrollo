@@ -166,18 +166,18 @@ public class Cliente implements ClienteObserver {
     
     public void update(PedidoObservable pedidoObservable){
         
-     if(pedidoObservable instanceof Pedido){
-     Pedido p = (Pedido) pedidoObservable;
-     
-        if(pedidos.contains(p)){
-          
-          if(p.getTipoPago() == TipoDePago.MERCADOPAGO){
-              p.generarMercadoPago();
-          }
-          else p.generarTransferencia();
-      }
-    }
-  }
+        if(pedidoObservable instanceof Pedido){
+            Pedido p = (Pedido) pedidoObservable;
+
+               if(pedidos.contains(p)){
+
+                    if(p.getTipoPago() == TipoDePago.MERCADOPAGO){
+                        p.generarMercadoPago();
+                    }
+                    else p.generarTransferencia();
+                }
+            }
+        }
     
     public boolean suscripcionEstadoPedido(PedidoObservable pedidoObservable){
         

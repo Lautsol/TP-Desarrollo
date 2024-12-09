@@ -7,7 +7,7 @@ import isi.deso.desarrollotrabajopractico.Interfaces.CrearVendedor;
 import isi.deso.desarrollotrabajopractico.Interfaces.ItemsMenuPedido;
 import isi.deso.desarrollotrabajopractico.Interfaces.ListaDeVendedores;
 import isi.deso.desarrollotrabajopractico.Interfaces.ModificarVendedor;
-import isi.deso.desarrollotrabajopractico.Interfaces.VerItemsVendedor;
+import isi.deso.desarrollotrabajopractico.Interfaces.VerItems;
 import isi.deso.desarrollotrabajopractico.modelo.ItemMenu;
 import isi.deso.desarrollotrabajopractico.modelo.Vendedor;
 import java.awt.event.ActionEvent;
@@ -25,7 +25,7 @@ public class VendedorController implements ActionListener, WindowListener {
     private ItemsMenuPedido interfazItemsMenuPedido;
     private ArrayList<ItemMenu> itemsMenu;
     private ArrayList<ItemMenu> itemsMenuEliminar;
-    private VerItemsVendedor interfazItemsVendedor;
+    private VerItems interfazItemsVendedor;
     
     public VendedorController(){}
     
@@ -53,7 +53,7 @@ public class VendedorController implements ActionListener, WindowListener {
         this.interfazItemsMenuPedido = interfazItemsMenuPedido;
     }
     
-    public void setVerItemsVendedor(VerItemsVendedor interfazItemsVendedor) {
+    public void setVerItemsVendedor(VerItems interfazItemsVendedor) {
         this.interfazItemsVendedor = interfazItemsVendedor;
     }
      
@@ -125,8 +125,8 @@ public class VendedorController implements ActionListener, WindowListener {
                 listaDeVendedores.mostrarMensaje();
                 restablecerTablaConDatosOriginales();
                 }   
+            }
         }
-      }
      
         else if(comando.equals("Eliminar")) {
             
@@ -230,26 +230,33 @@ public class VendedorController implements ActionListener, WindowListener {
         
         else if (comando.equals("Ver items")) {
             
-            interfazItemsVendedor = new VerItemsVendedor(this); 
+            interfazItemsVendedor = new VerItems(); 
+            interfazItemsVendedor.setControladorVendedor(this);
             setVerItemsVendedor(interfazItemsVendedor); 
             interfazItemsVendedor.ocultarColumna();
-            Vendedor vendedor = new Vendedor();
-            int id = Integer.parseInt(interfazModificarVendedor.getjTextField4().getText());
-            vendedor.setId(id);
-            ArrayList<ItemMenu> listaItemsVendedor = FactoryDAO.getItemMenuVendedorDAO().obtenerItemsMenuDeVendedor(vendedor);
             
-            Iterator<ItemMenu> iterator = listaItemsVendedor.iterator();
-            while (iterator.hasNext()) {
-                ItemMenu item = iterator.next();
-                for (ItemMenu itemEliminar : itemsMenuEliminar) {
-                    if (itemEliminar.getId() == item.getId()) {
-                        iterator.remove();
-                        break;
+            if(interfazModificarVendedor != null) {
+                Vendedor vendedor = new Vendedor();
+                int id = Integer.parseInt(interfazModificarVendedor.getjTextField4().getText());
+                vendedor.setId(id);
+                ArrayList<ItemMenu> listaItemsVendedor = FactoryDAO.getItemMenuVendedorDAO().obtenerItemsMenuDeVendedor(vendedor);
+
+                Iterator<ItemMenu> iterator = listaItemsVendedor.iterator();
+                while (iterator.hasNext()) {
+                    ItemMenu item = iterator.next();
+                    for (ItemMenu itemEliminar : itemsMenuEliminar) {
+                        if (itemEliminar.getId() == item.getId()) {
+                            iterator.remove();
+                            break;
+                        }
                     }
                 }
-            }
 
-            cargarDatosOriginalesEnTablaItems(listaItemsVendedor, interfazItemsVendedor);
+                listaItemsVendedor.addAll(itemsMenu);
+                cargarDatosOriginalesEnTablaItems(listaItemsVendedor, interfazItemsVendedor);
+            }
+            
+            else cargarDatosOriginalesEnTablaItems(itemsMenu, interfazItemsVendedor);
         }
         
         else if(comando.equals("EliminarItem")) {
@@ -258,12 +265,24 @@ public class VendedorController implements ActionListener, WindowListener {
             interfazItemsVendedor.getjTable1().getCellEditor().stopCellEditing(); // Detener la edición si está activa
             }
             
-            if(interfazItemsVendedor.confirmarAccion()) {
+            if(interfazItemsVendedor.confirmarAccion("¿Está seguro de que desea eliminar el item menú del vendedor?")) {
                 int row = interfazItemsVendedor.getjTable1().getSelectedRow();
 
                 int id = (Integer) interfazItemsVendedor.getModelo().getValueAt(row, 0);
                 ItemMenu item = (new ItemMenuController()).buscarItemMenu(id);
-                itemsMenuEliminar.add(item);
+                
+                Iterator<ItemMenu> iterator = itemsMenu.iterator();
+                    
+                    while (iterator.hasNext()) {
+                        ItemMenu itemMenu = iterator.next();
+                        if(itemMenu.getId() == item.getId()) {
+                            iterator.remove();
+                            break;
+                        }
+                    }
+                    
+                if(interfazModificarVendedor != null) itemsMenuEliminar.add(item);
+                
                 interfazItemsVendedor.getModelo().removeRow(row);
             }
         }
@@ -535,7 +554,7 @@ public class VendedorController implements ActionListener, WindowListener {
         }
     }
     
-    public void cargarDatosOriginalesEnTablaItems(ArrayList<ItemMenu> listaItems, VerItemsVendedor interfaz) {
+    public void cargarDatosOriginalesEnTablaItems(ArrayList<ItemMenu> listaItems, VerItems interfaz) {
         
         for (ItemMenu itemMenu : listaItems) {
                 Object[] rowData = {
