@@ -6,8 +6,11 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 public class CrearPedido extends javax.swing.JFrame {
+    
+    private Border borde;
     
     public CrearPedido() {
         initComponents();
@@ -15,6 +18,7 @@ public class CrearPedido extends javax.swing.JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        borde = campoIDvendedor.getBorder();
     }
     
     public void setControlador(PedidoController controlador) {
@@ -45,6 +49,10 @@ public class CrearPedido extends javax.swing.JFrame {
         campoEstado.setSelectedItem("EN ENVIO");
         campoIDvendedor.setText("");
         campoFormaDePago.setSelectedItem("MERCADOPAGO");
+    }
+    
+    public Border getBordeTexto() {
+        return borde;
     }
      
     public void mostrarMensajeCamposVacios() {

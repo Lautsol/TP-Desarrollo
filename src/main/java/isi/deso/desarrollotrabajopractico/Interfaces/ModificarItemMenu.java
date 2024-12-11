@@ -6,15 +6,19 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 public class ModificarItemMenu extends javax.swing.JFrame {
 
+    private Border borde;
+    
     public ModificarItemMenu() {
         initComponents();
         setVisible(true);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        borde = jTextField1.getBorder();
     }
     
     public void setControlador(ItemMenuController controlador) {
@@ -42,6 +46,10 @@ public class ModificarItemMenu extends javax.swing.JFrame {
     
     public JComboBox<String> getjComboBox1() {
         return jComboBox1;
+    }
+    
+    public Border getBordeTexto() {
+        return borde;
     }
     
     public void mostrarMensajeCamposVacios() {

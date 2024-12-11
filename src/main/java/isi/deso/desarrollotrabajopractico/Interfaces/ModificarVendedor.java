@@ -6,10 +6,12 @@ import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JTextField;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import javax.swing.border.Border;
 
 public class ModificarVendedor extends javax.swing.JFrame {
 
     private VendedorController controlador;
+    private Border borde;
     
     public ModificarVendedor() {
         initComponents();
@@ -17,6 +19,7 @@ public class ModificarVendedor extends javax.swing.JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        borde = jTextField1.getBorder();
     }
     
     public void setControlador(VendedorController controlador) {
@@ -38,6 +41,10 @@ public class ModificarVendedor extends javax.swing.JFrame {
 
     public JTextField getjTextField5() {
         return jTextField5;
+    }
+    
+    public Border getBordeTexto() {
+        return borde;
     }
     
     public void mostrarMensajeCamposVacios() {

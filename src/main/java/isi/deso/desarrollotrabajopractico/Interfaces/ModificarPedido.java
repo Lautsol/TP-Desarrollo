@@ -66,14 +66,6 @@ public class ModificarPedido extends javax.swing.JFrame {
         this.jTextField4 = jTextField4;
     }
     
-    public void mostrarMensajeCamposVacios() {
-       showMessageDialog(null, "Hay campos sin rellenar.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
-    }
-    
-    public void mostrarMensajeDatosInvalidos() {
-        showMessageDialog(null, "Hay campos inválidos.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
-    }
-    
     public void mostrarPagoGenerado(Pago pago) {
         showMessageDialog(null, "Fecha: " + pago.getFecha() + "\nMonto: " + pago.getMonto(), "PAGO REALIZADO CON ÉXITO", JOptionPane.INFORMATION_MESSAGE);
     }

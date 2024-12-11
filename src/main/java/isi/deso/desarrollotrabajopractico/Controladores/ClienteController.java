@@ -50,12 +50,14 @@ public class ClienteController implements ActionListener {
         Object source = e.getSource();
 
         if(comando.equals("Crear nuevo cliente")) {
+            
             interfazCrearCliente = new CrearCliente();  
             interfazCrearCliente.setControlador(this);
             setCrearCliente(interfazCrearCliente); 
         } 
         
         else if(comando.equals("Editar")) {
+            
            interfazModificarCliente = new ModificarCliente();  
            interfazModificarCliente.setControlador(this);
            setModificarCliente(interfazModificarCliente);  
@@ -88,6 +90,7 @@ public class ClienteController implements ActionListener {
         }
         
         else if(source == listaDeClientes.getjTextField1()) {
+            
             String texto = listaDeClientes.getjTextField1().getText();
 
         // Intentar convertir el texto a un int
@@ -169,7 +172,7 @@ public class ClienteController implements ActionListener {
             
             if(validarCamposVaciosModificar(interfazModificarCliente)) interfazModificarCliente.mostrarMensajeCamposVacios();
             else if(!validarTiposDeDatosModificar(interfazModificarCliente)) interfazModificarCliente.mostrarMensajeDatosInvalidos();
-            else if(interfazModificarCliente.confirmarAccion()) {
+            else {
                 String nombre = interfazModificarCliente.getjTextField1().getText();
                 long cuit = Long.parseLong(interfazModificarCliente.getjTextField2().getText());
                 String email = interfazModificarCliente.getjTextField3().getText();
@@ -182,7 +185,11 @@ public class ClienteController implements ActionListener {
                 if(interfazModificarCliente.getjTextField7().getText().trim().isEmpty()) alias = null;
                 else alias = interfazModificarCliente.getjTextField7().getText();
             
-                actualizarCliente(nombre, id, cuit, alias, cbu, email, direccion);
+                ClienteMySQLDAO clienteMySQLDAO = (ClienteMySQLDAO) FactoryDAO.getClienteDAO();
+                if(clienteMySQLDAO.buscarClientePorCuit(cuit) != null) interfazModificarCliente.mostrarMensajeCuit();
+                else if(interfazModificarCliente.confirmarAccion()) {
+                    actualizarCliente(nombre, id, cuit, alias, cbu, email, direccion);
+                }
 
                 interfazModificarCliente.dispose();
                 restablecerTablaConDatosOriginales();
@@ -369,7 +376,7 @@ public class ClienteController implements ActionListener {
     private boolean validarCamposVacios(CrearCliente interfaz) {
         
         boolean vacio = false;
-        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY); 
+        Border defaultBorder = interfaz.getBordeTexto();
 
         if (interfaz.getjTextField1().getText().trim().isEmpty()) {
             interfaz.getjTextField1().setBorder(BorderFactory.createLineBorder(Color.RED));
@@ -414,7 +421,7 @@ public class ClienteController implements ActionListener {
     private boolean validarTiposDeDatos(CrearCliente interfaz) {
         
         boolean correcto = true;
-        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+        Border defaultBorder = interfaz.getBordeTexto();
 
         if (!interfaz.getjTextField1().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
             interfaz.getjTextField1().setBorder(BorderFactory.createLineBorder(Color.RED));
@@ -464,7 +471,7 @@ public class ClienteController implements ActionListener {
     private boolean validarCamposVaciosModificar(ModificarCliente interfaz) {
         
         boolean vacio = false;
-        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+        Border defaultBorder = interfaz.getBordeTexto();
 
         if (interfaz.getjTextField1().getText().trim().isEmpty()) {
             interfaz.getjTextField1().setBorder(BorderFactory.createLineBorder(Color.RED));
@@ -509,7 +516,7 @@ public class ClienteController implements ActionListener {
     private boolean validarTiposDeDatosModificar(ModificarCliente interfaz) {
         
         boolean correcto = true;
-        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+        Border defaultBorder = interfaz.getBordeTexto();
 
         if (!interfaz.getjTextField1().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
             interfaz.getjTextField1().setBorder(BorderFactory.createLineBorder(Color.RED));

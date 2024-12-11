@@ -176,7 +176,7 @@ public class ListaDeClientes extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Nombre", "ID ", "Cuit", "Alias", "CBU", "Email", "Dirección", "Acciones"
+                "Nombre", "ID ", "CUIT", "Alias", "CBU", "Email", "Dirección", "Acciones"
             }
         ) {
             Class[] types = new Class [] {
@@ -346,22 +346,12 @@ public class ListaDeClientes extends javax.swing.JPanel {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable4;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JPanel panelVendedores;
-    private javax.swing.JPanel panelVendedores1;
     private javax.swing.JPanel panelVendedores3;
     // End of variables declaration//GEN-END:variables
 }

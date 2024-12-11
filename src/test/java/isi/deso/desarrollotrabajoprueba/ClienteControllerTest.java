@@ -44,9 +44,9 @@ public class ClienteControllerTest {
     void testCrearCliente() throws SQLException {
         
         String nombre = "Juan Perez";
-        long cuit = 20304050607L;
+        Long cuit = 12345678911L;
         String alias = "juanp";
-        Long cbu = 123456789012L;
+        Long cbu = 123456L;
         String email = "juan@mail.com";
         String direccion = "La Rioja 1250";
 
@@ -69,9 +69,9 @@ public class ClienteControllerTest {
     void testActualizarCliente() throws SQLException {
         
         String nombre = "Juan Perez";
-        long cuit = 20304050607L;
+        Long cuit = 12345678911L;
         String alias = "juanp";
-        Long cbu = 123456789012L;
+        Long cbu = 123456L;
         String email = "juan@mail.com";
         String direccion = "La Rioja 1250";
 
@@ -102,9 +102,9 @@ public class ClienteControllerTest {
     void testEliminarCliente() throws SQLException {
         
         String nombre = "Juan Perez";
-        long cuit = 20304050607L;
+        Long cuit = 12345678911L;
         String alias = "juanp";
-        Long cbu = 123456789012L;
+        Long cbu = 123456L;
         String email = "juan@correo.com";
         String direccion = "La Rioja 1250";
 
@@ -125,9 +125,9 @@ public class ClienteControllerTest {
     void testBuscarClientePorId() throws SQLException {
         
         String nombre = "Marcelo Perez";
-        long cuit = 20304050607L;
+        Long cuit = 12345678911L;
         String alias = "marp";
-        Long cbu = 123456789012L;
+        Long cbu = 123456L;
         String email = "marcelo@correo.com";
         String direccion = "La Rioja 1250";
 
@@ -150,8 +150,8 @@ public class ClienteControllerTest {
     @Test
     void testListarClientesPorNombre() throws SQLException {
         
-        int id1 = clienteController.crearCliente("Juan Perez", 20304050607L, "juanp", 123456789012L, "juan@mail.com", "La Rioja 1250");
-        int id2 = clienteController.crearCliente("Maria Lopez", 20304050608L, "marial", 123456789013L, "maria@mail.com", "San Martín 1340");
+        int id1 = clienteController.crearCliente("Juan Perez", 12345678911L, "juanp", 123456L, "juan@mail.com", "La Rioja 1250");
+        int id2 = clienteController.crearCliente("Maria Lopez", 20304050608L, "marial", 789101L, "maria@mail.com", "San Martín 1340");
 
         List<Cliente> clientes = clienteController.listarClientes("Juan Perez");
 

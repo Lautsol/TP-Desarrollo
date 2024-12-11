@@ -67,6 +67,7 @@ public class VendedorController implements ActionListener, WindowListener {
         Object source = e.getSource();
 
         if(comando.equals("Crear nuevo vendedor")) {
+            
             interfazModificarVendedor = null; 
             itemsMenu = new ArrayList<>();
             interfazCrearVendedor = new CrearVendedor();  
@@ -99,6 +100,7 @@ public class VendedorController implements ActionListener, WindowListener {
         }
      
         else if(source == listaDeVendedores.getjTextField1()) {
+            
             String texto = listaDeVendedores.getjTextField1().getText();
 
         // Intentar convertir el texto a un int
@@ -473,7 +475,7 @@ public class VendedorController implements ActionListener, WindowListener {
     private boolean validarCamposVacios(CrearVendedor interfaz) {
         
         boolean vacio = false;
-        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+        Border defaultBorder = interfaz.getBordeTexto();
 
         if (interfaz.getjTextField1().getText().trim().isEmpty()) {
             interfaz.getjTextField1().setBorder(BorderFactory.createLineBorder(Color.RED));
@@ -495,7 +497,7 @@ public class VendedorController implements ActionListener, WindowListener {
     private boolean validarTiposDeDatos(CrearVendedor interfaz) {
         
         boolean correcto = true;
-        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+        Border defaultBorder = interfaz.getBordeTexto();
 
         if (!interfaz.getjTextField1().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
             interfaz.getjTextField1().setBorder(BorderFactory.createLineBorder(Color.RED));
@@ -517,7 +519,7 @@ public class VendedorController implements ActionListener, WindowListener {
     private boolean validarCamposVaciosModificar(ModificarVendedor interfaz) {
         
         boolean vacio = false;
-        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+        Border defaultBorder = interfaz.getBordeTexto();
 
         if (interfaz.getjTextField1().getText().trim().isEmpty()) {
             interfaz.getjTextField1().setBorder(BorderFactory.createLineBorder(Color.RED));
@@ -539,7 +541,7 @@ public class VendedorController implements ActionListener, WindowListener {
     private boolean validarTiposDeDatosModificar(ModificarVendedor interfaz) {
         
         boolean correcto = true;
-        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+        Border defaultBorder = interfaz.getBordeTexto();
 
         if (!interfaz.getjTextField1().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
             interfaz.getjTextField1().setBorder(BorderFactory.createLineBorder(Color.RED));

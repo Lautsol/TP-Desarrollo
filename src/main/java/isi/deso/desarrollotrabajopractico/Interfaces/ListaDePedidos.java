@@ -45,10 +45,10 @@ public class ListaDePedidos extends javax.swing.JPanel {
         rendererEncabezado.setHorizontalAlignment(SwingConstants.CENTER);
         
         // Crear un renderizador personalizado para la columna de acciones
-        jTable1.getColumnModel().getColumn(6).setCellRenderer(new ActionCellRenderer());
+        jTable1.getColumnModel().getColumn(7).setCellRenderer(new ActionCellRenderer());
 
         // Crear un editor personalizado para la columna de acciones
-        jTable1.getColumnModel().getColumn(6).setCellEditor(new ActionCellEditor(jTable1));
+        jTable1.getColumnModel().getColumn(7).setCellEditor(new ActionCellEditor(jTable1));
     }
     
     public PedidoController getControlador() {
@@ -162,14 +162,14 @@ public class ListaDePedidos extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID pedido", "ID cliente", "ID vendedor", "Total", "Forma de pago", "Estado", "Acciones"
+                "ID pedido", "ID cliente", "ID vendedor", "Total", "Forma de pago", "Estado", "Fecha de pago", "Acciones"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Double.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Double.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true
+                false, false, false, false, false, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -183,8 +183,10 @@ public class ListaDePedidos extends javax.swing.JPanel {
         jTable1.setRowHeight(30);
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(6).setMinWidth(140);
-            jTable1.getColumnModel().getColumn(6).setMaxWidth(180);
+            jTable1.getColumnModel().getColumn(4).setMinWidth(100);
+            jTable1.getColumnModel().getColumn(5).setMinWidth(100);
+            jTable1.getColumnModel().getColumn(7).setMinWidth(140);
+            jTable1.getColumnModel().getColumn(7).setMaxWidth(180);
         }
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));

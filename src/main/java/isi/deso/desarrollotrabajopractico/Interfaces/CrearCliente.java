@@ -5,15 +5,19 @@ import isi.deso.desarrollotrabajopractico.Controladores.ClienteController;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 public class CrearCliente extends javax.swing.JFrame {
-   
+    
+    private Border borde;
+    
     public CrearCliente() {
         initComponents(); 
         setVisible(true);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        borde = jTextField1.getBorder();
     }
     
     public void setControlador(ClienteController controlador) {
@@ -54,6 +58,10 @@ public class CrearCliente extends javax.swing.JFrame {
         jTextField7.setText("");
     }
     
+    public Border getBordeTexto() {
+        return borde;
+    }
+    
     public void mostrarMensajeCamposVacios() {
        showMessageDialog(null, "Hay campos sin rellenar.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
     }
@@ -63,7 +71,7 @@ public class CrearCliente extends javax.swing.JFrame {
     }
     
     public void mostrarMensajeCuit() {
-        showMessageDialog(null, "Ya existe un cliente con ese cuit.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
+        showMessageDialog(null, "Ya existe un cliente con ese CUIT.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
     }
     
     public boolean confirmarAccion() {
@@ -118,7 +126,7 @@ public class CrearCliente extends javax.swing.JFrame {
             }
         });
 
-        jLabel14.setText("Cuit:");
+        jLabel14.setText("CUIT:");
 
         jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {

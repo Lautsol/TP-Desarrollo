@@ -9,6 +9,8 @@ public class Transferencia extends Pago {
     private long cbu;
     private long cuit;
     
+    public Transferencia(){};
+    
     public Transferencia(long cbu, long cuit, LocalDate fecha) {
         this.cbu = cbu ;
         this.cuit = cuit; 

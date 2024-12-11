@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Cliente implements ClienteObserver {
     
     private int id;
-    private long cuit;
+    private Long cuit;
     private String email;
     private String direccion;
     private String nombre;
@@ -16,7 +16,7 @@ public class Cliente implements ClienteObserver {
     private Long cbu;
     private String alias;
    
-    public Cliente(int id, long cuit, String nombre, String email, String direccion, Coordenada coordenadas, Long cbu, String alias) {
+    public Cliente(int id, Long cuit, String nombre, String email, String direccion, Coordenada coordenadas, Long cbu, String alias) {
         this.id = id;
         this.cuit = cuit;
         this.nombre = nombre;
@@ -28,7 +28,7 @@ public class Cliente implements ClienteObserver {
         this.alias = alias;
     }
     
-    public Cliente(int id, long cuit, String nombre, String email, String direccion, Coordenada coordenadas, Long cbu) {
+    public Cliente(int id, Long cuit, String nombre, String email, String direccion, Coordenada coordenadas, Long cbu) {
         this.id = id;
         this.cuit = cuit;
         this.nombre = nombre;
@@ -39,7 +39,7 @@ public class Cliente implements ClienteObserver {
         this.cbu = cbu;
     }
     
-    public Cliente(int id, long cuit, String nombre, String email, String direccion, Coordenada coordenadas, String alias) {
+    public Cliente(int id, Long cuit, String nombre, String email, String direccion, Coordenada coordenadas, String alias) {
         this.id = id;
         this.cuit = cuit;
         this.nombre = nombre;
@@ -109,7 +109,7 @@ public class Cliente implements ClienteObserver {
         return id;
     }
 
-    public long getCuit() {
+    public Long getCuit() {
         return cuit;
     }
 
@@ -137,7 +137,7 @@ public class Cliente implements ClienteObserver {
         this.id = id;
     }
 
-    public void setCuit(long cuit) {
+    public void setCuit(Long cuit) {
         this.cuit = cuit;
     }
 

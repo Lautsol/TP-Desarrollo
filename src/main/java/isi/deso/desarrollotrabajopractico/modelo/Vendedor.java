@@ -72,7 +72,6 @@ public class Vendedor {
         double dLatitud =  (unCliente.getCoordenadas().getLatitud() - coordenadas.getLatitud())/2;
         double dLongitud = (unCliente.getCoordenadas().getLongitud() - coordenadas.getLongitud())/2;
         double radio = 6372.8;
-        
         double distancia;
         double raiz = Math.sqrt(Math.pow((Math.sin(dLatitud)),2) + (Math.cos(coordenadas.getLatitud())*Math.cos(unCliente.getCoordenadas().getLatitud())*(Math.pow((Math.sin(dLongitud)),2))));
         distancia = 2*radio*Math.asin(raiz);

@@ -7,6 +7,8 @@ public class MercadoPago extends Pago {
     
     private String alias;
 
+    public MercadoPago(){};
+    
     public MercadoPago(String alias, LocalDate fecha) {
         this.alias = alias;
         this.fecha = fecha;

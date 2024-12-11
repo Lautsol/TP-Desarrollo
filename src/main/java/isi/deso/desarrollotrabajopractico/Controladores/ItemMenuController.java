@@ -66,6 +66,7 @@ public class ItemMenuController implements ActionListener, WindowListener {
         Object source = e.getSource();
 
         if(comando.equals("Crear nuevo item menú")) {
+            
             interfazCrearItemMenu = new CrearItemMenu();  
             interfazCrearItemMenu.setControlador(this);
             setCrearItemMenu(interfazCrearItemMenu);  
@@ -73,6 +74,7 @@ public class ItemMenuController implements ActionListener, WindowListener {
         } 
         
         else if(comando.equals("Editar")) {
+            
            interfazModificarItemMenu = new ModificarItemMenu();  
            interfazModificarItemMenu.setControlador(this);
            setModificarItemMenu(interfazModificarItemMenu);  
@@ -106,6 +108,7 @@ public class ItemMenuController implements ActionListener, WindowListener {
         } 
         
         else if(source == listaDeItemMenu.getjTextField1()) {
+            
             String texto = listaDeItemMenu.getjTextField1().getText();
 
         // Intentar convertir el texto a un int
@@ -459,24 +462,30 @@ public class ItemMenuController implements ActionListener, WindowListener {
     private boolean validarCamposVacios(CrearItemMenu interfaz) {
         
         boolean vacio = false;
-        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+        Border defaultBorder = interfaz.getBordeTexto();
 
         if (interfaz.getjTextField2().getText().trim().isEmpty()) {
-            interfaz.getjTextField2().setBorder(BorderFactory.createLineBorder(Color.RED));
+            interfaz.getjTextField2().setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.RED),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
             vacio = true;
         } else {
             interfaz.getjTextField2().setBorder(defaultBorder);
         }
 
         if (interfaz.getjTextField3().getText().trim().isEmpty()) {
-            interfaz.getjTextField3().setBorder(BorderFactory.createLineBorder(Color.RED));
+            interfaz.getjTextField3().setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.RED),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
             vacio = true;
         } else {
             interfaz.getjTextField3().setBorder(defaultBorder);
         }
 
         if (interfaz.getjTextField4().getText().trim().isEmpty()) {
-            interfaz.getjTextField4().setBorder(BorderFactory.createLineBorder(Color.RED));
+            interfaz.getjTextField4().setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.RED),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
             vacio = true;
         } else {
             interfaz.getjTextField4().setBorder(defaultBorder);
@@ -488,24 +497,30 @@ public class ItemMenuController implements ActionListener, WindowListener {
     private boolean validarTiposDeDatos(CrearItemMenu interfaz) {
         
         boolean correcto = true;
-        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+        Border defaultBorder = interfaz.getBordeTexto();
 
         if (!interfaz.getjTextField2().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
-            interfaz.getjTextField2().setBorder(BorderFactory.createLineBorder(Color.RED));
+            interfaz.getjTextField2().setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.RED),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
             correcto = false;
         } else {
             interfaz.getjTextField2().setBorder(defaultBorder);
         }
 
         if (!interfaz.getjTextField3().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s,]+")) {
-            interfaz.getjTextField3().setBorder(BorderFactory.createLineBorder(Color.RED));
+            interfaz.getjTextField3().setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.RED),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
             correcto = false;
         } else {
             interfaz.getjTextField3().setBorder(defaultBorder);
         }
 
         if (!interfaz.getjTextField4().getText().matches("-?\\d+(\\.\\d+)?")) {
-            interfaz.getjTextField4().setBorder(BorderFactory.createLineBorder(Color.RED));
+            interfaz.getjTextField4().setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.RED),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
             correcto = false;
         } else {
             interfaz.getjTextField4().setBorder(defaultBorder);
@@ -517,24 +532,30 @@ public class ItemMenuController implements ActionListener, WindowListener {
     private boolean validarCamposVaciosModificar(ModificarItemMenu interfaz) {
         
         boolean vacio = false;
-        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+        Border defaultBorder = interfaz.getBordeTexto();
 
         if (interfaz.getjTextField2().getText().trim().isEmpty()) {
-            interfaz.getjTextField2().setBorder(BorderFactory.createLineBorder(Color.RED));
+            interfaz.getjTextField2().setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.RED),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
             vacio = true;
         } else {
             interfaz.getjTextField2().setBorder(defaultBorder);
         }
 
         if (interfaz.getjTextField3().getText().trim().isEmpty()) {
-            interfaz.getjTextField3().setBorder(BorderFactory.createLineBorder(Color.RED));
+            interfaz.getjTextField3().setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.RED),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
             vacio = true;
         } else {
             interfaz.getjTextField3().setBorder(defaultBorder);
         }
 
         if (interfaz.getjTextField4().getText().trim().isEmpty()) {
-            interfaz.getjTextField4().setBorder(BorderFactory.createLineBorder(Color.RED));
+            interfaz.getjTextField4().setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.RED),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
             vacio = true;
         } else {
             interfaz.getjTextField4().setBorder(defaultBorder);
@@ -546,24 +567,30 @@ public class ItemMenuController implements ActionListener, WindowListener {
     private boolean validarTiposDeDatosModificar(ModificarItemMenu interfaz) {
         
         boolean correcto = true;
-        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+        Border defaultBorder = interfaz.getBordeTexto();
 
         if (!interfaz.getjTextField2().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
-            interfaz.getjTextField2().setBorder(BorderFactory.createLineBorder(Color.RED));
+            interfaz.getjTextField2().setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.RED),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
             correcto = false;
         } else {
             interfaz.getjTextField2().setBorder(defaultBorder);
         }
 
         if (!interfaz.getjTextField3().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s,]+")) {
-            interfaz.getjTextField3().setBorder(BorderFactory.createLineBorder(Color.RED));
+            interfaz.getjTextField3().setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.RED),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
             correcto = false;
         } else {
             interfaz.getjTextField3().setBorder(defaultBorder);
         }
 
         if (!interfaz.getjTextField4().getText().matches("-?\\d+(\\.\\d+)?")) {
-            interfaz.getjTextField4().setBorder(BorderFactory.createLineBorder(Color.RED));
+            interfaz.getjTextField4().setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.RED),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
             correcto = false;
         } else {
             interfaz.getjTextField4().setBorder(defaultBorder);

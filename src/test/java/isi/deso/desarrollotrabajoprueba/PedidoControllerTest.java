@@ -55,7 +55,7 @@ public class PedidoControllerTest {
         
         Coordenada c1 = new Coordenada(54.0, 35.0);
         Vendedor vendedor1 = new Vendedor(1,"Mateo","La Rioja 3240",c1);
-        Cliente cliente1 = new Cliente(3,123456,"Lautaro","c001@gmail.com","Corrientes 2766",c1,(long)8,"C1.mp");
+        Cliente cliente1 = new Cliente(3,12345678911L,"Lautaro","c001@gmail.com","Corrientes 2766",c1,123456L,"C1.mp");
         Categoria cat1 = new Categoria(1,"Saludable",TipoItem.COMIDA);
         Plato plato1 = new Plato(1,"Ensalada vegana","Ensalada con quinoa, espinaca y aguacate",3500,cat1,300,450,true,true,true);
         PedidoDetalle pd = new PedidoDetalle(plato1, 2);
@@ -79,7 +79,7 @@ public class PedidoControllerTest {
 
         Coordenada c1 = new Coordenada(54.0, 35.0);
         Vendedor vendedor1 = new Vendedor(1,"Mateo","La Rioja 3240",c1);
-        Cliente cliente1 = new Cliente(3,123456,"Lautaro","c001@gmail.com","Corrientes 2766",c1,(long)8,"C1.mp");
+        Cliente cliente1 = new Cliente(3,12345678911L,"Lautaro","c001@gmail.com","Corrientes 2766",c1,123456L,"C1.mp");
         Categoria cat1 = new Categoria(1,"Saludable",TipoItem.COMIDA);
         Plato plato1 = new Plato(1,"Ensalada vegana","Ensalada con quinoa, espinaca y aguacate",5000,cat1,300,450,true,true,true);
         PedidoDetalle pd = new PedidoDetalle(plato1, 2);
@@ -112,7 +112,7 @@ public class PedidoControllerTest {
 
         Coordenada c1 = new Coordenada(54.0, 35.0);
         Vendedor vendedor1 = new Vendedor(1,"Mateo","La Rioja 3240",c1);
-        Cliente cliente1 = new Cliente(3,123456,"Lautaro","c001@gmail.com","Corrientes 2766",c1,(long)8,"C1.mp");
+        Cliente cliente1 = new Cliente(3,12345678911L,"Lautaro","c001@gmail.com","Corrientes 2766",c1,123456L,"C1.mp");
         Categoria cat1 = new Categoria(1,"Saludable",TipoItem.COMIDA);
         Plato plato1 = new Plato(1,"Ensalada vegana","Ensalada con quinoa, espinaca y aguacate",5000,cat1,300,450,true,true,true);
         PedidoDetalle pd = new PedidoDetalle(plato1, 2);
@@ -138,7 +138,7 @@ public class PedidoControllerTest {
 
         Coordenada c1 = new Coordenada(54.0, 35.0);
         Vendedor vendedor1 = new Vendedor(1,"Mateo","La Rioja 3240",c1);
-        Cliente cliente1 = new Cliente(3,123456,"Lautaro","c001@gmail.com","Corrientes 2766",c1,(long)8,"C1.mp");
+        Cliente cliente1 = new Cliente(3,12345678911L,"Lautaro","c001@gmail.com","Corrientes 2766",c1,123456L,"C1.mp");
         Categoria cat1 = new Categoria(1,"Saludable",TipoItem.COMIDA);
         Plato plato1 = new Plato(1,"Ensalada vegana","Ensalada con quinoa, espinaca y aguacate",5000,cat1,300,450,true,true,true);
         PedidoDetalle pd = new PedidoDetalle(plato1, 2);
@@ -163,7 +163,7 @@ public class PedidoControllerTest {
         
         Coordenada c1 = new Coordenada(54.0, 35.0);
         Vendedor vendedor1 = new Vendedor(1, "Mateo", "La Rioja 3240", c1);
-        Cliente cliente1 = new Cliente(3, 123456, "Lautaro", "c001@gmail.com", "Corrientes 2766", c1, (long) 8, "C1.mp");
+        Cliente cliente1 = new Cliente(3, 12345678911L, "Lautaro", "c001@gmail.com", "Corrientes 2766", c1, 123456L, "C1.mp");
         Categoria cat1 = new Categoria(1, "Saludable", TipoItem.COMIDA);
         Plato plato1 = new Plato(1, "Ensalada vegana", "Ensalada con quinoa, espinaca y aguacate", 5000, cat1, 300, 450, true, true, true);
         PedidoDetalle pd = new PedidoDetalle(plato1, 2);
@@ -192,7 +192,7 @@ public class PedidoControllerTest {
         
         Coordenada c1 = new Coordenada(54.0, 35.0);
         Vendedor vendedor1 = new Vendedor(1, "Lucia", "Salta 123", c1);
-        Cliente cliente1 = new Cliente(3, 123456, "Lautaro", "c001@gmail.com", "Corrientes 2766", c1, (long) 8, "C1.mp");
+        Cliente cliente1 = new Cliente(3, 12345678911L, "Lautaro", "c001@gmail.com", "Corrientes 2766", c1, 123456L, "C1.mp");
         Categoria cat1 = new Categoria(1, "Saludable", TipoItem.COMIDA);
         Plato plato1 = new Plato(1, "Ensalada vegana", "Ensalada con quinoa, espinaca y aguacate", 5000, cat1, 300, 450, true, true, true);
         PedidoDetalle pd = new PedidoDetalle(plato1, 2);

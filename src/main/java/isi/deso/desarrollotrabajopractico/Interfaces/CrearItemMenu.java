@@ -4,11 +4,12 @@ import isi.deso.desarrollotrabajopractico.Controladores.ItemMenuController;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
-
-
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 public class CrearItemMenu extends javax.swing.JFrame {
+    
+    private Border borde;
     
     public CrearItemMenu() {
         initComponents();
@@ -16,6 +17,7 @@ public class CrearItemMenu extends javax.swing.JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        borde = jTextField2.getBorder();
     }
     
     public void setControlador(ItemMenuController controlador) {
@@ -44,6 +46,10 @@ public class CrearItemMenu extends javax.swing.JFrame {
         jTextField2.setText("");
         jTextField3.setText("");
         jTextField4.setText("");
+    }
+    
+    public Border getBordeTexto() {
+        return borde;
     }
     
     public void mostrarMensajeCamposVacios() {

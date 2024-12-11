@@ -13,13 +13,17 @@ public abstract class Pago {
     public void setMonto(double monto) {
         this.monto = monto;
     }
+    
+    public double getMonto() {
+        return monto;
+    }
 
     public LocalDate getFecha() {
         return fecha;
     }
-
-    public double getMonto() {
-        return monto;
+    
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
     }
 
     public int getId() {

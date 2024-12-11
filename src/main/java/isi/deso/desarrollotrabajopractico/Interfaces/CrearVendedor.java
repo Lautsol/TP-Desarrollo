@@ -5,8 +5,11 @@ import isi.deso.desarrollotrabajopractico.Controladores.VendedorController;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 public class CrearVendedor extends javax.swing.JFrame {
+    
+    Border borde;
     
     public CrearVendedor() {
         initComponents();
@@ -14,6 +17,7 @@ public class CrearVendedor extends javax.swing.JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        borde = jTextField1.getBorder();
     }
 
     public void setControlador(VendedorController controlador) {
@@ -34,6 +38,10 @@ public class CrearVendedor extends javax.swing.JFrame {
     public void setearCamposEnBlanco() {
         jTextField1.setText("");
         jTextField5.setText("");
+    }
+    
+    public Border getBordeTexto() {
+        return borde;
     }
     
     public void mostrarMensajeCamposVacios() {

@@ -77,7 +77,7 @@ public class ItemMenuPedidoMySQLDAO implements ItemMenuPedidoDAO {
                                   "JOIN itemsMenu p ON im.idItem = p.id WHERE im.idPedido = ?";
 
         try (Connection connection = getConnection();
-             PreparedStatement pstmtItemsPedido = connection.prepareStatement(sqlItemsVendedor)) {
+            PreparedStatement pstmtItemsPedido = connection.prepareStatement(sqlItemsVendedor)) {
             pstmtItemsPedido.setInt(1, pedido.getId_pedido());
             try (ResultSet rs = pstmtItemsPedido.executeQuery()) {
                 while (rs.next()) {

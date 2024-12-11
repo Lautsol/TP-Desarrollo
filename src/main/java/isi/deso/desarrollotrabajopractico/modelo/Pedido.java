@@ -37,6 +37,7 @@ public class Pedido  extends PedidoObservable {
 
     public Pedido() {
         pedidoDetalle = new ArrayList<>();
+        clientesObserver = new ArrayList<>();
     }
 
     public void setId_pedido(int id_pedido) {
