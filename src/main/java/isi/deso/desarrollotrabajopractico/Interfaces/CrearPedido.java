@@ -8,12 +8,9 @@ import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JTextField;
 
 public class CrearPedido extends javax.swing.JFrame {
-
-    private PedidoController controlador;
     
     public CrearPedido() {
         initComponents();
-        
         setVisible(true);
         setResizable(false);
         setLocationRelativeTo(null);
@@ -21,7 +18,6 @@ public class CrearPedido extends javax.swing.JFrame {
     }
     
     public void setControlador(PedidoController controlador) {
-        this.controlador = controlador;
         jButton1.addActionListener(controlador);
         jButton2.addActionListener(controlador);
         jButton3.addActionListener(controlador);

@@ -3,7 +3,7 @@ package isi.deso.desarrollotrabajopractico.modelo;
 
 public class PagoYaEfectuadoException extends Exception {
     
-    public PagoYaEfectuadoException (){
+    public PagoYaEfectuadoException() {
         super("PAGO YA EFECTUADO.");
     }
 }

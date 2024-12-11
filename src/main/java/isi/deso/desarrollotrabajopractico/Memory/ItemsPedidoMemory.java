@@ -32,11 +32,11 @@ public class ItemsPedidoMemory implements ItemsPedidoDAO {
                
                    pedidosDetalles.add(pd);    
             }
-       }
+        }
         
         retorno.addAll(pedidosDetalles.stream().distinct().collect(Collectors.toList()));
        
-      }
+        }
       
         else throw new ItemNoEncontradoException();
        

@@ -9,7 +9,6 @@ import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JTextField;
 
 public class CrearItemMenu extends javax.swing.JFrame {
-    private ItemMenuController controlador;
     
     public CrearItemMenu() {
         initComponents();
@@ -19,8 +18,7 @@ public class CrearItemMenu extends javax.swing.JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
     
-     public void setControlador(ItemMenuController controlador) {
-        this.controlador = controlador;
+    public void setControlador(ItemMenuController controlador) {
         jButton1.addActionListener(controlador);
         jButton2.addActionListener(controlador);
         jButton3.addActionListener(controlador);
@@ -37,7 +35,6 @@ public class CrearItemMenu extends javax.swing.JFrame {
     public JTextField getjTextField4() {
         return jTextField4;
     }
-
 
     public JComboBox<String> getjComboBox1() {
         return jComboBox1;

@@ -8,11 +8,11 @@ public class Pedido  extends PedidoObservable {
     
     private int id_pedido;
     private Cliente cliente;
+    private Vendedor vendedor;
     private ArrayList<PedidoDetalle> pedidoDetalle;
     private double total;
     private Pago formaDePago;
     private Estado estado;
-    private Vendedor vendedor;
     private boolean cambioEstado;
     private TipoDePago tipoPago;
      
@@ -190,7 +190,7 @@ public class Pedido  extends PedidoObservable {
         return clientesObserver.remove(cliente);
     }
      
-    public void notifyObservers(){
+    public void notifyObservers() {
        
         for(ClienteObserver c : clientesObserver){
             c.update(this);
@@ -198,7 +198,7 @@ public class Pedido  extends PedidoObservable {
         cambioEstado = false;
     }
     
-    public void setChanged(){
+    public void setChanged() {
         cambioEstado = true;
     }
 }

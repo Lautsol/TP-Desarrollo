@@ -11,12 +11,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 public class Categorias extends javax.swing.JFrame {
-
-    private ItemMenuController controlador;
     
     public Categorias(ItemMenuController controlador) {
         initComponents();
-        this.controlador = controlador;
         jButton2.addActionListener(controlador);
         jTable1.getTableHeader().setReorderingAllowed(false);
         setVisible(true);

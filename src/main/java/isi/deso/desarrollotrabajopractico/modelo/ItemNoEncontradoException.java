@@ -3,7 +3,7 @@ package isi.deso.desarrollotrabajopractico.modelo;
 
 public class ItemNoEncontradoException extends Exception {
    
-    public ItemNoEncontradoException(){
+    public ItemNoEncontradoException() {
         super("DATO NO ENCONTRADO.");
     }
 }

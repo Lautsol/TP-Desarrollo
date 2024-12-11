@@ -7,8 +7,6 @@ import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JTextField;
 
 public class CrearVendedor extends javax.swing.JFrame {
-
-    private VendedorController controlador2;
     
     public CrearVendedor() {
         initComponents();
@@ -19,7 +17,6 @@ public class CrearVendedor extends javax.swing.JFrame {
     }
 
     public void setControlador(VendedorController controlador) {
-        this.controlador2 = controlador;
         jButton1.addActionListener(controlador);
         jButton2.addActionListener(controlador);
         jButton3.addActionListener(controlador);

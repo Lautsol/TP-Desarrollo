@@ -7,10 +7,13 @@ import isi.deso.desarrollotrabajopractico.DAOS.FactoryDAO;
 import isi.deso.desarrollotrabajopractico.Interfaces.CrearCliente;
 import isi.deso.desarrollotrabajopractico.Interfaces.ListaDeClientes;
 import isi.deso.desarrollotrabajopractico.Interfaces.ModificarCliente;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
 
 public class ClienteController implements ActionListener {
 
@@ -46,23 +49,23 @@ public class ClienteController implements ActionListener {
         String comando = e.getActionCommand();
         Object source = e.getSource();
 
-        if (comando.equals("Crear nuevo cliente")) {
+        if(comando.equals("Crear nuevo cliente")) {
             interfazCrearCliente = new CrearCliente();  
             interfazCrearCliente.setControlador(this);
             setCrearCliente(interfazCrearCliente); 
         } 
         
-        else if (comando.equals("Editar")) {
+        else if(comando.equals("Editar")) {
            interfazModificarCliente = new ModificarCliente();  
            interfazModificarCliente.setControlador(this);
            setModificarCliente(interfazModificarCliente);  
            interfazModificarCliente.getjTextField4().setEditable(false);
            
-           if (listaDeClientes.getjTable1().isEditing()) {
-            listaDeClientes.getjTable1().getCellEditor().stopCellEditing(); // Detener la edición si está activa
+           if(listaDeClientes.getjTable().isEditing()) {
+            listaDeClientes.getjTable().getCellEditor().stopCellEditing(); // Detener la edición si está activa
            }
            
-           int row = listaDeClientes.getjTable1().getSelectedRow(); // Obtener la fila seleccionada
+           int row = listaDeClientes.getjTable().getSelectedRow(); // Obtener la fila seleccionada
                
            String nombre = (String) listaDeClientes.getModelo().getValueAt(row, 0);
            int id = (Integer) listaDeClientes.getModelo().getValueAt(row, 1);
@@ -82,9 +85,9 @@ public class ClienteController implements ActionListener {
            interfazModificarCliente.getjTextField6().setText(String.valueOf(cbu));
            interfazModificarCliente.getjTextField7().setText(alias); 
         
-    }
+        }
         
-        else if (source == listaDeClientes.getjTextField1()) {
+        else if(source == listaDeClientes.getjTextField1()) {
             String texto = listaDeClientes.getjTextField1().getText();
 
         // Intentar convertir el texto a un int
@@ -93,7 +96,7 @@ public class ClienteController implements ActionListener {
             
             // Llamar al método de búsqueda por ID
             Cliente cliente = buscarCliente(idCliente);
-            if (cliente != null) {
+            if(cliente != null) {
                 actualizarTablaConCliente(cliente);
             } 
             else {
@@ -120,14 +123,14 @@ public class ClienteController implements ActionListener {
                 
         }
         
-        else if (comando.equals("Eliminar")) {
+        else if(comando.equals("Eliminar")) {
             
-            if (listaDeClientes.getjTable1().isEditing()) {
-            listaDeClientes.getjTable1().getCellEditor().stopCellEditing(); // Detener la edición si está activa
+            if(listaDeClientes.getjTable().isEditing()) {
+            listaDeClientes.getjTable().getCellEditor().stopCellEditing(); // Detener la edición si está activa
             }
             
             if(listaDeClientes.confirmarAccion()) {
-                int row = listaDeClientes.getjTable1().getSelectedRow();
+                int row = listaDeClientes.getjTable().getSelectedRow();
 
                 int id = (Integer) listaDeClientes.getModelo().getValueAt(row, 1);
                 eliminarCliente(id);
@@ -139,7 +142,7 @@ public class ClienteController implements ActionListener {
         else if (comando.equals("Crear")) {
             
             if(validarCamposVacios(interfazCrearCliente)) interfazCrearCliente.mostrarMensajeCamposVacios();
-            else if (!validarTiposDeDatos(interfazCrearCliente)) interfazCrearCliente.mostrarMensajeDatosInvalidos();
+            else if(!validarTiposDeDatos(interfazCrearCliente)) interfazCrearCliente.mostrarMensajeDatosInvalidos();
             else {
             String nombre = interfazCrearCliente.getjTextField1().getText();
             long cuit = Long.parseLong(interfazCrearCliente.getjTextField2().getText());
@@ -165,7 +168,7 @@ public class ClienteController implements ActionListener {
         else if (comando.equals("Guardar")) {
             
             if(validarCamposVaciosModificar(interfazModificarCliente)) interfazModificarCliente.mostrarMensajeCamposVacios();
-            else if (!validarTiposDeDatosModificar(interfazModificarCliente)) interfazModificarCliente.mostrarMensajeDatosInvalidos();
+            else if(!validarTiposDeDatosModificar(interfazModificarCliente)) interfazModificarCliente.mostrarMensajeDatosInvalidos();
             else if(interfazModificarCliente.confirmarAccion()) {
                 String nombre = interfazModificarCliente.getjTextField1().getText();
                 long cuit = Long.parseLong(interfazModificarCliente.getjTextField2().getText());
@@ -186,11 +189,11 @@ public class ClienteController implements ActionListener {
             }
         }
         
-        else if (comando.equals("CancelarCrear")) {
+        else if(comando.equals("CancelarCrear")) {
             interfazCrearCliente.dispose();  
         } 
         
-        else if (comando.equals("CancelarModificar")) {
+        else if(comando.equals("CancelarModificar")) {
             interfazModificarCliente.dispose();  
         }
         
@@ -217,8 +220,8 @@ public class ClienteController implements ActionListener {
     public void actualizarCliente(String nombre, int id, long cuit, String alias, Long cbu, String email, String direccion){
         
         /*
-        for (Cliente cliente : ClienteMemory.listaClientes) {
-            if (cliente.getId() == id) {
+        for(Cliente cliente : ClienteMemory.listaClientes) {
+            if(cliente.getId() == id) {
                 cliente.setNombre(nombre);
                 cliente.setCuit(cuit);
                 cliente.setAlias(alias);
@@ -245,9 +248,9 @@ public class ClienteController implements ActionListener {
     public void eliminarCliente(int id) {
         
         /*Iterator<Cliente> iterador = ClienteMemory.listaClientes.iterator();
-        while (iterador.hasNext()) {
+        while(iterador.hasNext()) {
             Cliente c = iterador.next();
-            if (c.getId() == id) {
+            if(c.getId() == id) {
                 iterador.remove();
             }
         }*/
@@ -259,8 +262,8 @@ public class ClienteController implements ActionListener {
     public Cliente buscarCliente(int id) {
         
         /*
-        for (Cliente cliente : ClienteMemory.listaClientes) {
-            if (cliente.getId() == id) {
+        for(Cliente cliente : ClienteMemory.listaClientes) {
+            if(cliente.getId() == id) {
                 return cliente;
             }
         }
@@ -275,8 +278,8 @@ public class ClienteController implements ActionListener {
         
         /*
         ArrayList<Cliente> clientesFiltrados = new ArrayList<>();
-        for (Cliente cliente : ClienteMemory.listaClientes) {
-            if (cliente.getNombre().equals(nombre)) {
+        for(Cliente cliente : ClienteMemory.listaClientes) {
+            if(cliente.getNombre().equals(nombre)) {
                 clientesFiltrados.add(cliente);
             }
         }
@@ -309,7 +312,7 @@ public class ClienteController implements ActionListener {
         listaDeClientes.getModelo().setRowCount(0); 
 
         // Agregar los clientes a la tabla
-        for (Cliente cliente : clientes) {
+        for(Cliente cliente : clientes) {
             Object[] rowData = {
                 cliente.getNombre(),
                 cliente.getId(),
@@ -327,7 +330,7 @@ public class ClienteController implements ActionListener {
     public void cargarDatosOriginalesEnTabla() {
         
         /*
-        for (Cliente cliente : ClienteMemory.listaClientes) {
+        for(Cliente cliente : ClienteMemory.listaClientes) {
                 Object[] rowData = {
                 cliente.getNombre(),
                 cliente.getId(),
@@ -344,7 +347,7 @@ public class ClienteController implements ActionListener {
         */
         
         ClienteMySQLDAO clienteMySQLDAO = (ClienteMySQLDAO) FactoryDAO.getClienteDAO();
-        for (Cliente cliente : clienteMySQLDAO.obtenerTodosLosClientes()) {
+        for(Cliente cliente : clienteMySQLDAO.obtenerTodosLosClientes()) {
                 Object[] rowData = {
                 cliente.getNombre(),
                 cliente.getId(),
@@ -354,7 +357,6 @@ public class ClienteController implements ActionListener {
                 cliente.getEmail(),
                 cliente.getDireccion()
             };
-        
             listaDeClientes.getModelo().addRow(rowData);
         }
     }
@@ -367,56 +369,190 @@ public class ClienteController implements ActionListener {
     private boolean validarCamposVacios(CrearCliente interfaz) {
         
         boolean vacio = false;
-        
-        if(interfaz.getjTextField1().getText().trim().isEmpty() || 
-           interfaz.getjTextField2().getText().trim().isEmpty() ||
-           interfaz.getjTextField3().getText().trim().isEmpty() ||
-           interfaz.getjTextField5().getText().trim().isEmpty() ||
-           (interfaz.getjTextField6().getText().trim().isEmpty() &&
-           interfaz.getjTextField7().getText().trim().isEmpty())) vacio = true;
-        
+        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY); 
+
+        if (interfaz.getjTextField1().getText().trim().isEmpty()) {
+            interfaz.getjTextField1().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField1().setBorder(defaultBorder);
+        }
+
+        if (interfaz.getjTextField2().getText().trim().isEmpty()) {
+            interfaz.getjTextField2().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField2().setBorder(defaultBorder);
+        }
+
+        if (interfaz.getjTextField3().getText().trim().isEmpty()) {
+            interfaz.getjTextField3().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField3().setBorder(defaultBorder);
+        }
+
+        if (interfaz.getjTextField5().getText().trim().isEmpty()) {
+            interfaz.getjTextField5().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField5().setBorder(defaultBorder);
+        }
+
+        if (interfaz.getjTextField6().getText().trim().isEmpty() && interfaz.getjTextField7().getText().trim().isEmpty()) {
+            interfaz.getjTextField6().setBorder(BorderFactory.createLineBorder(Color.RED));
+            interfaz.getjTextField7().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField6().setBorder(defaultBorder);
+            interfaz.getjTextField7().setBorder(defaultBorder);
+        }
+
         return vacio;
     }
-    
+
     private boolean validarTiposDeDatos(CrearCliente interfaz) {
         
         boolean correcto = true;
-        
-        if(!interfaz.getjTextField1().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+") || 
-           !interfaz.getjTextField2().getText().matches("\\d+") ||
-           !interfaz.getjTextField3().getText().matches("^[\\w-\\.]+@[\\w-]+(\\.[\\w-]+)+$") ||
-           !interfaz.getjTextField5().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s]+") ||
-           (!interfaz.getjTextField6().getText().trim().isEmpty() && !interfaz.getjTextField6().getText().matches("\\d+"))) correcto = false;
-        
+        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+
+        if (!interfaz.getjTextField1().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+            interfaz.getjTextField1().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField1().setBorder(defaultBorder);
+        }
+
+        if (!interfaz.getjTextField2().getText().matches("^\\d{11}$")) {
+            interfaz.getjTextField2().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField2().setBorder(defaultBorder);
+        }
+
+        if (!interfaz.getjTextField3().getText().matches("^[\\w-\\.]+@[\\w-]+(\\.[\\w-]+)+$")) {
+            interfaz.getjTextField3().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField3().setBorder(defaultBorder);
+        }
+
+        if (!interfaz.getjTextField5().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s]+")) {
+            interfaz.getjTextField5().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField5().setBorder(defaultBorder);
+        }
+
+        if (!interfaz.getjTextField6().getText().trim().isEmpty() && !interfaz.getjTextField6().getText().matches("\\d{6}")) {
+            interfaz.getjTextField6().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField6().setBorder(defaultBorder);
+        }
+
+        if (!interfaz.getjTextField7().getText().trim().isEmpty() && !interfaz.getjTextField7().getText().matches("^[a-zA-Z0-9]+$")) {
+            interfaz.getjTextField7().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField7().setBorder(defaultBorder);
+        }
+
         return correcto;
     }
-    
+
     private boolean validarCamposVaciosModificar(ModificarCliente interfaz) {
         
         boolean vacio = false;
-        
-        if(interfaz.getjTextField1().getText().trim().isEmpty() || 
-           interfaz.getjTextField2().getText().trim().isEmpty() ||
-           interfaz.getjTextField3().getText().trim().isEmpty() ||
-           interfaz.getjTextField5().getText().trim().isEmpty() ||
-           (interfaz.getjTextField6().getText().trim().isEmpty() &&
-           interfaz.getjTextField7().getText().trim().isEmpty())) vacio = true;
-        
+        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+
+        if (interfaz.getjTextField1().getText().trim().isEmpty()) {
+            interfaz.getjTextField1().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField1().setBorder(defaultBorder);
+        }
+
+        if (interfaz.getjTextField2().getText().trim().isEmpty()) {
+            interfaz.getjTextField2().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField2().setBorder(defaultBorder);
+        }
+
+        if (interfaz.getjTextField3().getText().trim().isEmpty()) {
+            interfaz.getjTextField3().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField3().setBorder(defaultBorder);
+        }
+
+        if (interfaz.getjTextField5().getText().trim().isEmpty()) {
+            interfaz.getjTextField5().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField5().setBorder(defaultBorder);
+        }
+
+        if (interfaz.getjTextField6().getText().trim().isEmpty() && interfaz.getjTextField7().getText().trim().isEmpty()) {
+            interfaz.getjTextField6().setBorder(BorderFactory.createLineBorder(Color.RED));
+            interfaz.getjTextField7().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField6().setBorder(defaultBorder);
+            interfaz.getjTextField7().setBorder(defaultBorder);
+        }
+
         return vacio;
-        
     }
-    
+
     private boolean validarTiposDeDatosModificar(ModificarCliente interfaz) {
         
         boolean correcto = true;
-        
-        
-        if(!interfaz.getjTextField1().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+") || 
-           !interfaz.getjTextField2().getText().matches("\\d+") ||
-           !interfaz.getjTextField3().getText().matches("^[\\w-\\.]+@[\\w-]+(\\.[\\w-]+)+$") ||
-           !interfaz.getjTextField5().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s]+") ||
-          (!interfaz.getjTextField6().getText().trim().isEmpty() && !interfaz.getjTextField6().getText().matches("\\d+"))) correcto = false;
-        
+        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+
+        if (!interfaz.getjTextField1().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+            interfaz.getjTextField1().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField1().setBorder(defaultBorder);
+        }
+
+        if (!interfaz.getjTextField2().getText().matches("^\\d{11}$")) {
+            interfaz.getjTextField2().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField2().setBorder(defaultBorder);
+        }
+
+        if (!interfaz.getjTextField3().getText().matches("^[\\w-\\.]+@[\\w-]+(\\.[\\w-]+)+$")) {
+            interfaz.getjTextField3().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField3().setBorder(defaultBorder);
+        }
+
+        if (!interfaz.getjTextField5().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s]+")) {
+            interfaz.getjTextField5().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField5().setBorder(defaultBorder);
+        }
+
+        if (!interfaz.getjTextField6().getText().trim().isEmpty() && !interfaz.getjTextField6().getText().matches("\\d{6}")) {
+            interfaz.getjTextField6().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField6().setBorder(defaultBorder);
+        }
+
+        if (!interfaz.getjTextField7().getText().trim().isEmpty() && !interfaz.getjTextField7().getText().matches("^[a-zA-Z0-9]+$")) {
+            interfaz.getjTextField7().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField7().setBorder(defaultBorder);
+        }
+
         return correcto;
     }
     
@@ -424,7 +560,7 @@ public class ClienteController implements ActionListener {
         
         boolean existe = false;
         /*
-        for (Cliente cliente : ClienteMemory.listaClientes) {
+        for(Cliente cliente : ClienteMemory.listaClientes) {
             if(cliente.getId() == id_cliente) existe = true; 
         }
         */

@@ -54,6 +54,7 @@ public class PedidoMySQLDAO implements PedidoDAO {
     }
     
     public int crearPedido(Pedido pedido) {
+        
         String sqlPedido = "INSERT INTO grupo11.pedidos (id_cliente, id_vendedor, total, tipo_pago, estado, id_pago) VALUES (?, ?, ?, ?, ?, ?)";
 
         int pedidoId = -1; // Inicializa el id con un valor por defecto
@@ -109,6 +110,7 @@ public class PedidoMySQLDAO implements PedidoDAO {
     }
     
     public ArrayList<Pedido> obtenerTodosLosPedidos() {
+        
       ArrayList<Pedido> pedidos = new ArrayList<>();
       String sql = "SELECT p.id, p.id_cliente, p.id_vendedor, p.total, p.tipo_pago, p.estado, p.id_pago, pa.monto, pa.fecha "
                  + "FROM pedidos p "
@@ -173,7 +175,6 @@ public class PedidoMySQLDAO implements PedidoDAO {
         try (Connection connection = getConnection(); 
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            // Establecemos el parámetro de la consulta (el id del pedido)
             stmt.setInt(1, id);
 
             stmt.executeUpdate();
@@ -187,6 +188,7 @@ public class PedidoMySQLDAO implements PedidoDAO {
     }
     
     public ArrayList<Pedido> buscarPedidosPorCliente(int id_cliente) {
+        
         ArrayList<Pedido> pedidos = new ArrayList<>();
         String sql = "SELECT p.id, p.id_cliente, p.id_vendedor, p.total, p.tipo_pago, p.estado, p.id_pago, pa.monto, pa.fecha "
                      + "FROM pedidos p "
@@ -247,6 +249,7 @@ public class PedidoMySQLDAO implements PedidoDAO {
     }
 
     public ArrayList<Pedido> buscarPedidosPorVendedor(int id_vendedor) {
+        
         ArrayList<Pedido> pedidos = new ArrayList<>();
         String sql = "SELECT p.id, p.id_cliente, p.id_vendedor, p.total, p.tipo_pago, p.estado, p.id_pago, pa.monto, pa.fecha "
                      + "FROM pedidos p "
@@ -305,6 +308,7 @@ public class PedidoMySQLDAO implements PedidoDAO {
     }
 
     public Pedido buscarPedidoPorID(int id) {
+        
         Pedido pedido = null;
         String sql = "SELECT p.id, p.id_cliente, p.id_vendedor, p.total, p.tipo_pago, p.estado, p.id_pago, pa.monto, pa.fecha "
                      + "FROM pedidos p "

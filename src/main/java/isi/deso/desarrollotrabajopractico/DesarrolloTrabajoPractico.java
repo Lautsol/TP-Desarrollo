@@ -215,7 +215,7 @@ public class DesarrolloTrabajoPractico {
         new Principal();
     }
     
-    public static Vendedor buscarPorIdVendedor(int id, ArrayList<Vendedor> vendedores){
+    public static Vendedor buscarPorIdVendedor(int id, ArrayList<Vendedor> vendedores) {
        Vendedor vendedor = new Vendedor();
         
         for(int i=0; i<vendedores.size(); i++){
@@ -227,7 +227,7 @@ public class DesarrolloTrabajoPractico {
         return vendedor;
     }
     
-    public static ArrayList<Vendedor> buscarPorNombreVendedor(String nombre, ArrayList<Vendedor> vendedores){
+    public static ArrayList<Vendedor> buscarPorNombreVendedor(String nombre, ArrayList<Vendedor> vendedores) {
         ArrayList<Vendedor> vendedores1 = new ArrayList<>();
         
         for(int i=0; i<vendedores.size(); i++){
@@ -239,7 +239,7 @@ public class DesarrolloTrabajoPractico {
         return vendedores1;
     }
     
-    public static void eliminarVendedor(int id, ArrayList<Vendedor> vendedores){
+    public static void eliminarVendedor(int id, ArrayList<Vendedor> vendedores) {
         Iterator iterador = vendedores.iterator();
         
         while(iterador.hasNext()){
@@ -250,7 +250,7 @@ public class DesarrolloTrabajoPractico {
         }
     }
     
-    public static Cliente buscarPorIdCliente(int id, ArrayList<Cliente> clientes){
+    public static Cliente buscarPorIdCliente(int id, ArrayList<Cliente> clientes) {
        Cliente cliente = new Cliente();
         
         for(int i=0; i<clientes.size(); i++){
@@ -262,7 +262,7 @@ public class DesarrolloTrabajoPractico {
         return cliente;
     }
     
-    public static ArrayList<Cliente> buscarPorNombreCliente(String nombre, ArrayList<Cliente> clientes){
+    public static ArrayList<Cliente> buscarPorNombreCliente(String nombre, ArrayList<Cliente> clientes) {
         ArrayList<Cliente> clientes1 = new ArrayList<>();
         
         for(int i=0; i<clientes.size(); i++){
@@ -274,7 +274,7 @@ public class DesarrolloTrabajoPractico {
         return clientes1;
     }
     
-    public static void eliminarCliente(int id, ArrayList<Cliente> clientes){
+    public static void eliminarCliente(int id, ArrayList<Cliente> clientes) {
         Iterator iterador = clientes.iterator();
         
         while(iterador.hasNext()){

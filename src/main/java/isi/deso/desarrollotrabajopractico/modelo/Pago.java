@@ -10,7 +10,7 @@ public abstract class Pago {
     protected double monto;
     public abstract double calcularPrecio(double total);
     
-    public void setMonto(double monto){
+    public void setMonto(double monto) {
         this.monto = monto;
     }
 

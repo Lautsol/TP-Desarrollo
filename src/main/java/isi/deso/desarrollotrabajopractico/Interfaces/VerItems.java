@@ -20,6 +20,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 public class VerItems extends javax.swing.JFrame {
+    
     private VendedorController controladorVendedor;
     private PedidoController controladorPedido;
 
@@ -56,8 +57,8 @@ public class VerItems extends javax.swing.JFrame {
 
     private void actualizarColumnasAcciones() {
         if (controladorVendedor != null || controladorPedido != null) {
-            jTable1.getColumnModel().getColumn(7).setCellRenderer(new ActionCellRenderer(controladorVendedor, controladorPedido));
-            jTable1.getColumnModel().getColumn(7).setCellEditor(new ActionCellEditor(jTable1, controladorVendedor, controladorPedido));
+            jTable1.getColumnModel().getColumn(8).setCellRenderer(new ActionCellRenderer(controladorVendedor, controladorPedido));
+            jTable1.getColumnModel().getColumn(8).setCellEditor(new ActionCellEditor(jTable1, controladorVendedor, controladorPedido));
         }
     }
 
@@ -112,14 +113,15 @@ public class VerItems extends javax.swing.JFrame {
         return jTable1;
     }
 
-    public void ocultarColumna() {
+    public void ocultarColumnas() {
         TableColumnModel columnModel = jTable1.getColumnModel();
+        columnModel.removeColumn(columnModel.getColumn(7));
         columnModel.removeColumn(columnModel.getColumn(6)); 
     }
 
     public void ocultarColumnaAcciones() {
         TableColumnModel columnModel = jTable1.getColumnModel();
-        columnModel.removeColumn(columnModel.getColumn(7)); 
+        columnModel.removeColumn(columnModel.getColumn(8)); 
     }
 
     public boolean confirmarAccion(String mensaje) {
@@ -155,14 +157,14 @@ public class VerItems extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Tipo item", "Nombre", "Descripción", "Precio", "ID categoría", "Cantidad", "Acciones"
+                "ID", "Tipo item", "Nombre", "Descripción", "Precio", "ID categoría", "Cantidad", "Subtotal", "Acciones"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true, true
+                false, false, false, false, false, false, true, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -175,6 +177,12 @@ public class VerItems extends javax.swing.JFrame {
         });
         jTable1.setRowHeight(30);
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setMinWidth(20);
+            jTable1.getColumnModel().getColumn(1).setMinWidth(80);
+            jTable1.getColumnModel().getColumn(2).setMinWidth(100);
+            jTable1.getColumnModel().getColumn(3).setMinWidth(120);
+        }
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
 
@@ -190,7 +198,7 @@ public class VerItems extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 701, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 802, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -205,10 +213,10 @@ public class VerItems extends javax.swing.JFrame {
         panelItemMenuLayout.setHorizontalGroup(
             panelItemMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(panelItemMenuLayout.createSequentialGroup()
-                .addGap(58, 58, 58)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 597, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelItemMenuLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 774, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
         panelItemMenuLayout.setVerticalGroup(
             panelItemMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -223,7 +231,7 @@ public class VerItems extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 713, Short.MAX_VALUE)
+            .addGap(0, 814, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)

@@ -2,6 +2,7 @@
 package isi.deso.desarrollotrabajopractico.modelo;
 
 public class PedidoDetalle {
+    
     private ItemMenu producto;
     private int cantidad;
 
@@ -10,7 +11,7 @@ public class PedidoDetalle {
         this.cantidad = cantidad;
     }
     
-    public double calcularPrecio(){
+    public double calcularPrecio() {
         return cantidad * producto.getPrecio();
     }
     

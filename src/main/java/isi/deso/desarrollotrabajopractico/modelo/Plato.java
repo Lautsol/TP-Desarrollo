@@ -11,7 +11,7 @@ public class Plato extends ItemMenu {
     
     public Plato(){}
     
-    public Plato(int id, String nombre, String descripcion, double precio, Categoria categoria, double peso, int calorias, boolean vegano, boolean vegetariano, boolean celiaco){
+    public Plato(int id, String nombre, String descripcion, double precio, Categoria categoria, double peso, int calorias, boolean vegano, boolean vegetariano, boolean celiaco) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -24,27 +24,27 @@ public class Plato extends ItemMenu {
         apto_celiaco = celiaco;
     }
     
-    public boolean esComida(){
+    public boolean esComida() {
         return true;
     }
     
-    public boolean esBebida(){
+    public boolean esBebida() {
         return false;
     }
     
-    public boolean aptoVegano(){
+    public boolean aptoVegano() {
         return apto_vegano;
     }
     
-    public boolean aptoVegetariano(){
+    public boolean aptoVegetariano() {
         return apto_vegetariano;
     }
     
-    public boolean aptoCeliaco(){
+    public boolean aptoCeliaco() {
         return apto_celiaco;
     }
     
-    public int getCalorias(){
+    public int getCalorias() {
         return calorias;
     }
 
@@ -68,7 +68,7 @@ public class Plato extends ItemMenu {
         this.apto_celiaco = apto_celiaco;
     }
     
-    public double peso(){
+    public double peso() {
         peso = peso + peso * 0.1;
         return peso;
     }

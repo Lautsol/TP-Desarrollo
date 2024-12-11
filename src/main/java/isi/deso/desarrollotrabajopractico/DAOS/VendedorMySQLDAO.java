@@ -47,6 +47,7 @@ public class VendedorMySQLDAO implements VendedorDAO {
     }
     
     public int crearVendedor(Vendedor vendedor) {
+        
         String sqlVendedor = "INSERT INTO grupo11.vendedores (nombre, direccion) VALUES (?, ?)";
 
         int vendedorId = -1; // Inicializa el id con un valor por defecto
@@ -132,7 +133,6 @@ public class VendedorMySQLDAO implements VendedorDAO {
         try (Connection connection = getConnection(); 
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            // Establecemos el parámetro de la consulta 
             stmt.setInt(1, id);
 
             stmt.executeUpdate();
@@ -153,7 +153,6 @@ public class VendedorMySQLDAO implements VendedorDAO {
         try (Connection connection = getConnection(); 
             PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
-            // Establecer el parámetro del nombre en la consulta
             pstmt.setString(1, nombre + "%");
 
             try (ResultSet rs = pstmt.executeQuery()) {

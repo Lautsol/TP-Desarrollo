@@ -25,6 +25,7 @@ public class ModificarVendedor extends javax.swing.JFrame {
         jButton2.addActionListener(controlador);
         jButton3.addActionListener(controlador);
         jButton4.addActionListener(controlador);
+        addWindowListener(controlador);
     }
 
     public JTextField getjTextField1() {

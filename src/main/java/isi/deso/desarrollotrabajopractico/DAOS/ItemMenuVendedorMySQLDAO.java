@@ -220,6 +220,7 @@ public class ItemMenuVendedorMySQLDAO implements ItemMenuVendedorDAO {
     }
     
     public void eliminarItemsVendedor(Vendedor vendedor, ArrayList<ItemMenu> items) {
+        
         String sqlEliminarItems = "DELETE FROM itemsMenuVendedor WHERE idVendedor = ? AND idItem = ?";
 
         try (Connection connection = getConnection(); 

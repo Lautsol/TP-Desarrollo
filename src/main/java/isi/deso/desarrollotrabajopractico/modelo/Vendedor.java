@@ -13,7 +13,7 @@ public class Vendedor {
     private ArrayList<ItemMenu> items;
     private ArrayList<Pedido> pedidos;
     
-    public Vendedor(int id, String nombre, String direccion, Coordenada coordenadas){
+    public Vendedor(int id, String nombre, String direccion, Coordenada coordenadas) {
         this.id = id;
         this.nombre = nombre;
         this.direccion = direccion;
@@ -28,7 +28,7 @@ public class Vendedor {
         this.items = items;
     }
     
-    public int getId(){
+    public int getId() {
         return id;
     }
 
@@ -36,39 +36,39 @@ public class Vendedor {
         return items;
     }
     
-    public void setId(int id){
+    public void setId(int id) {
         this.id = id;
     }
     
-    public String getNombre(){
+    public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre){
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
-    public String getDireccion(){
+    public String getDireccion() {
         return direccion;
     }
 
-    public void setDireccion(String direccion){
+    public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
 
-    public Coordenada getCoordenadas(){
+    public Coordenada getCoordenadas() {
         return coordenadas;
     }
 
-    public void setCoordenadas(Coordenada coordenadas){
+    public void setCoordenadas(Coordenada coordenadas) {
         this.coordenadas = coordenadas;
     }
     
-    public String toString(){
+    public String toString() {
         return "ID: " + id + ", nombre: " + nombre + ", direccion: " + direccion + ".";
     }
     
-    public double distancia(Cliente unCliente){
+    public double distancia(Cliente unCliente) {
         double dLatitud =  (unCliente.getCoordenadas().getLatitud() - coordenadas.getLatitud())/2;
         double dLongitud = (unCliente.getCoordenadas().getLongitud() - coordenadas.getLongitud())/2;
         double radio = 6372.8;
@@ -80,7 +80,7 @@ public class Vendedor {
         return distancia; 
     }
         
-    public ArrayList<Bebida> getBebidas(){
+    public ArrayList<Bebida> getBebidas() {
         ArrayList<Bebida> bebidas = new ArrayList<>();
         
         for(int i = 0 ; i < items.size(); i++){
@@ -91,7 +91,7 @@ public class Vendedor {
         return bebidas;
     }
     
-    public ArrayList<Plato> getPlatos(){
+    public ArrayList<Plato> getPlatos() {
         ArrayList<Plato> platos = new ArrayList<>();
         
         for(int i = 0 ; i< items.size(); i++){
@@ -102,7 +102,7 @@ public class Vendedor {
         return platos;
     }
     
-    public ArrayList<Plato> getPlatosVeganos(){
+    public ArrayList<Plato> getPlatosVeganos() {
         ArrayList<Plato> platos = getPlatos();
         Iterator iterador = platos.iterator();
         
@@ -115,7 +115,7 @@ public class Vendedor {
         return platos;
     }
     
-    public ArrayList<Bebida> getBebidasSinAlcohol(){
+    public ArrayList<Bebida> getBebidasSinAlcohol() {
         ArrayList<Bebida> bebidas = getBebidas();
         Iterator<Bebida> iterador = bebidas.iterator();
         
@@ -136,8 +136,9 @@ public class Vendedor {
         this.pedidos = pedidos;
     }
     
-    public void agregarPedido(Pedido pedido){
-       pedidos.add(pedido);
+    public void agregarPedido(Pedido pedido) {
+        pedido.setVendedor(this);
+        pedidos.add(pedido);
     }
    
     public ArrayList<Pedido> buscarPedidosPorEstado(Estado estado){
@@ -158,7 +159,7 @@ public class Vendedor {
        }
     }
   
-    public void cambiarEstadoPedido(PedidoObservable pedido){
+    public void cambiarEstadoPedido(PedidoObservable pedido) {
      
      ArrayList<Pedido> pedidosEnProceso = buscarPedidosPorEstado(Estado.EN_PROCESO);
      

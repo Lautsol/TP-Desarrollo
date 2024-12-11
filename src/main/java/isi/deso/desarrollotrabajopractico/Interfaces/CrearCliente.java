@@ -8,20 +8,15 @@ import javax.swing.JTextField;
 
 public class CrearCliente extends javax.swing.JFrame {
    
-    private ClienteController controlador;
-  
     public CrearCliente() {
-      
         initComponents(); 
         setVisible(true);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
     }
     
     public void setControlador(ClienteController controlador) {
-        this.controlador = controlador;
         JButton1.addActionListener(controlador);
         JButton2.addActionListener(controlador);
     }
@@ -335,7 +330,7 @@ public class CrearCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField7KeyTyped
 
     private void jTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyTyped
-        if (jTextField2.getText().length() >= 6) {
+        if (jTextField2.getText().length() >= 11) {
                     evt.consume(); // Evitar que se ingrese más texto
                 }
     }//GEN-LAST:event_jTextField2KeyTyped

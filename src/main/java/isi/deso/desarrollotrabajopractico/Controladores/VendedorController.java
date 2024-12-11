@@ -10,6 +10,7 @@ import isi.deso.desarrollotrabajopractico.Interfaces.ModificarVendedor;
 import isi.deso.desarrollotrabajopractico.Interfaces.VerItems;
 import isi.deso.desarrollotrabajopractico.modelo.ItemMenu;
 import isi.deso.desarrollotrabajopractico.modelo.Vendedor;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -17,6 +18,8 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
 
 public class VendedorController implements ActionListener, WindowListener {
     private ListaDeVendedores listaDeVendedores;
@@ -27,7 +30,9 @@ public class VendedorController implements ActionListener, WindowListener {
     private ArrayList<ItemMenu> itemsMenuEliminar;
     private VerItems interfazItemsVendedor;
     
-    public VendedorController(){}
+    public VendedorController(){
+    
+    }
     
     public VendedorController(ListaDeVendedores listaDeVendedores) {
         this.listaDeVendedores = listaDeVendedores;
@@ -61,7 +66,7 @@ public class VendedorController implements ActionListener, WindowListener {
         String comando = e.getActionCommand();
         Object source = e.getSource();
 
-        if (comando.equals("Crear nuevo vendedor")) {
+        if(comando.equals("Crear nuevo vendedor")) {
             interfazModificarVendedor = null; 
             itemsMenu = new ArrayList<>();
             interfazCrearVendedor = new CrearVendedor();  
@@ -78,7 +83,7 @@ public class VendedorController implements ActionListener, WindowListener {
            setModificarVendedor(interfazModificarVendedor); 
            interfazModificarVendedor.getjTextField4().setEditable(false);
            
-           if (listaDeVendedores.getjTable1().isEditing()) {
+           if(listaDeVendedores.getjTable1().isEditing()) {
             listaDeVendedores.getjTable1().getCellEditor().stopCellEditing(); // Detener la edición si está activa
            }
            
@@ -93,7 +98,7 @@ public class VendedorController implements ActionListener, WindowListener {
            interfazModificarVendedor.getjTextField5().setText(direccion);   
         }
      
-        else if (source == listaDeVendedores.getjTextField1()) {
+        else if(source == listaDeVendedores.getjTextField1()) {
             String texto = listaDeVendedores.getjTextField1().getText();
 
         // Intentar convertir el texto a un int
@@ -102,7 +107,7 @@ public class VendedorController implements ActionListener, WindowListener {
             
             // Llamar al método de búsqueda por ID
             Vendedor vendedor = buscarPorIdVendedor(idVendedor);
-            if (vendedor != null) {
+            if(vendedor != null) {
                 actualizarTablaConVendedor(vendedor);
             } 
             else {
@@ -130,7 +135,7 @@ public class VendedorController implements ActionListener, WindowListener {
      
         else if(comando.equals("Eliminar")) {
             
-            if (listaDeVendedores.getjTable1().isEditing()) {
+            if(listaDeVendedores.getjTable1().isEditing()) {
             listaDeVendedores.getjTable1().getCellEditor().stopCellEditing(); // Detener la edición si está activa
             }
             
@@ -144,7 +149,7 @@ public class VendedorController implements ActionListener, WindowListener {
           
         } 
      
-        else if (comando.equals("Crear")) {
+        else if(comando.equals("Crear")) {
             
             if(validarCamposVacios(interfazCrearVendedor)) interfazCrearVendedor.mostrarMensajeCamposVacios();
             else if(!validarTiposDeDatos(interfazCrearVendedor)) interfazCrearVendedor.mostrarMensajeDatosInvalidos();
@@ -162,7 +167,7 @@ public class VendedorController implements ActionListener, WindowListener {
           }
         } 
         
-        else if (comando.equals("Agregar items")) {
+        else if(comando.equals("Agregar items")) {
             
             interfazItemsMenuPedido = new ItemsMenuPedido(this);
             interfazItemsMenuPedido.ocultarColumna();
@@ -177,19 +182,19 @@ public class VendedorController implements ActionListener, WindowListener {
                  
                 Iterator<ItemMenu> iterator = listaItems.iterator();
     
-                while (iterator.hasNext()) {
+                while(iterator.hasNext()) {
                     ItemMenu item = iterator.next();
 
                     // Verificar si el ítem ya está en la lista de items del vendedor
                     boolean itemYaAsociado = false;
-                    for (ItemMenu itemVendedor : listaItemsVendedor) {
-                        if (item.getId() == itemVendedor.getId()) {
+                    for(ItemMenu itemVendedor : listaItemsVendedor) {
+                        if(item.getId() == itemVendedor.getId()) {
                             itemYaAsociado = true;
                             break;
                         }
                     }
 
-                    if (itemYaAsociado) {
+                    if(itemYaAsociado) {
                         iterator.remove();
                     }
                 }
@@ -198,9 +203,9 @@ public class VendedorController implements ActionListener, WindowListener {
             cargarDatosOriginalesEnTablaItems(listaItems, interfazItemsMenuPedido);
         }
         
-        else if (comando.equals("Agregar")) {
+        else if(comando.equals("Agregar")) {
             
-            if (interfazItemsMenuPedido.getjTable1().isEditing()) {
+            if(interfazItemsMenuPedido.getjTable1().isEditing()) {
             interfazItemsMenuPedido.getjTable1().getCellEditor().stopCellEditing(); // Detener la edición si está activa
             }
            
@@ -212,8 +217,8 @@ public class VendedorController implements ActionListener, WindowListener {
             boolean agregado = false;
             
             if(!itemsMenu.isEmpty()) {
-                for (ItemMenu itemMenu : itemsMenu) {
-                    if (itemMenu.getId() == item.getId()) {
+                for(ItemMenu itemMenu : itemsMenu) {
+                    if(itemMenu.getId() == item.getId()) {
                         agregado = true;
                         break; 
                     }
@@ -228,12 +233,12 @@ public class VendedorController implements ActionListener, WindowListener {
             
         }
         
-        else if (comando.equals("Ver items")) {
+        else if(comando.equals("Ver items")) {
             
             interfazItemsVendedor = new VerItems(); 
             interfazItemsVendedor.setControladorVendedor(this);
             setVerItemsVendedor(interfazItemsVendedor); 
-            interfazItemsVendedor.ocultarColumna();
+            interfazItemsVendedor.ocultarColumnas();
             
             if(interfazModificarVendedor != null) {
                 Vendedor vendedor = new Vendedor();
@@ -242,10 +247,10 @@ public class VendedorController implements ActionListener, WindowListener {
                 ArrayList<ItemMenu> listaItemsVendedor = FactoryDAO.getItemMenuVendedorDAO().obtenerItemsMenuDeVendedor(vendedor);
 
                 Iterator<ItemMenu> iterator = listaItemsVendedor.iterator();
-                while (iterator.hasNext()) {
+                while(iterator.hasNext()) {
                     ItemMenu item = iterator.next();
-                    for (ItemMenu itemEliminar : itemsMenuEliminar) {
-                        if (itemEliminar.getId() == item.getId()) {
+                    for(ItemMenu itemEliminar : itemsMenuEliminar) {
+                        if(itemEliminar.getId() == item.getId()) {
                             iterator.remove();
                             break;
                         }
@@ -261,7 +266,7 @@ public class VendedorController implements ActionListener, WindowListener {
         
         else if(comando.equals("EliminarItem")) {
             
-            if (interfazItemsVendedor.getjTable1().isEditing()) {
+            if(interfazItemsVendedor.getjTable1().isEditing()) {
             interfazItemsVendedor.getjTable1().getCellEditor().stopCellEditing(); // Detener la edición si está activa
             }
             
@@ -273,7 +278,7 @@ public class VendedorController implements ActionListener, WindowListener {
                 
                 Iterator<ItemMenu> iterator = itemsMenu.iterator();
                     
-                    while (iterator.hasNext()) {
+                    while(iterator.hasNext()) {
                         ItemMenu itemMenu = iterator.next();
                         if(itemMenu.getId() == item.getId()) {
                             iterator.remove();
@@ -287,7 +292,7 @@ public class VendedorController implements ActionListener, WindowListener {
             }
         }
 
-        else if (comando.equals("Guardar")) {
+        else if(comando.equals("Guardar")) {
             
             if(validarCamposVaciosModificar(interfazModificarVendedor)) interfazModificarVendedor.mostrarMensajeCamposVacios();
             else if(!validarTiposDeDatosModificar(interfazModificarVendedor)) interfazModificarVendedor.mostrarMensajeDatosInvalidos();
@@ -312,12 +317,12 @@ public class VendedorController implements ActionListener, WindowListener {
             }
         } 
         
-        else if (comando.equals("CancelarCrear")) {
+        else if(comando.equals("CancelarCrear")) {
             interfazCrearVendedor.dispose();  
 
         } 
         
-        else if (comando.equals("CancelarModificar")) {
+        else if(comando.equals("CancelarModificar")) {
             interfazModificarVendedor.dispose();  
         }
         
@@ -334,13 +339,12 @@ public class VendedorController implements ActionListener, WindowListener {
       
     public void cargarDatosOriginalesEnTabla() {
       /*
-        for (Vendedor vendedor : VendedorMemory.listaVendedores) {
+        for(Vendedor vendedor : VendedorMemory.listaVendedores) {
               Object[] rowData = {
               vendedor.getNombre(),
               vendedor.getId(),
               vendedor.getDireccion()
           };
-        
           listaDeVendedores.getModelo().addRow(rowData);
       }
       */
@@ -352,7 +356,6 @@ public class VendedorController implements ActionListener, WindowListener {
               vendedor.getId(),
               vendedor.getDireccion()
           };
-        
           listaDeVendedores.getModelo().addRow(rowData);
       }
       
@@ -389,9 +392,9 @@ public class VendedorController implements ActionListener, WindowListener {
         
         /*
         Iterator<Vendedor> iterador = VendedorMemory.listaVendedores.iterator();
-        while (iterador.hasNext()) {
+        while(iterador.hasNext()) {
             Vendedor c = iterador.next();
-            if (c.getId() == id) {
+            if(c.getId() == id) {
                 iterador.remove();
             }
         }
@@ -403,8 +406,8 @@ public class VendedorController implements ActionListener, WindowListener {
     public Vendedor buscarPorIdVendedor(int id){
        
         /*
-        for (Vendedor vendedor : VendedorMemory.listaVendedores) {
-            if (vendedor.getId() == id) {
+        for(Vendedor vendedor : VendedorMemory.listaVendedores) {
+            if(vendedor.getId() == id) {
                 return vendedor;
             }
         }
@@ -418,8 +421,8 @@ public class VendedorController implements ActionListener, WindowListener {
         
         /*
         ArrayList<Vendedor> vendedorFiltrados = new ArrayList<>();
-        for (Vendedor vendedor : VendedorMemory.listaVendedores) {
-            if (vendedor.getNombre().equals(nombre)) {
+        for(Vendedor vendedor : VendedorMemory.listaVendedores) {
+            if(vendedor.getNombre().equals(nombre)) {
                 vendedorFiltrados.add(vendedor);
             }
         }
@@ -434,7 +437,7 @@ public class VendedorController implements ActionListener, WindowListener {
         listaDeVendedores.getModelo().setRowCount(0); 
 
         // Agregar los vendedores a la tabla
-        for (Vendedor vendedor : vendedores) {
+        for(Vendedor vendedor : vendedores) {
             Object[] rowData = {
                 vendedor.getNombre(),
                 vendedor.getId(),
@@ -447,8 +450,8 @@ public class VendedorController implements ActionListener, WindowListener {
     public void actualizarVendedor(Vendedor vendedorActualizado, ArrayList<ItemMenu> itemMenu) {
         
         /*
-        for (Vendedor vendedor : VendedorMemory.listaVendedores) {
-            if (vendedor.getId() == id) {
+        for(Vendedor vendedor : VendedorMemory.listaVendedores) {
+            if(vendedor.getId() == id) {
                 vendedor.setNombre(nombre);
                 vendedor.setDireccion(direccion);
             }
@@ -470,40 +473,88 @@ public class VendedorController implements ActionListener, WindowListener {
     private boolean validarCamposVacios(CrearVendedor interfaz) {
         
         boolean vacio = false;
-        
-        if(interfaz.getjTextField1().getText().trim().isEmpty() ||
-           interfaz.getjTextField5().getText().trim().isEmpty()) vacio = true;
-        
+        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+
+        if (interfaz.getjTextField1().getText().trim().isEmpty()) {
+            interfaz.getjTextField1().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField1().setBorder(defaultBorder);
+        }
+
+        if (interfaz.getjTextField5().getText().trim().isEmpty()) {
+            interfaz.getjTextField5().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField5().setBorder(defaultBorder);
+        }
+
         return vacio;
     }
-    
+
     private boolean validarTiposDeDatos(CrearVendedor interfaz) {
         
         boolean correcto = true;
-        
-        if(!interfaz.getjTextField1().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+") ||
-           !interfaz.getjTextField5().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s]+")) correcto = false;
-        
+        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+
+        if (!interfaz.getjTextField1().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+            interfaz.getjTextField1().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField1().setBorder(defaultBorder);
+        }
+
+        if (!interfaz.getjTextField5().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s]+")) {
+            interfaz.getjTextField5().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField5().setBorder(defaultBorder);
+        }
+
         return correcto;
     }
-    
+
     private boolean validarCamposVaciosModificar(ModificarVendedor interfaz) {
         
         boolean vacio = false;
-        
-        if(interfaz.getjTextField1().getText().trim().isEmpty() ||
-           interfaz.getjTextField5().getText().trim().isEmpty()) vacio = true;
-        
+        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+
+        if (interfaz.getjTextField1().getText().trim().isEmpty()) {
+            interfaz.getjTextField1().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField1().setBorder(defaultBorder);
+        }
+
+        if (interfaz.getjTextField5().getText().trim().isEmpty()) {
+            interfaz.getjTextField5().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField5().setBorder(defaultBorder);
+        }
+
         return vacio;
     }
-    
+
     private boolean validarTiposDeDatosModificar(ModificarVendedor interfaz) {
         
         boolean correcto = true;
-        
-        if(!interfaz.getjTextField1().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+") ||
-           !interfaz.getjTextField5().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s]+")) correcto = false;
-        
+        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+
+        if (!interfaz.getjTextField1().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+            interfaz.getjTextField1().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField1().setBorder(defaultBorder);
+        }
+
+        if (!interfaz.getjTextField5().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s]+")) {
+            interfaz.getjTextField5().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField5().setBorder(defaultBorder);
+        }
+
         return correcto;
     }
     
@@ -511,7 +562,7 @@ public class VendedorController implements ActionListener, WindowListener {
         
         boolean existe = false;
         /*
-        for (Vendedor vendedor : VendedorMemory.listaVendedores) {
+        for(Vendedor vendedor : VendedorMemory.listaVendedores) {
             if(vendedor.getId() == id_vendedor) existe = true; 
         }
         
@@ -526,7 +577,7 @@ public class VendedorController implements ActionListener, WindowListener {
     public void cargarDatosOriginalesEnTablaItems(ArrayList<ItemMenu> listaItems, ItemsMenuPedido interfaz) {
         
         /*
-        for (ItemMenu itemMenu : ItemMenuMemory.listaItemMenu) {
+        for(ItemMenu itemMenu : ItemMenuMemory.listaItemMenu) {
                 Object[] rowData = {
                 itemMenu.getId(),
                 itemMenu.getCategoria().getTipo_item().toString(),
@@ -540,7 +591,7 @@ public class VendedorController implements ActionListener, WindowListener {
         }
         */
         
-        for (ItemMenu itemMenu : listaItems) {
+        for(ItemMenu itemMenu : listaItems) {
                 Object[] rowData = {
                 itemMenu.getId(),
                 itemMenu.getCategoria().getTipo_item().toString(),
@@ -549,14 +600,13 @@ public class VendedorController implements ActionListener, WindowListener {
                 itemMenu.getPrecio(),
                 itemMenu.getCategoria().getId()
             };
-        
             interfaz.getModelo().addRow(rowData);
         }
     }
     
     public void cargarDatosOriginalesEnTablaItems(ArrayList<ItemMenu> listaItems, VerItems interfaz) {
         
-        for (ItemMenu itemMenu : listaItems) {
+        for(ItemMenu itemMenu : listaItems) {
                 Object[] rowData = {
                 itemMenu.getId(),
                 itemMenu.getCategoria().getTipo_item().toString(),
@@ -565,39 +615,31 @@ public class VendedorController implements ActionListener, WindowListener {
                 itemMenu.getPrecio(),
                 itemMenu.getCategoria().getId()
             };
-        
             interfaz.getModelo().addRow(rowData);
         }
     }
     
     public void windowOpened(WindowEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public void windowClosing(WindowEvent e) {
-            itemsMenu = new ArrayList<>();
-            interfazModificarVendedor.dispose();
-            interfazModificarVendedor = null;
+        itemsMenu = new ArrayList<>();
+        interfazModificarVendedor = null;
     }
 
     public void windowClosed(WindowEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public void windowIconified(WindowEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public void windowDeiconified(WindowEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public void windowActivated(WindowEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public void windowDeactivated(WindowEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

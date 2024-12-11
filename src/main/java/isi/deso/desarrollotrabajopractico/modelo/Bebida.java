@@ -2,17 +2,18 @@
 package isi.deso.desarrollotrabajopractico.modelo;
 
 public abstract class Bebida extends ItemMenu {
+    
     protected double volumen;
    
-    public boolean esBebida(){
+    public boolean esBebida() {
         return true;
     }
     
-    public boolean esComida(){
+    public boolean esComida() {
         return false;
     }
     
-    public boolean aptoVegano(){
+    public boolean aptoVegano() {
         return true;
     }
 

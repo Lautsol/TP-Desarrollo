@@ -71,6 +71,7 @@ public class ItemMenuPedidoMySQLDAO implements ItemMenuPedidoDAO {
     }
     
     public ArrayList<PedidoDetalle> obtenerDetallesPedido(Pedido pedido) {
+        
         String sqlItemsVendedor = "SELECT im.idItem, im.cantidad, p.nombre, p.descripcion, p.precio, p.item, p.id_categoria " +
                                   "FROM itemsMenuPedido im " +
                                   "JOIN itemsMenu p ON im.idItem = p.id WHERE im.idPedido = ?";

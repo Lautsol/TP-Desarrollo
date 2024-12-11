@@ -1,6 +1,7 @@
 package isi.deso.desarrollotrabajopractico.modelo;
 
 public class Categoria {
+    
     private int id;
     private String descripcion;
     private TipoItem tipo_item;

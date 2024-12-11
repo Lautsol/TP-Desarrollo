@@ -11,8 +11,6 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 public class ModificarPedido extends javax.swing.JFrame {
     
-    private PedidoController controlador;
-    
     public ModificarPedido() {
         initComponents();
         setVisible(true);
@@ -22,7 +20,6 @@ public class ModificarPedido extends javax.swing.JFrame {
     }
     
     public void setControlador(PedidoController controlador) {
-        this.controlador = controlador;
         jButton1.addActionListener(controlador);
         jButton2.addActionListener(controlador);
         jButton3.addActionListener(controlador);
@@ -67,10 +64,6 @@ public class ModificarPedido extends javax.swing.JFrame {
 
     public void setjTextField4(JTextField jTextField4) {
         this.jTextField4 = jTextField4;
-    }
-
-    public PedidoController getControlador() {
-        return controlador;
     }
     
     public void mostrarMensajeCamposVacios() {

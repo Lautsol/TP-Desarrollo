@@ -4,7 +4,7 @@ public class Gaseosa extends Bebida {
     
     public Gaseosa(){}
     
-    public Gaseosa(int id, String nombre, String descripcion, double precio, Categoria categoria, double volumen){
+    public Gaseosa(int id, String nombre, String descripcion, double precio, Categoria categoria, double volumen) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -13,7 +13,7 @@ public class Gaseosa extends Bebida {
         this.volumen = volumen;
     }
     
-    public double peso(){
+    public double peso() {
         return volumen * 1.04 + volumen * 0.2;  
     }
     

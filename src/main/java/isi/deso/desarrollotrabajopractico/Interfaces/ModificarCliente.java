@@ -8,8 +8,6 @@ import javax.swing.JTextField;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 public class ModificarCliente extends javax.swing.JFrame {
-    
-    private ClienteController controlador;
  
     public ModificarCliente() {
         initComponents();
@@ -20,7 +18,6 @@ public class ModificarCliente extends javax.swing.JFrame {
     }
     
     public void setControlador(ClienteController controlador) {
-        this.controlador = controlador;
         jButton1.addActionListener(controlador);
         jButton2.addActionListener(controlador);
     }
@@ -328,7 +325,7 @@ public class ModificarCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1KeyTyped
 
     private void jTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyTyped
-        if (jTextField2.getText().length() >= 6) {
+        if (jTextField2.getText().length() >= 11) {
                     evt.consume(); // Evitar que se ingrese más texto
                 }
     }//GEN-LAST:event_jTextField2KeyTyped

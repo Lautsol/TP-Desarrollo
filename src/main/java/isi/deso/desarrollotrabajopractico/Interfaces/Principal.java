@@ -86,7 +86,7 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(itemMenusBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(42, 42, 42)
                 .addComponent(pedidosBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(156, Short.MAX_VALUE))
         );
 
         panelDeAcciones.setForeground(new java.awt.Color(153, 153, 153));
@@ -96,11 +96,11 @@ public class Principal extends javax.swing.JFrame {
         panelDeAcciones.setLayout(panelDeAccionesLayout);
         panelDeAccionesLayout.setHorizontalGroup(
             panelDeAccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 795, Short.MAX_VALUE)
+            .addGap(0, 892, Short.MAX_VALUE)
         );
         panelDeAccionesLayout.setVerticalGroup(
             panelDeAccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 420, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -109,25 +109,22 @@ public class Principal extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(panelDeAcciones, javax.swing.GroupLayout.PREFERRED_SIZE, 795, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelDeAcciones, javax.swing.GroupLayout.PREFERRED_SIZE, 892, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(panelDeAcciones, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelDeAcciones, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void vendedoresBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vendedoresBotonActionPerformed
-        // TODO add your handling code here:
+        
         ListaDeVendedores panelVendedores = new ListaDeVendedores();
-        panelVendedores.setSize(795,420);
+        panelVendedores.setSize(892,433);
         panelVendedores.setLocation(0,0);
         panelDeAcciones.removeAll();
         panelDeAcciones.add(panelVendedores, BorderLayout.CENTER);
@@ -137,9 +134,9 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_vendedoresBotonActionPerformed
 
     private void clientesBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientesBotonActionPerformed
-        // TODO add your handling code here:
+        
         ListaDeClientes panelClientes = new ListaDeClientes();
-        panelClientes.setSize(795,420);
+        panelClientes.setSize(892,433);
         panelClientes.setLocation(0,0);
         panelDeAcciones.removeAll();
         panelDeAcciones.add( panelClientes, BorderLayout.CENTER);
@@ -149,9 +146,9 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_clientesBotonActionPerformed
 
     private void itemMenusBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenusBotonActionPerformed
-        // TODO add your handling code here:
+        
         ListaDeItemMenu panelItemMenu = new ListaDeItemMenu();
-        panelItemMenu.setSize(795,420);
+        panelItemMenu.setSize(892,433);
         panelItemMenu.setLocation(0,0);
         panelDeAcciones.removeAll();
         panelDeAcciones.add( panelItemMenu, BorderLayout.CENTER);
@@ -161,9 +158,9 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_itemMenusBotonActionPerformed
 
     private void pedidosBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pedidosBotonActionPerformed
-        // TODO add your handling code here:
+        
         ListaDePedidos panelPedidos = new ListaDePedidos();
-        panelPedidos.setSize(795,420);
+        panelPedidos.setSize(892,433);
         panelPedidos.setLocation(0,0);
         panelDeAcciones.removeAll();
         panelDeAcciones.add( panelPedidos, BorderLayout.CENTER);

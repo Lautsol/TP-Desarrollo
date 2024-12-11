@@ -2,6 +2,7 @@
 package isi.deso.desarrollotrabajopractico.modelo;
 
 public abstract class ItemMenu {
+    
     protected int id;
     protected String nombre;
     protected String descripcion;

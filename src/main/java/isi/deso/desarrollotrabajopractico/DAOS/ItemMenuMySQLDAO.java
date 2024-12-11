@@ -50,6 +50,7 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
     }
     
     public int crearItemMenu(ItemMenu itemMenu) {
+        
         String sqlItemMenu = "INSERT INTO grupo11.itemsMenu (tipo_item, nombre, descripcion, precio, id_categoria, item) VALUES (?, ?, ?, ?, ?, ?)";
 
         int itemMenuId = -1; // Inicializa el id con un valor por defecto
@@ -107,6 +108,7 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
     }
     
     public ArrayList<ItemMenu> obtenerTodosLosItemsMenu() {
+        
         ArrayList<ItemMenu> itemsMenu = new ArrayList<>();
 
         String sql = "SELECT * FROM itemsMenu WHERE item IN (?, ?, ?) ORDER BY id";  
@@ -182,7 +184,6 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
         try (Connection connection = getConnection(); 
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            // Establecemos el parámetro de la consulta (el id del item menu)
             stmt.setInt(1, id);
 
             stmt.executeUpdate();
@@ -207,7 +208,7 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
         
             // Obtener los items de tipo comida
             try (PreparedStatement pstmtComida = connection.prepareStatement(sqlComida)) {
-                pstmtComida.setString(1, nombre + "%"); // Establecer el nombre en la consulta
+                pstmtComida.setString(1, nombre + "%"); 
                 try (ResultSet rsComida = pstmtComida.executeQuery()) {
                     while (rsComida.next()) {
                         ItemMenu itemMenu = new Plato(
@@ -229,7 +230,7 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
 
             // Obtener los items de tipo gaseosa
             try (PreparedStatement pstmtGaseosa = connection.prepareStatement(sqlGaseosa)) {
-                pstmtGaseosa.setString(1, nombre + "%"); // Establecer el nombre en la consulta
+                pstmtGaseosa.setString(1, nombre + "%"); 
                 try (ResultSet rsGaseosa = pstmtGaseosa.executeQuery()) {
                     while (rsGaseosa.next()) {
                         ItemMenu itemMenu = new Gaseosa(
@@ -247,7 +248,7 @@ public class ItemMenuMySQLDAO implements ItemMenuDAO {
 
             // Obtener los items de tipo alcohol
             try (PreparedStatement pstmtAlcohol = connection.prepareStatement(sqlAlcohol)) {
-                pstmtAlcohol.setString(1, nombre + "%"); // Establecer el nombre en la consulta
+                pstmtAlcohol.setString(1, nombre + "%"); 
                 try (ResultSet rsAlcohol = pstmtAlcohol.executeQuery()) {
                     while (rsAlcohol.next()) {
                         ItemMenu itemMenu = new Alcohol(

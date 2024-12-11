@@ -46,6 +46,7 @@ public class ClienteMySQLDAO implements ClienteDAO {
     }
     
     public int crearCliente(Cliente cliente) {
+        
         String sqlCliente = "INSERT INTO grupo11.clientes (nombre, cuit, email, direccion, cbu, alias) VALUES (?, ?, ?, ?, ?, ?)";
         int clienteId = -1;
 
@@ -61,7 +62,6 @@ public class ClienteMySQLDAO implements ClienteDAO {
 
             pstmtCliente.executeUpdate();
 
-            // Obtener el id generado
             try (ResultSet generatedKeys = pstmtCliente.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     clienteId = generatedKeys.getInt(1); // Obtiene el id generado
@@ -142,7 +142,6 @@ public class ClienteMySQLDAO implements ClienteDAO {
         try (Connection connection = getConnection(); 
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            // Establecemos el parámetro de la consulta (el id del cliente)
             stmt.setInt(1, id);
 
             stmt.executeUpdate();
@@ -163,11 +162,9 @@ public class ClienteMySQLDAO implements ClienteDAO {
         try (Connection connection = getConnection(); 
             PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
-            // Establecer el parámetro del nombre en la consulta
             pstmt.setString(1, nombre + "%");
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                // Iterar sobre los resultados de la consulta
                 while (rs.next()) {
                     Cliente cliente = new Cliente(
                         rs.getInt("id"), 
@@ -199,11 +196,9 @@ public class ClienteMySQLDAO implements ClienteDAO {
         try (Connection connection = getConnection(); 
             PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
-            // Establecer el parámetro del ID en la consulta
             pstmt.setInt(1, id);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                // Si se encuentra un resultado, crear el objeto Cliente
                 if (rs.next()) {
                     cliente = new Cliente(
                         rs.getInt("id"), 
@@ -235,11 +230,9 @@ public class ClienteMySQLDAO implements ClienteDAO {
         try (Connection connection = getConnection(); 
             PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
-            // Establecer el parámetro del ID en la consulta
             pstmt.setLong(1, cuit);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                // Si se encuentra un resultado, crear el objeto Cliente
                 if (rs.next()) {
                     cliente = new Cliente(
                         rs.getInt("id"), 

@@ -8,8 +8,6 @@ import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JTextField;
 
 public class ModificarItemMenu extends javax.swing.JFrame {
-    
-    private ItemMenuController controlador;
 
     public ModificarItemMenu() {
         initComponents();
@@ -20,7 +18,6 @@ public class ModificarItemMenu extends javax.swing.JFrame {
     }
     
     public void setControlador(ItemMenuController controlador) {
-        this.controlador = controlador;
         jButton1.addActionListener(controlador);
         jButton2.addActionListener(controlador);
         jButton3.addActionListener(controlador);

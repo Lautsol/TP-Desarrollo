@@ -46,6 +46,7 @@ public class PagoMySQLDAO implements PagoDAO {
     }
 
     public void registrarPago(Pedido pedido) {
+        
         String sqlPago = "INSERT INTO grupo11.pagos (monto, fecha) VALUES (?, ?)";
 
         try (Connection connection = getConnection();
@@ -56,7 +57,6 @@ public class PagoMySQLDAO implements PagoDAO {
 
             pstmtPago.executeUpdate();
 
-            // Obtener el ID generado automáticamente
             try (ResultSet generatedKeys = pstmtPago.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     pedido.getPago().setId(generatedKeys.getInt(1));  

@@ -14,13 +14,16 @@ import isi.deso.desarrollotrabajopractico.Interfaces.ModificarItemMenu;
 import isi.deso.desarrollotrabajopractico.modelo.ItemMenu;
 import isi.deso.desarrollotrabajopractico.modelo.Plato;
 import isi.deso.desarrollotrabajopractico.modelo.TipoItem;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.JTable;
+import javax.swing.border.Border;
 
 public class ItemMenuController implements ActionListener, WindowListener {
     private ListaDeItemMenu listaDeItemMenu;
@@ -62,21 +65,21 @@ public class ItemMenuController implements ActionListener, WindowListener {
         String comando = e.getActionCommand();
         Object source = e.getSource();
 
-        if (comando.equals("Crear nuevo item menú")) {
+        if(comando.equals("Crear nuevo item menú")) {
             interfazCrearItemMenu = new CrearItemMenu();  
             interfazCrearItemMenu.setControlador(this);
             setCrearItemMenu(interfazCrearItemMenu);  
             idCategoria = 0;
         } 
         
-        else if (comando.equals("Editar")) {
+        else if(comando.equals("Editar")) {
            interfazModificarItemMenu = new ModificarItemMenu();  
            interfazModificarItemMenu.setControlador(this);
            setModificarItemMenu(interfazModificarItemMenu);  
            interfazModificarItemMenu.getjTextField1().setEditable(false);
            interfazModificarItemMenu.getjComboBox1().setEnabled(false);
            
-           if (listaDeItemMenu.getjTable1().isEditing()) {
+           if(listaDeItemMenu.getjTable1().isEditing()) {
             listaDeItemMenu.getjTable1().getCellEditor().stopCellEditing(); // Detener la edición si está activa
            }
            
@@ -102,7 +105,7 @@ public class ItemMenuController implements ActionListener, WindowListener {
             
         } 
         
-        else if (source == listaDeItemMenu.getjTextField1()) {
+        else if(source == listaDeItemMenu.getjTextField1()) {
             String texto = listaDeItemMenu.getjTextField1().getText();
 
         // Intentar convertir el texto a un int
@@ -111,7 +114,7 @@ public class ItemMenuController implements ActionListener, WindowListener {
             
             // Llamar al método de búsqueda por ID
             ItemMenu itemMenu = buscarItemMenu(idItemMenu);
-            if (itemMenu != null) {
+            if(itemMenu != null) {
                 actualizarTablaConItemMenu(itemMenu);
             } 
             else {
@@ -137,9 +140,9 @@ public class ItemMenuController implements ActionListener, WindowListener {
             }
         }
         
-        else if (comando.equals("Eliminar")) {
+        else if(comando.equals("Eliminar")) {
             
-            if (listaDeItemMenu.getjTable1().isEditing()) {
+            if(listaDeItemMenu.getjTable1().isEditing()) {
             listaDeItemMenu.getjTable1().getCellEditor().stopCellEditing(); // Detener la edición si está activa
             }
             
@@ -176,13 +179,13 @@ public class ItemMenuController implements ActionListener, WindowListener {
                     interfazCategorias.dispose();
                 }
         
-    }
+        }
         
-        else if (comando.equals("Crear")) {
+        else if(comando.equals("Crear")) {
             
             if(validarCamposVacios(interfazCrearItemMenu)) interfazCrearItemMenu.mostrarMensajeCamposVacios();
-            else if(idCategoria == 0) interfazCrearItemMenu.mostrarMensajeCategoria("Debe especificar la categoría del item menú.");
             else if(!validarTiposDeDatos(interfazCrearItemMenu)) interfazCrearItemMenu.mostrarMensajeDatosInvalidos();
+            else if(idCategoria == 0) interfazCrearItemMenu.mostrarMensajeCategoria("Debe especificar la categoría del item menú.");
             else {
             String nombre = interfazCrearItemMenu.getjTextField2().getText();
             String descripcion = interfazCrearItemMenu.getjTextField3().getText();
@@ -195,7 +198,7 @@ public class ItemMenuController implements ActionListener, WindowListener {
             
             Categoria categoria = buscarCategoria(idCategoria);
             
-            if (!categoriaCorrecta(categoria, tipoItem)) interfazCrearItemMenu.mostrarMensajeCategoria("El tipo de item no corresponde a esa categoría.");
+            if(!categoriaCorrecta(categoria, tipoItem)) interfazCrearItemMenu.mostrarMensajeCategoria("El tipo de item no corresponde a esa categoría.");
             else if(interfazCrearItemMenu.confirmarAccion()) {
                 crearItemMenu(nombre, descripcion, precio, idCategoria, opcion);
                 restablecerTablaConDatosOriginales();
@@ -224,7 +227,7 @@ public class ItemMenuController implements ActionListener, WindowListener {
             
             Categoria categoria = buscarCategoria(idCategoria);
             
-            if (!categoriaCorrecta(categoria, tipoItem)) interfazModificarItemMenu.mostrarMensajeCategoria("El tipo de item no corresponde a esa categoría.");
+            if(!categoriaCorrecta(categoria, tipoItem)) interfazModificarItemMenu.mostrarMensajeCategoria("El tipo de item no corresponde a esa categoría.");
             else if(interfazModificarItemMenu.confirmarAccion()) {
                 actualizarItemMenu(id, tipoItem, nombre, descripcion, precio, idCategoria, item);
                 restablecerTablaConDatosOriginales();
@@ -233,12 +236,12 @@ public class ItemMenuController implements ActionListener, WindowListener {
           }
         } 
         
-        else if (comando.equals("CancelarCrear")) {
+        else if(comando.equals("CancelarCrear")) {
             interfazCrearItemMenu.dispose();
             interfazCrearItemMenu = null;
         } 
         
-        else if (comando.equals("CancelarModificar")) {
+        else if(comando.equals("CancelarModificar")) {
                 interfazModificarItemMenu.dispose();  
                 interfazModificarItemMenu = null;
         }
@@ -252,8 +255,8 @@ public class ItemMenuController implements ActionListener, WindowListener {
     public ItemMenu buscarItemMenu(int id) {
         
         /*
-        for (ItemMenu itemMenu : ItemMenuMemory.listaItemMenu) {
-            if (itemMenu.getId() == id) {
+        for(ItemMenu itemMenu : ItemMenuMemory.listaItemMenu) {
+            if(itemMenu.getId() == id) {
                 return itemMenu;
             }
         }
@@ -283,7 +286,7 @@ public class ItemMenuController implements ActionListener, WindowListener {
     public void cargarDatosOriginalesEnTabla() {
         
         /*
-        for (ItemMenu itemMenu : ItemMenuMemory.listaItemMenu) {
+        for(ItemMenu itemMenu : ItemMenuMemory.listaItemMenu) {
                 Object[] rowData = {
                 itemMenu.getId(),
                 itemMenu.getCategoria().getTipo_item().toString(),
@@ -307,7 +310,6 @@ public class ItemMenuController implements ActionListener, WindowListener {
                 itemMenu.getPrecio(),
                 itemMenu.getCategoria().getId()
             };
-        
             listaDeItemMenu.getModelo().addRow(rowData);
         }
     }
@@ -321,8 +323,8 @@ public class ItemMenuController implements ActionListener, WindowListener {
         
         /*
         ArrayList<ItemMenu> itemsMenuFiltrados = new ArrayList<>();
-        for (ItemMenu itemMenu : ItemMenuMemory.listaItemMenu) {
-            if (itemMenu.getNombre().equals(nombre)) {
+        for(ItemMenu itemMenu : ItemMenuMemory.listaItemMenu) {
+            if(itemMenu.getNombre().equals(nombre)) {
                 itemsMenuFiltrados.add(itemMenu);
             }
         }
@@ -337,7 +339,7 @@ public class ItemMenuController implements ActionListener, WindowListener {
         listaDeItemMenu.getModelo().setRowCount(0); 
 
         // Agregar los items a la tabla
-        for (ItemMenu itemMenu : itemsMenu) {
+        for(ItemMenu itemMenu : itemsMenu) {
             Object[] rowData = {
                 itemMenu.getId(),
                 itemMenu.getCategoria().getTipo_item().toString(),
@@ -353,9 +355,9 @@ public class ItemMenuController implements ActionListener, WindowListener {
     public void eliminarItemMenu(int id) {
         /*
         Iterator<ItemMenu> iterador = ItemMenuMemory.listaItemMenu.iterator();
-        while (iterador.hasNext()) {
+        while(iterador.hasNext()) {
             ItemMenu i = iterador.next();
-            if (i.getId() == id) {
+            if(i.getId() == id) {
                 iterador.remove();
             }
         }
@@ -405,8 +407,8 @@ public class ItemMenuController implements ActionListener, WindowListener {
     
     public void actualizarItemMenu(int id, TipoItem tipoItem, String nombre, String descripcion, double precio, int idCategoria, String item) {
         /*
-        for (ItemMenu itemMenu : ItemMenuMemory.listaItemMenu) {
-            if (itemMenu.getId() == id) {
+        for(ItemMenu itemMenu : ItemMenuMemory.listaItemMenu) {
+            if(itemMenu.getId() == id) {
             itemMenu.getCategoria().setTipo_item(tipoItem);
             itemMenu.setNombre(nombre);
             itemMenu.setDescripcion(descripcion);
@@ -457,44 +459,116 @@ public class ItemMenuController implements ActionListener, WindowListener {
     private boolean validarCamposVacios(CrearItemMenu interfaz) {
         
         boolean vacio = false;
-        
-        if(interfaz.getjTextField2().getText().trim().isEmpty() ||
-           interfaz.getjTextField3().getText().trim().isEmpty() ||
-           interfaz.getjTextField4().getText().trim().isEmpty()) vacio = true;
-        
+        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+
+        if (interfaz.getjTextField2().getText().trim().isEmpty()) {
+            interfaz.getjTextField2().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField2().setBorder(defaultBorder);
+        }
+
+        if (interfaz.getjTextField3().getText().trim().isEmpty()) {
+            interfaz.getjTextField3().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField3().setBorder(defaultBorder);
+        }
+
+        if (interfaz.getjTextField4().getText().trim().isEmpty()) {
+            interfaz.getjTextField4().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField4().setBorder(defaultBorder);
+        }
+
         return vacio;
     }
-    
+
     private boolean validarTiposDeDatos(CrearItemMenu interfaz) {
         
         boolean correcto = true;
-        
-        if(!interfaz.getjTextField2().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+") ||
-           !interfaz.getjTextField3().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s,]+") ||
-           !interfaz.getjTextField4().getText().matches("-?\\d+(\\.\\d+)?")) correcto = false;
-        
+        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+
+        if (!interfaz.getjTextField2().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+            interfaz.getjTextField2().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField2().setBorder(defaultBorder);
+        }
+
+        if (!interfaz.getjTextField3().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s,]+")) {
+            interfaz.getjTextField3().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField3().setBorder(defaultBorder);
+        }
+
+        if (!interfaz.getjTextField4().getText().matches("-?\\d+(\\.\\d+)?")) {
+            interfaz.getjTextField4().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField4().setBorder(defaultBorder);
+        }
+
         return correcto;
     }
-    
+
     private boolean validarCamposVaciosModificar(ModificarItemMenu interfaz) {
         
         boolean vacio = false;
-        
-        if(interfaz.getjTextField2().getText().trim().isEmpty() ||
-           interfaz.getjTextField3().getText().trim().isEmpty() ||
-           interfaz.getjTextField4().getText().trim().isEmpty()) vacio = true;
-        
+        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+
+        if (interfaz.getjTextField2().getText().trim().isEmpty()) {
+            interfaz.getjTextField2().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField2().setBorder(defaultBorder);
+        }
+
+        if (interfaz.getjTextField3().getText().trim().isEmpty()) {
+            interfaz.getjTextField3().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField3().setBorder(defaultBorder);
+        }
+
+        if (interfaz.getjTextField4().getText().trim().isEmpty()) {
+            interfaz.getjTextField4().setBorder(BorderFactory.createLineBorder(Color.RED));
+            vacio = true;
+        } else {
+            interfaz.getjTextField4().setBorder(defaultBorder);
+        }
+
         return vacio;
     }
-    
+
     private boolean validarTiposDeDatosModificar(ModificarItemMenu interfaz) {
         
         boolean correcto = true;
-        
-        if(!interfaz.getjTextField2().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+") ||
-           !interfaz.getjTextField3().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s,]+") ||
-           !interfaz.getjTextField4().getText().matches("-?\\d+(\\.\\d+)?")) correcto = false;
-        
+        Border defaultBorder = BorderFactory.createLineBorder(Color.GRAY);
+
+        if (!interfaz.getjTextField2().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+            interfaz.getjTextField2().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField2().setBorder(defaultBorder);
+        }
+
+        if (!interfaz.getjTextField3().getText().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s,]+")) {
+            interfaz.getjTextField3().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField3().setBorder(defaultBorder);
+        }
+
+        if (!interfaz.getjTextField4().getText().matches("-?\\d+(\\.\\d+)?")) {
+            interfaz.getjTextField4().setBorder(BorderFactory.createLineBorder(Color.RED));
+            correcto = false;
+        } else {
+            interfaz.getjTextField4().setBorder(defaultBorder);
+        }
+
         return correcto;
     }
     
@@ -503,7 +577,7 @@ public class ItemMenuController implements ActionListener, WindowListener {
         /*
         Categoria categoria = null; 
         
-        for (Categoria c : CategoriaMemory.listaCategorias) {
+        for(Categoria c : CategoriaMemory.listaCategorias) {
             if(c.getId() == id_categoria) categoria = c;
             
         }
@@ -522,26 +596,25 @@ public class ItemMenuController implements ActionListener, WindowListener {
     
     private void cargarCategoriasTabla() {
         CategoriaMySQLDAO categoriaMySQLDAO = (CategoriaMySQLDAO) FactoryDAO.getCategoriaDAO();
-        for (Categoria categoria : categoriaMySQLDAO.obtenerTodasLasCategorias()) {
+        for(Categoria categoria : categoriaMySQLDAO.obtenerTodasLasCategorias()) {
             Object[] rowData = {
                 categoria.getId(),
                 categoria.getTipo_item().toString(),
                 categoria.getDescripcion()
             };
-
             interfazCategorias.getModelo().addRow(rowData);
         }
     }
     
     private void seleccionarFilaPorID(JTable tabla, int idBuscado) {
-        for (int i = 0; i < tabla.getRowCount(); i++) {
+        for(int i = 0; i < tabla.getRowCount(); i++) {
             int id = (Integer) tabla.getValueAt(i, 0);  
-            if (id == idBuscado) {
+            if(id == idBuscado) {
                 tabla.setRowSelectionInterval(i, i);  
                 break;  
+            }
         }
     }
-  }
 
     public void windowOpened(WindowEvent e) {
     }
