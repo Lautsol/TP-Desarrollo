@@ -59,7 +59,6 @@ public class ListaDePedidos extends javax.swing.JPanel {
         return jComboBox1;
     }
 
-    // Renderizador de celdas para los botones
     private class ActionCellRenderer extends JPanel implements TableCellRenderer {
 
         private final JButton editButton = new JButton("Editar");
@@ -69,15 +68,24 @@ public class ListaDePedidos extends javax.swing.JPanel {
             setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
             add(editButton);
             add(deleteButton);
-            
         }
 
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            
+            String estado = table.getValueAt(row, 5).toString();
+            String idCliente = table.getValueAt(row, 1).toString();
+            String idVendedor = table.getValueAt(row, 2).toString();
+
+            if (estado.equals("RECIBIDO") || idCliente.equals("No disponible") || idVendedor.equals("No disponible")) {
+                editButton.setText("Ver");
+            } else {
+                editButton.setText("Editar");
+            }
+
             return this;
         }
     }
 
-    // Editor de celdas para los botones
     private class ActionCellEditor extends AbstractCellEditor implements TableCellEditor {
 
         private final JPanel panel;
@@ -89,20 +97,31 @@ public class ListaDePedidos extends javax.swing.JPanel {
             this.table = table;
             panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
             editButton = new JButton("Editar");
+            editButton.setActionCommand("Editar");
             deleteButton = new JButton("Eliminar");
-           
 
             panel.add(editButton);
             panel.add(deleteButton);
-            
+
             editButton.addActionListener(controlador);
             deleteButton.addActionListener(controlador);
         }
 
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            
+            String estado = table.getValueAt(row, 5).toString(); 
+            String idCliente = table.getValueAt(row, 1).toString();
+            String idVendedor = table.getValueAt(row, 2).toString();
+
+            if (estado.equals("RECIBIDO") || idCliente.equals("No disponible") || idVendedor.equals("No disponible")) {
+                editButton.setText("Ver");
+            } else {
+                editButton.setText("Editar");
+            }
+
             return panel;
         }
-
+        
         public Object getCellEditorValue() {
             return null; 
         }

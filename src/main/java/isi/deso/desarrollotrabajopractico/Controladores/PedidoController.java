@@ -91,13 +91,7 @@ public class PedidoController implements ActionListener, WindowListener {
             }
 
             int row = listaDePedidos.getjTable1().getSelectedRow(); 
-            Object estadoObj = listaDePedidos.getModelo().getValueAt(row, 5);
-            String estadoStr = estadoObj.toString(); 
-            String cliente = String.valueOf(listaDePedidos.getModelo().getValueAt(row, 1));
-            String vendedor = String.valueOf(listaDePedidos.getModelo().getValueAt(row, 2));
             
-            if(!estadoStr.equals("RECIBIDO") && !cliente.equals("No disponible") && !vendedor.equals("No disponible")) {
-                
             interfazModificarPedido = new ModificarPedido();  
             interfazModificarPedido.setControlador(this);
             setModificarPedido(interfazModificarPedido);     
@@ -108,25 +102,29 @@ public class PedidoController implements ActionListener, WindowListener {
             interfazModificarPedido.getjComboBox1().setEnabled(false);
 
             int idPedido = (Integer) listaDePedidos.getModelo().getValueAt(row,0);
-            int idCliente = (Integer) listaDePedidos.getModelo().getValueAt(row, 1);
-            int idVendedor = (Integer) listaDePedidos.getModelo().getValueAt(row, 2);
+            Object idCliente = listaDePedidos.getModelo().getValueAt(row, 1);
+            Object idVendedor = listaDePedidos.getModelo().getValueAt(row, 2);
             double total = (Double) listaDePedidos.getModelo().getValueAt(row, 3);
-           
-            // Obtener el valor de la forma de pago como cadena
             Object formaDePagoObj = listaDePedidos.getModelo().getValueAt(row, 4);
             String formaDePagoStr = formaDePagoObj.toString();  
-            TipoDePago tipoDePago = TipoDePago.valueOf(formaDePagoStr.toUpperCase());  
-            Estado est = Estado.valueOf(estadoStr.toUpperCase());  
+            Object estadoObj = listaDePedidos.getModelo().getValueAt(row, 5);
+            String estadoStr = estadoObj.toString();
+            
+            if(estadoStr.equals("RECIBIDO")) interfazModificarPedido.getjComboBox2().addItem("RECIBIDO");
+            
+            if(estadoStr.equals("RECIBIDO") || idCliente.equals("No disponible") ||
+              idVendedor.equals("No disponible")) {
+                interfazModificarPedido.getjLabel().setText("Ver pedido");
+                interfazModificarPedido.getjButton1().setEnabled(false);
+                interfazModificarPedido.getjComboBox2().setEnabled(false);
+            }
            
-            interfazModificarPedido.getjComboBox2().setSelectedItem(estadoStr);
-
             interfazModificarPedido.getjTextField4().setText(String.valueOf(idPedido));
             interfazModificarPedido.getjTextField1().setText(String.valueOf(idCliente)); 
             interfazModificarPedido.getjTextField2().setText(String.valueOf(idVendedor)); 
             interfazModificarPedido.getjTextField3().setText(String.valueOf(total)); 
             interfazModificarPedido.getjComboBox1().setSelectedItem(formaDePagoStr); 
-           }
-           
+            interfazModificarPedido.getjComboBox2().setSelectedItem(estadoStr);
         } 
         
         else if(source == listaDePedidos.getjTextField1()) {

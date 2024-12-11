@@ -3,7 +3,9 @@ package isi.deso.desarrollotrabajopractico.Interfaces;
 
 import isi.deso.desarrollotrabajopractico.Controladores.PedidoController;
 import isi.deso.desarrollotrabajopractico.modelo.Pago;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JTextField;
@@ -50,6 +52,14 @@ public class ModificarPedido extends javax.swing.JFrame {
         return jTextField4;
     }
 
+    public JLabel getjLabel() {
+        return jLabel22;
+    }
+
+    public JButton getjButton1() {
+        return jButton1;
+    }
+    
     public void setjTextField1(JTextField jTextField1) {
         this.jTextField1 = jTextField1;
     }
