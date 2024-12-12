@@ -116,6 +116,7 @@ public class PedidoController implements ActionListener, WindowListener {
               idVendedor.equals("No disponible")) {
                 interfazModificarPedido.getjLabel().setText("Ver pedido");
                 interfazModificarPedido.getjButton1().setEnabled(false);
+                interfazModificarPedido.getjButton2().setText("Cerrar");
                 interfazModificarPedido.getjComboBox2().setEnabled(false);
             }
            

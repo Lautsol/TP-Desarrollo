@@ -61,6 +61,7 @@ public class ClienteController implements ActionListener {
            interfazModificarCliente = new ModificarCliente();  
            interfazModificarCliente.setControlador(this);
            setModificarCliente(interfazModificarCliente);  
+           interfazModificarCliente.getjTextField2().setEditable(false);
            interfazModificarCliente.getjTextField4().setEditable(false);
            
            if(listaDeClientes.getjTable().isEditing()) {
@@ -185,14 +186,11 @@ public class ClienteController implements ActionListener {
                 if(interfazModificarCliente.getjTextField7().getText().trim().isEmpty()) alias = null;
                 else alias = interfazModificarCliente.getjTextField7().getText();
             
-                ClienteMySQLDAO clienteMySQLDAO = (ClienteMySQLDAO) FactoryDAO.getClienteDAO();
-                if(clienteMySQLDAO.buscarClientePorCuit(cuit) != null) interfazModificarCliente.mostrarMensajeCuit();
-                else if(interfazModificarCliente.confirmarAccion()) {
+                if(interfazModificarCliente.confirmarAccion()) {
                     actualizarCliente(nombre, id, cuit, alias, cbu, email, direccion);
+                    interfazModificarCliente.dispose();
+                    restablecerTablaConDatosOriginales();
                 }
-
-                interfazModificarCliente.dispose();
-                restablecerTablaConDatosOriginales();
             }
         }
         

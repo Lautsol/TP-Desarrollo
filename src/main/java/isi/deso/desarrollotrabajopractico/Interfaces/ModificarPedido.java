@@ -60,6 +60,10 @@ public class ModificarPedido extends javax.swing.JFrame {
         return jButton1;
     }
     
+    public JButton getjButton2() {
+        return jButton2;
+    }
+    
     public void setjTextField1(JTextField jTextField1) {
         this.jTextField1 = jTextField1;
     }
