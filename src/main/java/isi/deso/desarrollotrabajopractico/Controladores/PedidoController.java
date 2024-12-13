@@ -99,18 +99,22 @@ public class PedidoController implements ActionListener, WindowListener {
             interfazModificarPedido.getjTextField2().setEditable(false);
             interfazModificarPedido.getjTextField3().setEditable(false);
             interfazModificarPedido.getjTextField4().setEditable(false);
+            interfazModificarPedido.getjTextField5().setEditable(false);
             interfazModificarPedido.getjComboBox1().setEnabled(false);
 
             int idPedido = (Integer) listaDePedidos.getModelo().getValueAt(row,0);
+            Pedido pedido = FactoryDAO.getPedidoDAO().buscarPedidoPorID(idPedido);
             Object idCliente = listaDePedidos.getModelo().getValueAt(row, 1);
             Object idVendedor = listaDePedidos.getModelo().getValueAt(row, 2);
-            double total = (Double) listaDePedidos.getModelo().getValueAt(row, 3);
+            double total = pedido.getTotal();
             Object formaDePagoObj = listaDePedidos.getModelo().getValueAt(row, 4);
             String formaDePagoStr = formaDePagoObj.toString();  
             Object estadoObj = listaDePedidos.getModelo().getValueAt(row, 5);
             String estadoStr = estadoObj.toString();
             
-            if(estadoStr.equals("RECIBIDO")) interfazModificarPedido.getjComboBox2().addItem("RECIBIDO");
+            if(estadoStr.equals("RECIBIDO")) {
+                interfazModificarPedido.getjComboBox2().addItem("RECIBIDO");
+            }
             
             if(estadoStr.equals("RECIBIDO") || idCliente.equals("No disponible") ||
               idVendedor.equals("No disponible")) {
@@ -120,11 +124,16 @@ public class PedidoController implements ActionListener, WindowListener {
                 interfazModificarPedido.getjComboBox2().setEnabled(false);
             }
            
+            double recargo = 0;
+            if(formaDePagoStr.equals("MERCADOPAGO")) recargo = pedido.getTotal() * 0.04;
+            else if(formaDePagoStr.equals("TRANSFERENCIA")) recargo = pedido.getTotal() * 0.02;
+                
             interfazModificarPedido.getjTextField4().setText(String.valueOf(idPedido));
             interfazModificarPedido.getjTextField1().setText(String.valueOf(idCliente)); 
             interfazModificarPedido.getjTextField2().setText(String.valueOf(idVendedor)); 
             interfazModificarPedido.getjTextField3().setText(String.valueOf(total)); 
             interfazModificarPedido.getjComboBox1().setSelectedItem(formaDePagoStr); 
+            interfazModificarPedido.getjTextField5().setText(String.valueOf(recargo));
             interfazModificarPedido.getjComboBox2().setSelectedItem(estadoStr);
         } 
         
@@ -267,6 +276,7 @@ public class PedidoController implements ActionListener, WindowListener {
                     interfazCrearPedido.getCampoIDvendedor().setEditable(false);
                     interfazItemsMenuPedido = new ItemsMenuPedido(this);
                     setItemsMenuPedido(interfazItemsMenuPedido);
+                    interfazItemsMenuPedido.getjLabel1().setText("Agregar items al pedido");
                     cargarDatosOriginalesEnTablaItems(idVendedor);
                 }
             }
@@ -312,11 +322,13 @@ public class PedidoController implements ActionListener, WindowListener {
             }
         }
     }
-        else if(comando.equals("Ver items")) {
+        
+        else if(comando.equals("Ver detalles del pedido")) {
             
             interfazVerItemsPedido = new VerItems();
             interfazVerItemsPedido.setControladorPedido(this);
             setItemsPedido(interfazVerItemsPedido);
+            interfazVerItemsPedido.getjLabel1().setText("Detalles del pedido");
             
             if(interfazModificarPedido != null) {
                 
@@ -731,7 +743,7 @@ public class PedidoController implements ActionListener, WindowListener {
                 itemMenu.getNombre(),
                 itemMenu.getDescripcion(),
                 itemMenu.getPrecio(),
-                itemMenu.getCategoria().getId(), 
+                itemMenu.getCategoria().getDescripcion(), 
                 1
             };
             interfazItemsMenuPedido.getModelo().addRow(rowData);
@@ -747,7 +759,7 @@ public class PedidoController implements ActionListener, WindowListener {
                 pd.getProducto().getNombre(),
                 pd.getProducto().getDescripcion(),
                 pd.getProducto().getPrecio(),
-                pd.getProducto().getCategoria().getId(),
+                pd.getProducto().getCategoria().getDescripcion(),
                 pd.getCantidad(),
                 pd.getProducto().getPrecio() * pd.getCantidad()
             };

@@ -79,12 +79,8 @@ public class CrearPedido extends javax.swing.JFrame {
         showMessageDialog(null, "Debe ingresar el CBU del cliente para utilizar esa forma de pago.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
     }
     
-    public void mostrarMensajeProductoOtroVendedor() {
-        showMessageDialog(null, "El pedido no puede contener productos de distintos vendedores.", "ERROR", JOptionPane.ERROR_MESSAGE);
-    }
-    
     public void mostrarMensajePedidoVacio() {
-        showMessageDialog(null, "No puede crear un pedido sin items.", "ERROR", JOptionPane.ERROR_MESSAGE);
+        showMessageDialog(null, "El pedido debe tener al menos un item.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
     }
     
     public boolean confirmarAccion() {
@@ -212,7 +208,7 @@ public class CrearPedido extends javax.swing.JFrame {
         });
 
         jButton4.setBackground(new java.awt.Color(102, 102, 102));
-        jButton4.setText("Ver items");
+        jButton4.setText("Ver detalles del pedido");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -228,7 +224,7 @@ public class CrearPedido extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()

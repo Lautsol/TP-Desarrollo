@@ -235,12 +235,13 @@ public class VendedorController implements ActionListener, WindowListener {
             
         }
         
-        else if(comando.equals("Ver items")) {
+        else if(comando.equals("Ver items del vendedor")) {
             
             interfazItemsVendedor = new VerItems(); 
             interfazItemsVendedor.setControladorVendedor(this);
             setVerItemsVendedor(interfazItemsVendedor); 
             interfazItemsVendedor.ocultarColumnas();
+            interfazItemsVendedor.getjLabel1().setText("Items del vendedor");
             
             if(interfazModificarVendedor != null) {
                 Vendedor vendedor = new Vendedor();
@@ -600,7 +601,7 @@ public class VendedorController implements ActionListener, WindowListener {
                 itemMenu.getNombre(),
                 itemMenu.getDescripcion(),
                 itemMenu.getPrecio(),
-                itemMenu.getCategoria().getId()
+                itemMenu.getCategoria().getDescripcion()
             };
             interfaz.getModelo().addRow(rowData);
         }
@@ -615,7 +616,7 @@ public class VendedorController implements ActionListener, WindowListener {
                 itemMenu.getNombre(),
                 itemMenu.getDescripcion(),
                 itemMenu.getPrecio(),
-                itemMenu.getCategoria().getId()
+                itemMenu.getCategoria().getDescripcion()
             };
             interfaz.getModelo().addRow(rowData);
         }

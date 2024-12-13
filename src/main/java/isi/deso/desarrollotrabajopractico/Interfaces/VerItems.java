@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -113,6 +114,10 @@ public class VerItems extends javax.swing.JFrame {
         return jTable1;
     }
 
+    public JLabel getjLabel1() {
+        return jLabel1;
+    }
+
     public void ocultarColumnas() {
         TableColumnModel columnModel = jTable1.getColumnModel();
         columnModel.removeColumn(columnModel.getColumn(7));
@@ -157,14 +162,14 @@ public class VerItems extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Tipo item", "Nombre", "Descripción", "Precio", "ID categoría", "Cantidad", "Subtotal", "Acciones"
+                "ID", "Tipo de item", "Nombre", "Descripción", "Precio", "Categoría", "Cantidad", "Subtotal", "Acciones"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true, false, true
+                false, false, false, false, false, false, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -178,10 +183,16 @@ public class VerItems extends javax.swing.JFrame {
         jTable1.setRowHeight(30);
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setMinWidth(20);
+            jTable1.getColumnModel().getColumn(0).setMinWidth(5);
+            jTable1.getColumnModel().getColumn(0).setMaxWidth(70);
             jTable1.getColumnModel().getColumn(1).setMinWidth(80);
-            jTable1.getColumnModel().getColumn(2).setMinWidth(100);
-            jTable1.getColumnModel().getColumn(3).setMinWidth(120);
+            jTable1.getColumnModel().getColumn(2).setMinWidth(80);
+            jTable1.getColumnModel().getColumn(3).setMinWidth(130);
+            jTable1.getColumnModel().getColumn(4).setMinWidth(15);
+            jTable1.getColumnModel().getColumn(5).setMinWidth(150);
+            jTable1.getColumnModel().getColumn(6).setMinWidth(15);
+            jTable1.getColumnModel().getColumn(7).setMinWidth(15);
+            jTable1.getColumnModel().getColumn(8).setMinWidth(60);
         }
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));

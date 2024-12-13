@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JPanel;
@@ -127,6 +128,10 @@ public class ItemsMenuPedido extends javax.swing.JFrame {
     public JTable getjTable1() {
         return jTable1;
     }
+
+    public JLabel getjLabel1() {
+        return jLabel1;
+    }
     
     public void ocultarColumna() {
         TableColumnModel columnModel = jTable1.getColumnModel();
@@ -179,11 +184,11 @@ public class ItemsMenuPedido extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Tipo item", "Nombre", "Descripción", "Precio", "ID categoría", "Cantidad", "Acciones"
+                "ID", "Tipo de item", "Nombre", "Descripción", "Precio", "Categoría", "Cantidad", "Acciones"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, true, true
@@ -200,10 +205,14 @@ public class ItemsMenuPedido extends javax.swing.JFrame {
         jTable1.setRowHeight(30);
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setMinWidth(20);
+            jTable1.getColumnModel().getColumn(0).setMinWidth(5);
+            jTable1.getColumnModel().getColumn(0).setMaxWidth(70);
             jTable1.getColumnModel().getColumn(1).setMinWidth(80);
-            jTable1.getColumnModel().getColumn(2).setMinWidth(100);
-            jTable1.getColumnModel().getColumn(3).setMinWidth(120);
+            jTable1.getColumnModel().getColumn(2).setMinWidth(80);
+            jTable1.getColumnModel().getColumn(3).setMinWidth(150);
+            jTable1.getColumnModel().getColumn(4).setMinWidth(5);
+            jTable1.getColumnModel().getColumn(5).setMinWidth(185);
+            jTable1.getColumnModel().getColumn(6).setMinWidth(5);
         }
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));

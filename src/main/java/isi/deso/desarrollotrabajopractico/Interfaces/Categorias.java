@@ -99,7 +99,7 @@ public class Categorias extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Descripción", "Tipo item"
+                "ID", "Tipo de item", "Descripción"
             }
         ) {
             Class[] types = new Class [] {

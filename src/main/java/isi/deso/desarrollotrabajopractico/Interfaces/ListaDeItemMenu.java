@@ -161,7 +161,7 @@ public class ListaDeItemMenu extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID ", "Tipo item", "Nombre", "Descripción", "Precio", "ID categoría", "Acciones"
+                "ID ", "Tipo de item", "Nombre", "Descripción", "Precio", "ID categoría", "Acciones"
             }
         ) {
             Class[] types = new Class [] {
