@@ -72,11 +72,11 @@ public class CrearPedido extends javax.swing.JFrame {
     }
     
     public void mostrarMensajeAlias() {
-        showMessageDialog(null, "Debe ingresar el alias del cliente para utilizar esa forma de pago.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
+        showMessageDialog(null, "El cliente debe registrar su alias para utilizar esa forma de pago.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
     }
     
     public void mostrarMensajeCbu() {
-        showMessageDialog(null, "Debe ingresar el CBU del cliente para utilizar esa forma de pago.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
+        showMessageDialog(null, "El cliente debe registrar su CBU para utilizar esa forma de pago.", "ADVERTENCIA", JOptionPane.INFORMATION_MESSAGE);
     }
     
     public void mostrarMensajePedidoVacio() {
